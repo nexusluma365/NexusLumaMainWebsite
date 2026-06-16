@@ -1134,6 +1134,7 @@
       a, button, input, select, textarea { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
       :root { --section-spacing: 88px; --section-gap: 72px; --section-gap-sm: 56px; }
       #mainNav { padding: 10px 0; }
+      #mainNav { backdrop-filter: none; background: rgba(11,11,15,.96); }
       .nav-inner { padding: 0 14px; grid-template-columns: 1fr auto; row-gap: 8px; }
       .hero-parallax { min-height: 220vh; }
       .mask-text { font-size: clamp(4.5rem, 22vw, 18rem); }
@@ -1216,11 +1217,11 @@
     }
     @media (max-width: 520px) {
       #mainNav { padding: 8px 0; }
-      .nav-inner { grid-template-columns: 1fr; gap: 7px; }
-      .nav-brand { justify-self: center; }
+      .nav-inner { grid-template-columns: auto 1fr; gap: 10px; }
+      .nav-brand { justify-self: start; }
       .nav-brand span { display: none; }
-      .nav-actions { width: 100%; max-width: 100%; justify-content: space-between; }
-      .nav-cta { font-size: 10px; padding: 9px 10px; }
+      .nav-actions { width: auto; max-width: none; justify-self: end; justify-content: flex-end; }
+      .nav-cta { font-size: 10px; padding: 9px 9px; }
       .nav-phone { font-size: 10px; }
       .hero-parallax { min-height: 190vh; }
       .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
@@ -1543,6 +1544,7 @@
        SLIDESHOWS
     ============================================================ */
     let startMosaic = null, stopMosaic = null, startContractor = null, stopContractor = null;
+    let mosaicVisible = false, contractorVisible = false;
 
     document.addEventListener("DOMContentLoaded", function() {
       // Split mosaic
@@ -1559,9 +1561,19 @@
         }, tiles.length * 150 + 300);
       }
       let mosaicInterval = null;
-      startMosaic = () => { if (mosaicInterval) return; mosaicInterval = setInterval(() => { const next = (mCurrent + 1) % images.length; animateTiles(next); mCurrent = next; }, 5000); };
+      startMosaic = () => { if (!mosaicVisible || mosaicInterval) return; mosaicInterval = setInterval(() => { const next = (mCurrent + 1) % images.length; animateTiles(next); mCurrent = next; }, 5000); };
       stopMosaic  = () => { if (!mosaicInterval) return; clearInterval(mosaicInterval); mosaicInterval = null; };
-      startMosaic();
+      const mosaicRoot = document.querySelector(".split-mosaic");
+      if ("IntersectionObserver" in window && mosaicRoot) {
+        const observer = new IntersectionObserver((entries) => {
+          mosaicVisible = entries.some(entry => entry.isIntersecting);
+          if (mosaicVisible) startMosaic(); else stopMosaic();
+        }, { rootMargin: "180px 0px" });
+        observer.observe(mosaicRoot);
+      } else {
+        mosaicVisible = true;
+        startMosaic();
+      }
     });
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -1570,9 +1582,19 @@
       let cCurrent = 0;
       function showSlide(idx) { slides.forEach((img, i) => img.classList.toggle('active', i === idx)); }
       let contractorInterval = null;
-      startContractor = () => { if (contractorInterval) return; contractorInterval = setInterval(() => { cCurrent = (cCurrent + 1) % slides.length; showSlide(cCurrent); }, 3000); };
+      startContractor = () => { if (!contractorVisible || contractorInterval) return; contractorInterval = setInterval(() => { cCurrent = (cCurrent + 1) % slides.length; showSlide(cCurrent); }, 3000); };
       stopContractor  = () => { if (!contractorInterval) return; clearInterval(contractorInterval); contractorInterval = null; };
-      startContractor();
+      const contractorRoot = document.querySelector(".contractor-panel");
+      if ("IntersectionObserver" in window && contractorRoot) {
+        const observer = new IntersectionObserver((entries) => {
+          contractorVisible = entries.some(entry => entry.isIntersecting);
+          if (contractorVisible) startContractor(); else stopContractor();
+        }, { rootMargin: "180px 0px" });
+        observer.observe(contractorRoot);
+      } else {
+        contractorVisible = true;
+        startContractor();
+      }
     });
 
     // Video stacking
@@ -1732,8 +1754,12 @@
           scale: 1.02, ease: "none",
           scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
         });
+        gsap.to(".hero-bg-parallax", {
+          opacity: 0, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "35% top", end: "bottom top", scrub: 0.6 }
+        });
         gsap.to(".hero-parallax-overlay", {
-          opacity: 0.15, ease: "none",
+          opacity: 0, ease: "none",
           scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
         });
         gsap.to(".mask-text", {
