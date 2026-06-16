@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Popup Scroll Fix</title>
+  <style>
+    /* Prevent body scroll when popup is open (mobile only) */
+    body.popup-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
+      -webkit-overflow-scrolling: auto;
+    }
+
+    #offer-pop {
+      align-items: flex-start;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: contain;
+      touch-action: none;
+    }
+
+    #offer-pop-modal {
+      max-height: 100vh;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    /* Right side form container - enable scroll here */
+    #offer-pop-modal > div:nth-child(2) {
+      align-self: stretch;
+      height: 100%;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      justify-content: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      #offer-pop {
+        padding: 0 !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #offer-pop-modal {
+        flex-direction: column !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        min-height: 100vh !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        overflow: hidden;
+      }
+
+      #offer-pop-modal > div {
+        width: 100% !important;
+        flex: none !important;
+        overflow: hidden;
+      }
+
+      /* Left promotional side - fixed height, no scroll */
+      #offer-pop-modal > div:first-child {
+        padding: 40px 24px !important;
+        height: 35vh !important;
+        min-height: 280px !important;
+        max-height: 35vh !important;
+        overflow: hidden !important;
+        flex-shrink: 0;
+      }
+
+      /* Right form side - scrollable area */
+      #offer-pop-modal > div:nth-child(2) {
+        padding: 32px 20px 60px !important;
+        height: 65vh !important;
+        max-height: 65vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+        touch-action: pan-y !important;
+      }
+
+      #offer-pop-modal h1 {
+        font-size: 2em !important;
+        margin-bottom: 16px !important;
+      }
+
+      #offer-pop-modal h2 {
+        font-size: 1.8em !important;
+        margin-bottom: 20px !important;
+      }
+
+      #offer-pop-modal p {
+        font-size: 1.05em !important;
+      }
+
+      /* Form container adjustments */
+      #offer-pop-form-container {
+        width: 100% !important;
+        padding-bottom: 20px;
+      }
+
+      #offer-pop-form-container > div:first-child {
+        flex-direction: column !important;
+        gap: 12px !important;
+      }
+
+      #offer-pop-form-container > div:first-child input {
+        width: 100% !important;
+      }
+
+      /* Close button mobile adjustments */
+      #offer-pop-close {
+        top: 12px !important;
+        right: 12px !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.8em !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #111 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        z-index: 1000;
+      }
+    }
+
+    @media (max-width: 520px) {
+      #offer-pop-modal > div:first-child {
+        padding: 32px 20px !important;
+        min-height: 240px !important;
+      }
+
+      #offer-pop-modal h1 {
+        font-size: 1.75em !important;
+        margin-bottom: 12px !important;
+      }
+
+      #offer-pop-modal h2 {
+        font-size: 1.6em !important;
+      }
+
+      #offer-pop-form-container input,
+      #offer-pop-form-container select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+      }
+    }
+
+    /* Prevent double-tap zoom on buttons */
+    button, input[type="submit"], a {
+      touch-action: manipulation;
+    }
+
+    /* Smooth scroll for form area */
+    #offer-pop-modal > div:nth-child(2)::-webkit-scrollbar {
+      width: 0;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="offer-pop" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,30,34,0.75);z-index:99999;align-items:flex-start;justify-content:center;backdrop-filter:blur(12px);">
+  <div id="offer-pop-modal" style="background:linear-gradient(135deg,#f5f6fa 0%,#e5e9f7 50%,#d1d8e6 100%);border-radius:40px;max-width:1600px;width:95vw;min-height:700px;box-shadow:0 16px 64px rgba(0,0,0,0.18);overflow:hidden;position:relative;display:flex;flex-direction:row;">
+    
+    <!-- Left Side -->
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:64px 48px;background: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), #222; color: #fff; position: relative;">
+      <h1 style="font-size:3.5em;font-weight:700;margin-bottom:24px;color:#fff;letter-spacing:-0.02em;text-shadow:0 2px 16px rgba(0,0,0,0.45);">Receive $200 OFF!</h1>
+      <p style="font-size:1.5em;color:#f0f0f0;max-width:400px;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,0.45);">Get $200 Off when you schedule your first project with us.</p>
+    </div>
+    
+    <!-- Right Side - Scrollable Form -->
+    <div style="flex:1.2;background:rgba(255,255,255,0.85);padding:48px 40px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;">
+      <h2 style="font-size:2.5em;font-weight:600;color:#222;margin-bottom:32px;text-align:center;letter-spacing:-0.01em;">Sign Up</h2>
+      
+      <div id="offer-pop-form-container" style="width:100%;max-width:700px;">
+        <div style="display:flex;gap:18px;margin-bottom:18px;">
+          <input type="text" id="firstName" placeholder="First name" required style="flex:1;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;" />
+          <input type="text" id="lastName" placeholder="Last name" required style="flex:1;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;" />
+        </div>
+        
+        <input type="tel" id="phone" placeholder="Phone number" required style="width:100%;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;margin-bottom:18px;" />
+        
+        <input type="email" id="email" placeholder="Email address" required style="width:100%;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;margin-bottom:18px;" />
+        
+        <select id="howDidYouHear" required style="width:100%;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;margin-bottom:18px;">
+          <option value="" disabled selected>How did you hear about us?</option>
+          <option value="Google">Google</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Referral">Referral</option>
+          <option value="Other">Other</option>
+        </select>
+        
+        <select id="state" required style="width:100%;padding:18px 16px;border-radius:16px;border:1.5px solid #d1d8e6;font-size:1.15em;background:#f5f6fa;margin-bottom:18px;">
+          <option value="" disabled selected>Select your state</option>
+          <option value="NC">North Carolina</option>
+          <option value="SC">South Carolina</option>
+          <option value="VA">Virginia</option>
+          <option value="GA">Georgia</option>
+        </select>
+        
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+          <input type="checkbox" id="acceptTerms" style="width:22px;height:22px;border-radius:8px;" />
+          <label for="acceptTerms" style="font-size:1.1em;color:#222;">Accept Terms & Conditions</label>
+        </div>
+        
+        <div id="offer-pop-status" style="margin-bottom:18px;font-size:1.1em;text-align:center;"></div>
+        
+        <button id="offer-pop-submit" style="width:100%;background:linear-gradient(90deg,#007aff 0%,#0051a8 100%);color:#fff;font-weight:700;padding:18px 0;border-radius:16px;font-size:1.25em;border:none;cursor:pointer;">JOIN US</button>
+        
+        <div style="position:relative;padding:18px 0;text-align:center;">
+          <span style="background:rgba(255,255,255,0.85);color:#888;padding:0 18px;position:relative;z-index:1;font-size:1.1em;">NOW</span>
+          <div style="position:absolute;top:50%;left:0;width:100%;height:1.5px;background:#d1d8e6;z-index:0;"></div>
+        </div>
+      </div>
+    </div>
+    
+    <button id="offer-pop-close" style="position:absolute;top:32px;right:32px;z-index:10;font-size:2.5em;font-weight:700;background:rgba(0,0,0,0.10);color:#222;width:56px;height:56px;border:none;border-radius:50%;cursor:pointer;">&times;</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  let savedScrollPosition = 0;
+
+  function lockBodyScroll() {
+    // Only lock on mobile
+    if (window.innerWidth <= 900) {
+      savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      document.body.classList.add('popup-open');
+      document.body.style.top = `-${savedScrollPosition}px`;
+    }
+  }
+
+  function unlockBodyScroll() {
+    if (window.innerWidth <= 900) {
+      document.body.classList.remove('popup-open');
+      document.body.style.top = '';
+      window.scrollTo(0, savedScrollPosition);
+    }
+  }
+
+  // Show popup after 2 seconds (for testing - change to 15000 for production)
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+      document.getElementById('offer-pop').style.display = 'flex';
+      lockBodyScroll();
+    }, 2000);
+    
+    // Close button
+    document.getElementById('offer-pop-close').onclick = function() {
+      document.getElementById('offer-pop').style.display = 'none';
+      unlockBodyScroll();
+    };
+    
+    // Submit button
+    document.getElementById('offer-pop-submit').onclick = function() {
+      const status = document.getElementById('offer-pop-status');
+      
+      // Validate
+      if (!document.getElementById('acceptTerms').checked) {
+        status.textContent = 'Please accept the Terms & Conditions';
+        status.style.color = '#c00';
+        return;
+      }
+      
+      status.textContent = 'Successfully signed up!';
+      status.style.color = '#090';
+      
+      setTimeout(function() {
+        document.getElementById('offer-pop').style.display = 'none';
+        unlockBodyScroll();
+      }, 1200);
+    };
+
+    // Prevent background scroll on touch devices
+    const modal = document.getElementById('offer-pop-modal');
+    const formContainer = modal.querySelector('div:nth-child(2)');
+    
+    // Allow scroll only within form container
+    formContainer.addEventListener('touchmove', function(e) {
+      e.stopPropagation();
+    }, { passive: true });
+    
+    // Prevent scroll on modal backdrop
+    document.getElementById('offer-pop').addEventListener('touchmove', function(e) {
+      if (e.target === this) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparent Pricing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --line: rgba(15, 15, 20, 0.12);
+            --shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+            --accent: #d9a74f;
+            --accent-2: #f0c76b;
+            --content-max: 1200px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: radial-gradient(circle at 20% 10%, rgba(15, 15, 20, 0.04), transparent 60%), #ffffff;
+            padding: 120px 24px 120px 24px;
+            min-height: 100vh;
+            color: #0b0b0f;
+        }
+
+
+        .logo-header {
+            position: fixed;
+            top: 18px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            background: rgba(11, 11, 15, 0.92);
+            padding: 8px 18px;
+            border-radius: 40px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(14px);
+            animation: fadeInDown 0.6s ease-out;
+            text-decoration: none;
+            color: #ffffff;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .logo-header img {
+            height: 36px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-header-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: var(--content-max);
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(15, 15, 20, 0.08);
+            color: rgba(15, 15, 20, 0.7);
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-size: 52px;
+            color: #0b0b0f;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            color: rgba(15, 15, 20, 0.7);
+            font-size: 18px;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            align-items: start;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: rgba(15, 15, 20, 0.03);
+            border-radius: 24px;
+            padding: 48px 42px;
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, box-shadow;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+            background: rgba(15, 15, 20, 0.045);
+        }
+
+        .featured-wrapper {
+            padding: 2px;
+            border-radius: 26px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+            position: relative;
+            box-shadow: 0 18px 54px rgba(0, 0, 0, 0.16);
+        }
+
+        .featured-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 48px 42px;
+            box-shadow: none;
+            transform: scale(1.06) translateZ(0);
+            will-change: transform;
+        }
+
+        .featured-card:hover {
+            transform: scale(1.06) translateZ(0);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+            color: #0b0b0f;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            color: rgba(15, 15, 20, 0.65);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .icon-symbol {
+            font-size: 18px;
+        }
+
+        /* SVG icon sizing for professional look */
+        .icon-svg svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .plan-name {
+            font-size: 44px;
+            color: #0b0b0f;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .plan-name-bold {
+            font-weight: 700;
+        }
+
+        .plan-description {
+            color: rgba(15, 15, 20, 0.65);
+            font-size: 15px;
+            margin-bottom: 30px;
+            min-height: 40px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .price-section.stack {
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .currency {
+            font-size: 32px;
+            color: #0b0b0f;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 56px;
+            color: #0b0b0f;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .period {
+            color: rgba(15, 15, 20, 0.5);
+            font-size: 15px;
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        .payment-plan {
+            text-align: center;
+            color: #0b0b0f;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding: 12px;
+            background: rgba(15, 15, 20, 0.04);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .cta-button {
+            display: inline-flex;
+            width: 100%;
+            padding: 16px 32px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #ffffff;
+            color: #0b0b0f;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.25;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                        background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 40px;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            min-height: 52px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-button:hover {
+            border-color: rgba(15, 15, 20, 0.2);
+            background: rgba(15, 15, 20, 0.04);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .cta-button-primary {
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+            border-color: transparent;
+            color: #0b0b0f;
+            font-weight: 800;
+        }
+
+        .cta-button-primary:hover {
+            background: linear-gradient(135deg, #e8b95b 0%, #c69441 100%);
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            color: rgba(15, 15, 20, 0.68);
+            font-size: 15px;
+            padding: 14px 0;
+            padding-left: 28px;
+            position: relative;
+            line-height: 1.6;
+            border-bottom: 1px solid var(--line);
+            word-wrap: break-word;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 4px;
+            top: 14px;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .features-list li.gold-feature {
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .features-list li.gold-feature::before {
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: rgba(15, 15, 20, 0.6);
+            font-size: 15px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Privacy footer styles */
+        .site-footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid var(--line);
+        }
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .footer-heading {
+            color: #0b0b0f;
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+        .footer-text {
+            color: rgba(15, 15, 20, 0.64);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .eco-badge {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0b0f;
+            font-size: 18px;
+        }
+
+        /* Featured card specific adjustments */
+        .featured-card .plan-name {
+            font-size: 40px;
+        }
+
+        .featured-card .plan-description {
+            font-size: 14px;
+        }
+
+        .featured-card .price {
+            font-size: 52px;
+        }
+
+        .featured-card .card-icon {
+            font-size: 12px;
+        }
+
+        .featured-card .features-list li {
+            font-size: 14px;
+            padding: 12px 0;
+            padding-left: 28px;
+        }
+
+        @media (max-width: 1024px) {
+            .featured-card {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                padding: 100px 16px 80px 16px;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: contain;
+            }
+            a, button, input, select, textarea {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .logo-header,
+            .pricing-card,
+            .cta-button {
+                transition-duration: 0.2s !important;
+                transform: none !important;
+            }
+
+            .logo-header {
+                position: static;
+                margin: 0 0 32px 0;
+                gap: 6px;
+                justify-content: center;
+                padding: 6px 12px;
+                min-height: auto;
+            }
+
+            h1 {
+                font-size: 40px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+                gap: 24px;
+            }
+
+            .pricing-card {
+                padding: 40px 32px;
+            }
+
+            .plan-name {
+                font-size: 36px;
+            }
+
+            .price {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 50px 12px 60px 12px;
+            }
+
+            .logo-header {
+                margin-bottom: 24px;
+                gap: 6px;
+                padding: 6px 10px;
+            }
+
+            h1 {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .header {
+                margin-bottom: 60px;
+            }
+
+            .pricing-card {
+                padding: 32px 24px;
+            }
+
+            .plan-name {
+                font-size: 28px;
+            }
+
+            .price {
+                font-size: 40px;
+            }
+
+            .currency {
+                font-size: 28px;
+            }
+
+            .features-list li {
+                font-size: 13px;
+                padding-left: 24px;
+            }
+        }
+
+        /* Fade-in animations with GPU acceleration */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 20px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .header {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .pricing-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pricing-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .featured-wrapper {
+            animation: fadeInUp 0.6s ease-out 0.2s forwards;
+        }
+
+        .pricing-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        /* Optimized pulsating button with GPU acceleration */
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(217, 167, 79, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(217, 167, 79, 0);
+            }
+        }
+
+        .featured-card .cta-button-primary {
+            animation: pulse 2s infinite;
+            will-change: box-shadow;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="logo-header" href="index.html" aria-label="Go to home page">
+        <img src="Asset/premium-logo-240.webp" alt="Nexus Luma Logo" width="78" height="44" decoding="async" fetchpriority="high" style="height:44px;width:auto;display:inline-block;vertical-align:middle;" />
+        <div class="logo-header-text">Nexus Luma</div>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>A Smarter Investment in Your Online Presence</h1>
+            <p class="subtitle">No confusion. No surprises. Just quality work done right.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Basic Business Card -->
+            <div class="pricing-card">
+                <div class="card-icon">
+                    <span class="icon-svg" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </span>
+                    <span>For Beginners</span>
+                </div>
+                <h2 class="plan-name">Basic<br><span class="plan-name-bold">Business</span></h2>
+                <p class="plan-description">For Getting Started Only</p>
+                
+                <a href="https://buy.stripe.com/eVqdR89ts4CR8fK5HDbQY0Q" class="cta-button" target="_blank" rel="noopener noreferrer">Get Started Now</a>
+                
+                <div class="price-section">
+                    <span class="currency">$</span>
+                    <span class="price">1,499</span>
+                    <span class="period">one-time</span>
+                </div>
+
+                <div class="payment-plan">Pay in 4 easy installments of $375</div>
+
+                <ul class="features-list">
+                    <li>A Full Business Website</li>
+                    <li>Custom Design (Not a Template)</li>
+                    <li>SEO Keywords Added</li>
+                    <li>Mobile & Desktop Friendly</li>
+                    <li>Smooth Scrolling & Animation</li>
+                    <li>7–14 day average delivery</li>
+                    <li class="gold-feature">90-Day Money Back Guarantee</li>
+                </ul>
+            </div>
+
+            <!-- Business Enterprise Card (Featured) -->
+            <div class="featured-wrapper">
+                <div class="featured-badge">I Want This</div>
+                <div class="pricing-card featured-card">
+                    <div class="card-icon">
+                        <span class="icon-svg" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="10" r="5"/>
+                                <path d="M9 15l-2 5 5-2 5 2-2-5"/>
+                            </svg>
+                        </span>
+                        <span>Best Choice</span>
+                    </div>
+                    <h2 class="plan-name">Business<br><span class="plan-name-bold">Enterprise</span></h2>
+                    <p class="plan-description">This Level Isn't for Beginners</p>
+                    
+                    <a href="https://buy.stripe.com/7sY00idJI6KZ7bGfidbQY0R" class="cta-button cta-button-primary" target="_blank" rel="noopener noreferrer">Get Started Now</a>
+                    
+                    <div class="price-section">
+                        <span class="currency">$</span>
+                        <span class="price">3,499</span>
+                        <span class="period">one-time</span>
+                    </div>
+
+                    <div class="payment-plan">Pay in 4 easy installments of $875</div>
+
+                    <ul class="features-list">
+                        <li>Includes all Basic Business features</li>
+                        <li>3D visuals & interactive design</li>
+                        <li>Lead capture system setup</li>
+                        <li>Mobile & desktop optimized</li>
+                        <li>No-code development included</li>
+                        <li>Weekday production support</li>
+                        <li>7–14 day average delivery</li>
+                        <li>Easy ticket system (Notion)</li>
+                        <li>Immediate project kickoff</li>
+                        <li class="gold-feature">90-Day Money Back Guarantee</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Custom Pricing Card -->
+            <div class="pricing-card">
+                <div class="card-icon">
+                    <span class="icon-svg" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="7" width="18" height="12" rx="2"/>
+                            <path d="M9 7V5h6v2"/>
+                        </svg>
+                    </span>
+                    <span>On a Budget</span>
+                </div>
+                <h2 class="plan-name"><span class="plan-name-bold">Custom<br>Pricing</span></h2>
+                <p class="plan-description">Not sure what this should cost? Let's talk it through.</p>
+                
+                <a href="https://buy.stripe.com/9B600icFEd9n8fKee9bQY0O" class="cta-button" target="_blank" rel="noopener noreferrer">Start With a Strategy Call</a>
+                
+                <div class="price-section stack">
+                    <span class="price" style="font-size: 28px; color: #d9a74f;">Schedule Today!</span>
+                    <div style="font-weight: 800; color: #0b0b0f; margin-top: 2px;">&amp; Get A Free Landing Page</div>
+                </div>
+
+                <ul class="features-list">
+                    <li>Want custom pricing?</li>
+                    <li>Schedule a Zoom Call Today!</li>
+                    <li>Custom scope</li>
+                    <li>Dedicated team</li>
+                    <li>Fixed deadlines</li>
+                    <li>Strategic and Consulting Sessions, bi-weekly</li>
+                    <li>Payment plan based on milestones</li>
+                </ul>
+            </div>
+        </div>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <h3 class="footer-heading">Privacy Notice</h3>
+        <p class="footer-text">
+          Nexus Luma, a brand operated under TonoSound LLC, respects your privacy. We do not sell, rent, or share your personal information with third parties. Information you provide may be used internally to deliver services and to inform you about other products or services offered by TonoSound LLC. Your data is handled securely and used only for legitimate business and communication purposes.
+        </p>
+      </div>
+    </footer>
+</body>
+</html>

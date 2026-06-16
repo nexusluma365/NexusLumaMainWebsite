@@ -1,0 +1,13 @@
+# Local Netlify folder
+.netlify
+node_modules
+.DS_Store
+
+# Unused raw source media; optimized web files are used by the site.
+Naphtali.mp4
+George.mov
+
+# Local secrets
+.env
+.env.*
+!.env.example

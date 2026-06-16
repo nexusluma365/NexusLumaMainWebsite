@@ -1,0 +1,10 @@
+{
+  "name": "nexus-luma-website",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx netlify-cli@latest dev --port 8888",
+    "check": "node scripts/check.mjs"
+  }
+}
+

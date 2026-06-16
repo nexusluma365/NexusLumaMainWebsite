@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="Best Web designer In North Carolina" />
+  <title>Immersive Web Designs</title>
+  <link rel="icon" href="Asset/premium-logo-240.webp" type="image/webp">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+  <link rel="preload" as="image" href="Asset/astro%20man%20in%20space.webp" fetchpriority="high">
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="logo-google" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="16" fill="#fff"/>
+      <path d="M16 13v3.2h4.5c-.2 1.2-1.4 3.5-4.5 3.5-2.7 0-5-2.2-5-5s2.3-5 5-5c1.5 0 2.5.6 3.1 1.2l2.1-2C19.7 7.7 18 7 16 7c-5 0-9 4-9 9s4 9 9 9c5 0 8.3-3.5 8.3-8.5 0-.6-.1-1.1-.2-1.5H16z" fill="#4285F4"/>
+    </symbol>
+    <symbol id="logo-webflow" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="6" fill="#fff"/>
+      <path d="M8 24l4-16 4 8 4-8 4 16h-4l-2-8-2 8H8z" fill="#4353FF"/>
+    </symbol>
+  </svg>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html {
+      scroll-behavior: auto;
+      overscroll-behavior-y: none;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      overflow-x: hidden;
+      overscroll-behavior-y: none;
+      background: #fff;
+      color: #0b0b0f;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+    :root {
+      --navH: 78px;
+      --line: rgba(15,15,20,.10);
+      --shadow: 0 18px 60px rgba(0,0,0,.12);
+      --section-spacing: 140px;
+      --section-gap: 96px;
+      --section-gap-sm: 72px;
+      --content-max: 1200px;
+    }
+    section { scroll-margin-top: var(--navH); }
+
+    .page-loader {
+      position: fixed; inset: 0; background: #fff; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity 0.5s ease; pointer-events: none;
+    }
+    .page-loader.loaded { opacity: 0; }
+
+    /* NAV */
+    #mainNav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      padding: 16px 0;
+      background: rgba(11,11,15,.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      transform: translateZ(0);
+      will-change: transform;
+    }
+    .nav-inner {
+      max-width: var(--content-max); margin: 0 auto; padding: 0 24px;
+      display: grid; grid-template-columns: 1fr auto; align-items: center;
+    }
+    .nav-brand { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+    .nav-actions {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-cta {
+      text-decoration: none;
+      font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+      padding: 12px 20px; border-radius: 999px; color: #fff;
+      background: linear-gradient(135deg, #2b2d35 0%, #16181e 100%);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,.34);
+      transition: transform .2s ease, box-shadow .3s ease, background .3s ease;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,.28); background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%); }
+    .nav-audit-btn {
+      border: 1px solid rgba(240,199,107,.45);
+      background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%);
+      color: #08133a;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .nav-audit-btn:hover { background: linear-gradient(135deg, #f6d681 0%, #d9a74f 100%); }
+    .nav-phone {
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    #mainNav ul { display: flex; justify-content: center; align-items: center; gap: 48px; list-style: none; }
+    #mainNav .nav-cta-item { display: none; }
+    .nav-toggle {
+      display: none; background: transparent; border: 1px solid rgba(255,255,255,.18);
+      color: #fff; border-radius: 12px; width: 44px; height: 44px;
+      align-items: center; justify-content: center; cursor: pointer; padding: 0; position: relative;
+    }
+    .nav-toggle span { display: block; width: 20px; height: 2px; background: rgba(255,255,255,.9); border-radius: 2px; position: relative; }
+    .nav-toggle span::before, .nav-toggle span::after {
+      content: ""; position: absolute; left: 0; width: 20px; height: 2px;
+      background: rgba(255,255,255,.9); border-radius: 2px; transition: transform .2s ease;
+    }
+    .nav-toggle span::before { top: -6px; }
+    .nav-toggle span::after { top: 6px; }
+    #mainNav a { color: rgba(210,210,220,.78); text-decoration: none; font-size: 14px; font-weight: 600; position: relative; transition: color 0.3s cubic-bezier(0.4,0,0.2,1); letter-spacing: -0.01em; }
+    #mainNav a::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 0; height: 2px; transform: translateX(-50%); background: rgba(255,255,255,.85); transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+    #mainNav a:hover { color: rgba(255,255,255,.98); }
+    #mainNav a:hover::after { width: 100%; }
+
+    /* HERO */
+    .hero-parallax { min-height: 205vh; background: #020308; margin-top: 0; position: relative; }
+    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; will-change: background-color; z-index: 1; }
+    .hero-bg-parallax {
+      position: absolute; inset: 0;
+      background-image: url("Asset/astro man in space.webp");
+      background-size: cover; background-position: center;
+      transform: translate3d(0,0,0) scale(1.12); transform-origin: center;
+      will-change: transform, opacity; backface-visibility: hidden;
+    }
+    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18), rgba(0,0,0,.52)); will-change: opacity; }
+    .mask-text {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: clamp(7rem, 28vw, 34rem); font-weight: 900; letter-spacing: -0.06em;
+      color: transparent;
+      background-image: url("Asset/astro man in space.webp");
+      background-size: cover; background-position: center;
+      -webkit-background-clip: text; background-clip: text;
+      transform: translate3d(0,0,0) scale(1.28);
+      will-change: opacity; backface-visibility: hidden;
+    }
+    .reveal-copy {
+      position: absolute; top: 70%; left: 0; right: 0; margin: 0 auto;
+      width: min(840px, 92vw); text-align: center;
+      opacity: 0; color: #fff; transform: translate3d(0,42px,0);
+      will-change: opacity; backface-visibility: hidden;
+    }
+    .reveal-copy h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); font-weight: 900; margin-top: 1.4rem; letter-spacing: -0.02em; }
+    .reveal-copy p { margin-top: 1rem; font-size: clamp(1.05rem, 1.9vw, 1.3rem); line-height: 1.65; opacity: .76; }
+
+    /* PRODUCT INTRO */
+    .product-intro { max-width: 920px; margin: -480px auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
+    .intro-to-astro { position: relative; background: linear-gradient(180deg, #020308 0%, #020308 58%, #08090d 72%, #020308 100%); overflow: visible; }
+    .product-intro .product-overline { font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 18px; }
+    .product-intro h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1.4rem; line-height: 1.2; letter-spacing: -0.03em; color: #fff; }
+    .product-intro p { font-size: clamp(1.1rem, 2vw, 1.25rem); line-height: 1.75; color: rgba(255,255,255,.74); max-width: 740px; margin: 0 auto; }
+
+    .what-we-do { max-width: 1120px; margin: 0 auto; padding: 64px 24px 92px; color: #fff; position: relative; z-index: 2; }
+    .what-we-do-head { max-width: 820px; margin: 0 auto 38px; text-align: center; }
+    .what-we-do-overline { font-size: 12px; font-weight: 850; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 18px; }
+    .what-we-do h2 { font-size: clamp(2rem, 4vw, 3.15rem); line-height: 1.08; font-weight: 900; letter-spacing: 0; margin-bottom: 18px; }
+    .what-we-do-subtitle { max-width: 760px; margin: 0 auto; font-size: clamp(1.04rem, 1.8vw, 1.2rem); line-height: 1.72; color: rgba(255,255,255,.72); }
+    .what-we-do-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+    .what-we-do-card { padding: 28px; border: 1px solid rgba(255,255,255,.12); border-radius: 16px; background: rgba(255,255,255,.045); box-shadow: 0 22px 58px rgba(0,0,0,.18); }
+    .what-we-do-card h3 { font-size: 1.06rem; line-height: 1.22; font-weight: 850; margin-bottom: 12px; color: #fff; }
+    .what-we-do-card p { color: rgba(255,255,255,.68); font-size: .96rem; line-height: 1.58; margin: 0; }
+    .what-we-do-cta { margin-top: 34px; text-align: center; }
+
+    .offer-stack { max-width: 1120px; margin: 0 auto; padding: 0 24px 96px; color: #fff; position: relative; z-index: 2; }
+    .offer-stack-inner { border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.035)); box-shadow: 0 28px 80px rgba(0,0,0,.24); padding: 42px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
+    .offer-stack .offer-kicker { font-size: 12px; font-weight: 850; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 16px; }
+    .offer-stack h2 { font-size: clamp(2rem, 3.7vw, 3rem); line-height: 1.08; font-weight: 900; letter-spacing: 0; margin-bottom: 16px; }
+    .offer-stack p { color: rgba(255,255,255,.72); font-size: 1.04rem; line-height: 1.72; margin: 0 0 20px; }
+    .offer-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0; padding: 0; }
+    .offer-list li { color: rgba(255,255,255,.82); font-size: .95rem; line-height: 1.45; display: flex; gap: 10px; }
+    .offer-list li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #9fd3dd; margin-top: 7px; flex: 0 0 auto; }
+    .offer-callout { border-radius: 18px; background: #fff; color: #101326; padding: 30px; box-shadow: 0 22px 58px rgba(0,0,0,.18); }
+    .offer-callout h3 { font-size: 1.25rem; line-height: 1.2; font-weight: 900; margin: 0 0 12px; }
+    .offer-callout p { color: rgba(16,19,38,.66); font-size: .98rem; line-height: 1.6; margin: 0 0 20px; }
+    .offer-callout .btn { width: 100%; }
+
+    /* LOWER SECTIONS */
+    .bendo-collage, .content, .real-estate-trust, .contractor-showcase, .site-closure { background: #fbfaf8; }
+    .bendo-collage { padding: 168px 24px 78px; position: relative; overflow: visible; contain: layout paint; background: #020308; }
+    .bendo-title { max-width: 780px; margin: 0 auto 42px; text-align: center; font-size: clamp(2.2rem, 4.6vw, 4.35rem); line-height: 1.04; font-weight: 850; letter-spacing: 0; color: #fff; opacity: 0; transform: translateY(24px); will-change: opacity; position: relative; z-index: 5; isolation: isolate; }
+    .collage-wrap { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; }
+    .icon { width: 34px; height: 34px; margin-bottom: 14px; display: grid; place-items: center; color: #6aaec0; }
+    .icon svg { width: 30px; height: 30px; stroke: currentColor; }
+    .icon-card h4 { font-size: .95rem; color: #101326; font-weight: 850; line-height: 1.25; letter-spacing: 0; margin-bottom: 6px; }
+    .icon-card p { color: rgba(16,19,38,.62); font-size: .86rem; line-height: 1.45; margin: 0; }
+    .collage-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 24px; align-items: start; }
+    .collage-slot { min-height: 395px; border-radius: 16px; position: relative; overflow: visible; opacity: 0; transform: translate3d(0,48px,0); will-change: transform, opacity; backface-visibility: hidden; }
+    .collage-slot figure { height: 222px; margin: 0 0 20px; border-radius: 16px; overflow: hidden; background: #092059; box-shadow: 0 18px 42px rgba(8,20,58,.16); position: relative; }
+    .collage-slot figure::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,16,48,.12), rgba(6,16,48,.18)); z-index: 1; pointer-events: none; }
+    .collage-slot img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.75) contrast(1.02); transition: transform .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
+    .collage-slot:hover img { transform: scale(1.06); filter: saturate(1) contrast(1.04); }
+    .collage-slot h3 { font-size: 1.18rem; line-height: 1.18; color: #101326; font-weight: 850; margin: 0 0 10px; display: flex; gap: 8px; align-items: center; }
+    .collage-slot h3::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #6aaec0; flex: 0 0 auto; }
+    .collage-slot p { color: rgba(255,255,255,.72); font-size: .94rem; line-height: 1.55; margin: 0 0 18px; }
+    .collage-slot a { color: #9fd3dd; text-decoration: none; font-size: .82rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+
+    .testimonial-stack { max-width: 980px; margin: 0 auto; position: relative; z-index: 2; }
+    .video-rail { position: relative; min-height: clamp(560px, 68vw, 760px); margin: 0 auto; overflow: visible; }
+    .testimonial-video {
+      width: clamp(270px, 29vw, 360px); aspect-ratio: 9/16; border-radius: 26px; overflow: hidden;
+      position: absolute; top: 24px; left: 50%; background: #111827;
+      border: 1px solid rgba(255,255,255,.14); box-shadow: 0 32px 80px rgba(0,0,0,.42);
+      opacity: 0; transform: translate3d(0,48px,0); will-change: opacity, transform;
+      cursor: pointer;
+      transition: transform .36s cubic-bezier(.16,1,.3,1), box-shadow .34s cubic-bezier(.16,1,.3,1), opacity .24s cubic-bezier(.16,1,.3,1), filter .32s cubic-bezier(.16,1,.3,1);
+    }
+    .testimonial-video.is-front { z-index: 3; transform: translate3d(-86%,0,0) scale(1); filter: none; }
+    .testimonial-video.is-middle { z-index: 2; transform: translate3d(-22%,54px,0) scale(.94); filter: brightness(.82); }
+    .testimonial-video.is-back { z-index: 1; transform: translate3d(40%,102px,0) scale(.88); box-shadow: 0 22px 58px rgba(0,0,0,.34); filter: brightness(.72); }
+    .testimonial-video.is-front, .testimonial-video.is-middle, .testimonial-video.is-back { opacity: 1; }
+    .testimonial-video video, .testimonial-video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .testimonial-video video { position: absolute; inset: 0; z-index: 2; background: transparent; pointer-events: none; }
+    .testimonial-video.is-front video { pointer-events: auto; }
+    .video-fallback { position: absolute; inset: 0; z-index: 1; }
+    .video-fallback::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,3,8,.08), rgba(2,3,8,.78)); }
+    .video-caption { position: absolute; left: 22px; right: 22px; bottom: 22px; z-index: 3; color: #fff; text-shadow: 0 12px 28px rgba(0,0,0,.45); pointer-events: none; }
+    .video-caption strong { display: block; font-size: 1.05rem; line-height: 1.18; margin-bottom: 7px; }
+    .video-caption span { display: block; color: rgba(255,255,255,.76); font-size: .88rem; line-height: 1.45; }
+    .video-hint { margin: 18px auto 0; color: rgba(255,255,255,.62); font-size: .88rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-align: center; }
+
+    .content { padding: 12px 24px 88px; }
+    .feature-grid { max-width: 1010px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .feature-card { padding: 28px 28px 30px; border-top: 1px solid rgba(8,20,58,.16); opacity: 0; transform: translateY(36px); will-change: opacity; backface-visibility: hidden; }
+    .feature-card h3 { color: #101326; font-size: 1.05rem; font-weight: 900; margin-bottom: 10px; letter-spacing: 0; }
+    .feature-card p { color: rgba(16,19,38,.64); font-size: .98rem; line-height: 1.65; margin: 0; }
+
+    .real-estate-trust { padding: 30px 24px 116px; position: relative; overflow: hidden; }
+    .real-estate-trust::after { content: "lives"; position: absolute; right: max(8px,3vw); top: 250px; writing-mode: vertical-rl; font-size: clamp(4rem,10vw,9rem); font-weight: 950; color: transparent; -webkit-text-stroke: 1px rgba(8,20,58,.18); pointer-events: none; }
+    .trust-intro { max-width: 820px; margin: 0 auto 46px; text-align: center; opacity: 0; transform: translateY(28px); will-change: opacity; position: relative; z-index: 1; }
+    .trust-intro .overline, .contractor-intro .overline { color: #226e91; font-size: .78rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 16px; }
+    .trust-intro h2, .contractor-intro h2 { color: #101326; font-size: clamp(2.1rem, 4.4vw, 4rem); line-height: 1.04; font-weight: 850; letter-spacing: 0; margin: 0 0 18px; }
+    .trust-intro p, .contractor-intro p { color: rgba(16,19,38,.66); font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.68; margin: 0 auto; max-width: 760px; }
+
+    .split-mosaic { max-width: 940px; margin: 0 auto; position: relative; z-index: 1; padding: 0; }
+    .split-mosaic::before { content: ""; position: absolute; left: -74px; top: -64px; width: 150px; height: 150px; border-radius: 42px; background: #6aaec0; opacity: .86; z-index: -1; }
+    .split-mosaic::after { content: ""; position: absolute; right: -62px; bottom: -58px; width: 142px; height: 142px; border-radius: 42px; background: #6aaec0; opacity: .86; z-index: -1; }
+    .split-head { text-align: center; margin-bottom: 22px; }
+    .split-title, .split-head h2 { color: #101326; font-size: clamp(1.7rem, 3.2vw, 2.8rem); line-height: 1.12; font-weight: 850; opacity: 0; transform: translateY(22px); will-change: opacity; }
+    .split-head p { color: rgba(16,19,38,.62); font-size: 1rem; line-height: 1.62; max-width: 620px; margin: 12px auto 0; }
+    .split-shell { min-height: 390px; border-radius: 18px; overflow: hidden; background: #111a35; box-shadow: 0 28px 76px rgba(8,20,58,.22); position: relative; }
+    .split-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12,1fr); }
+    .split-tile { position: relative; opacity: 0; transform: translate3d(0,36px,0); will-change: opacity, transform; overflow: hidden; }
+    .split-tile::before { content: ""; position: absolute; inset: -2px; background-image: var(--splitImg); background-repeat: no-repeat; background-size: 200% 170%; background-position: var(--posX) var(--posY); transform: scale(1.03); transition: transform .65s cubic-bezier(.2,.8,.2,1), opacity .7s cubic-bezier(.2,.8,.2,1); }
+    .split-tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7,12,30,.56), rgba(7,12,30,.20)); }
+    .split-tile:hover::before { transform: scale(1.08); }
+    .split-tile.reveal::before { opacity: .2; }
+    .t1 { grid-column: 1/span 4; grid-row: 1/span 2; } .t2 { grid-column: 5/span 4; grid-row: 1/span 2; } .t3 { grid-column: 9/span 4; grid-row: 1/span 2; }
+    .t4 { grid-column: 1/span 3; grid-row: 3/span 2; } .t5 { grid-column: 4/span 3; grid-row: 3/span 2; } .t6 { grid-column: 7/span 3; grid-row: 3/span 2; } .t7 { grid-column: 10/span 3; grid-row: 3/span 2; }
+    .media-overlay { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 48px; color: #fff; z-index: 2; pointer-events: none; }
+    .media-overlay h3 { font-size: clamp(2.3rem, 5vw, 4.6rem); line-height: .96; font-weight: 350; max-width: 620px; text-shadow: 0 10px 34px rgba(0,0,0,.42); }
+    .media-overlay em { font-family: ui-serif, Georgia, serif; font-style: italic; color: #9fd3dd; font-weight: 500; }
+
+    .trust-cta { max-width: 960px; margin: 72px auto 0; text-align: center; opacity: 0; transform: translateY(48px); will-change: opacity; position: relative; z-index: 1; }
+    .trust-cta h3 { color: #101326; font-size: clamp(2rem, 3.6vw, 3.2rem); line-height: 1.08; font-weight: 850; margin: 0 0 16px; }
+    .trust-cta p { color: rgba(16,19,38,.66); margin: 0 auto 28px; max-width: 620px; line-height: 1.65; font-size: 1.08rem; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 15px 24px; border-radius: 999px; border: 1px solid transparent; font-size: .95rem; font-weight: 900; text-decoration: none; letter-spacing: 0; cursor: pointer; transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1), background .3s cubic-bezier(.4,0,.2,1); will-change: transform; }
+    .btn-primary { color: #fff; background: #101326; box-shadow: 0 16px 36px rgba(16,19,38,.24); }
+    .btn-primary:hover { transform: translateY(-3px); background: #226e91; box-shadow: 0 20px 44px rgba(34,110,145,.28); }
+    .btn-ghost { color: #101326; background: rgba(255,255,255,.78); border-color: rgba(8,20,58,.14); }
+    .btn-ghost:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 16px 34px rgba(8,20,58,.12); }
+
+    .contractor-showcase { padding: 0 24px 116px; background: #fff; }
+    .contractor-intro { max-width: 860px; margin: 0 auto 48px; text-align: center; opacity: 0; transform: translateY(28px); will-change: opacity; }
+    .contractor-panel { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: .96fr 1.04fr; gap: 0; background: #101326; color: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px rgba(8,20,58,.22); }
+    .contractor-media { min-height: 560px; position: relative; overflow: hidden; opacity: 0; transform: translateX(-28px); will-change: opacity; }
+    .contractor-media img { width: 100%; height: 100%; object-fit: cover; display: none; opacity: 0; position: absolute; inset: 0; transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+    .contractor-media img.active { display: block; opacity: 1; position: relative; transform: scale(1.02); }
+    .contractor-panel:hover .contractor-media img.active { transform: scale(1.07); }
+    .contractor-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(16,19,38,.04), rgba(16,19,38,.32)); }
+    .contractor-side { padding: 64px; position: relative; opacity: 0; transform: translateX(28px); will-change: opacity; }
+    .contractor-side .kicker { color: #9fd3dd; font-size: .78rem; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 18px; }
+    .contractor-side h3 { font-size: clamp(2rem, 3.4vw, 3.45rem); line-height: 1.04; font-weight: 850; margin: 0 0 20px; }
+    .contractor-side p { color: rgba(255,255,255,.76); font-size: 1.05rem; line-height: 1.68; margin: 0 0 26px; }
+    .proof-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 32px; padding: 0; }
+    .proof-item { color: rgba(255,255,255,.82); font-size: .94rem; line-height: 1.48; display: flex; gap: 10px; }
+    .proof-dot { width: 8px; height: 8px; border-radius: 50%; background: #9fd3dd; margin-top: 7px; flex: 0 0 auto; }
+    .contractor-ctaRow { display: flex; flex-wrap: wrap; gap: 12px; }
+    .contractor-icons { max-width: 980px; margin: -42px auto 0; background: #fff; border: 1px solid rgba(8,20,58,.10); box-shadow: 0 24px 70px rgba(8,20,58,.13); border-radius: 8px; display: grid; grid-template-columns: repeat(4,1fr); overflow: hidden; position: relative; z-index: 2; }
+    .contractor-icons .icon-card { padding: 28px 24px 30px; border-right: 1px solid rgba(8,20,58,.10); opacity: 0; transform: translateY(22px); will-change: opacity; }
+    .contractor-icons .icon-card:last-child { border-right: none; }
+    .contractor-about { max-width: 1120px; margin: 104px auto 0; display: grid; grid-template-columns: .9fr 1.1fr; gap: 58px; align-items: center; }
+    .contractor-aboutText { opacity: 0; transform: translateX(-26px); will-change: opacity; }
+    .contractor-aboutText h3 { color: #101326; font-size: clamp(2rem, 3.6vw, 3.35rem); line-height: 1.05; font-weight: 850; margin: 0 0 20px; }
+    .contractor-aboutText p { color: rgba(16,19,38,.66); font-size: 1.05rem; line-height: 1.72; margin: 0 0 16px; }
+    .contractor-aboutMedia { min-height: 430px; border-radius: 18px; overflow: hidden; background: #eef3f4; opacity: 0; transform: translateX(26px); will-change: opacity; }
+    .contractor-aboutMedia img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .65s cubic-bezier(.2,.8,.2,1); }
+    .contractor-aboutMedia:hover img { transform: scale(1.05); }
+    .contractor-projects { max-width: 1120px; margin: 104px auto 0; text-align: center; }
+    .contractor-projectsHead { max-width: 780px; margin: 0 auto 28px; }
+    .contractor-projectsHead h3 { color: #101326; font-size: clamp(1.9rem, 3vw, 2.8rem); line-height: 1.1; font-weight: 850; opacity: 0; transform: translateY(18px); will-change: opacity; margin: 0 0 12px; }
+    .contractor-projectsHead p { color: rgba(16,19,38,.64); font-size: 1rem; line-height: 1.66; opacity: 0; transform: translateY(18px); will-change: opacity; margin: 0; }
+    .logo-marquee { width: 100%; height: 56px; overflow: hidden; margin: 34px 0 54px; --marquee-gap: 16px; opacity: 0; transform: translateY(18px); will-change: opacity; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%); }
+    .logo-marquee .track { display: inline-flex; gap: var(--marquee-gap); align-items: center; width: max-content; animation: marquee 24s linear infinite; will-change: transform; }
+    .logo-marquee .logo-item { width: 112px; height: 54px; display: grid; place-items: center; background: #fff; border: 1px solid rgba(8,20,58,.10); border-radius: 8px; box-shadow: 0 10px 28px rgba(8,20,58,.08); }
+    .logo-marquee img { max-width: 74px; max-height: 34px; object-fit: contain; display: block; }
+    @keyframes marquee { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+    .project-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; text-align: left; }
+    .project-card { background: #fbfaf8; border: 1px solid rgba(8,20,58,.10); border-radius: 14px; overflow: hidden; opacity: 0; transform: translateY(28px); will-change: opacity; transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s cubic-bezier(.4,0,.2,1); }
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 22px 56px rgba(8,20,58,.13); }
+    .project-thumb { aspect-ratio: 1.38/1; overflow: hidden; background: #101326; }
+    .project-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .65s cubic-bezier(.2,.8,.2,1); }
+    .project-card:hover .project-thumb img { transform: scale(1.07); }
+    .project-body { padding: 24px; }
+    .project-body .tag { display: inline-block; color: #226e91; font-size: .72rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 12px; }
+    .project-body h4 { color: #101326; font-size: 1.15rem; line-height: 1.22; font-weight: 850; margin: 0 0 10px; }
+    .project-body p { color: rgba(16,19,38,.64); font-size: .96rem; line-height: 1.58; margin: 0; }
+
+    /* ============================================================
+       WEBSITE ANALYZER SECTION
+    ============================================================ */
+    .analyzer-section {
+      background: #020308;
+      padding: 96px 24px 108px;
+      position: relative;
+      overflow: hidden;
+    }
+    .analyzer-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,110,145,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .analyzer-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .analyzer-overline {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: #9fd3dd;
+      margin-bottom: 18px;
+    }
+    .analyzer-inner h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .analyzer-inner > p {
+      color: rgba(255,255,255,.62);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 540px;
+      margin: 0 auto 36px;
+    }
+    .audit-launch-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 18px 34px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%);
+      color: #08133a;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      box-shadow: 0 18px 48px rgba(217,167,79,.28);
+      transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+    }
+    .audit-launch-btn:hover { transform: translateY(-2px); box-shadow: 0 24px 62px rgba(217,167,79,.36); }
+    .audit-launch-btn:disabled { opacity: .62; cursor: not-allowed; transform: none; }
+    .analyzer-form {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+    }
+    .analyzer-field {
+      margin-bottom: 14px;
+    }
+    .analyzer-field label {
+      display: block;
+      color: rgba(255,255,255,.6);
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .analyzer-field input {
+      width: 100%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color .2s ease, background .2s ease;
+      font-family: inherit;
+    }
+    .analyzer-field input::placeholder { color: rgba(255,255,255,.3); }
+    .analyzer-field input:focus { border-color: #9fd3dd; background: rgba(159,211,221,.06); }
+    .analyzer-field input.error { border-color: #f87272; background: rgba(248,114,114,.06); }
+    .analyzer-error-msg {
+      color: #f87272;
+      font-size: .8rem;
+      font-weight: 600;
+      margin-top: 6px;
+      text-align: left;
+      min-height: 1.2em;
+    }
+    .analyzer-submit {
+      width: 100%;
+      margin-top: 8px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #226e91 0%, #1a5570 100%);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow: 0 14px 38px rgba(34,110,145,.36);
+      font-family: inherit;
+    }
+    .analyzer-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(34,110,145,.44); }
+    .analyzer-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .analyzer-note {
+      margin-top: 16px;
+      color: rgba(255,255,255,.38);
+      font-size: .8rem;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       ANALYZER RESULTS MODAL
+    ============================================================ */
+    .analyzer-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,3,8,.72);
+      backdrop-filter: blur(18px);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .analyzer-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .analyzer-modal {
+      background: #f4f8fb;
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: 26px;
+      box-shadow: 0 40px 110px rgba(0,0,0,.48);
+      width: 100%;
+      max-width: 1160px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      color: #08133a;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34,110,145,.28) transparent;
+    }
+    .analyzer-modal::-webkit-scrollbar { width: 6px; }
+    .analyzer-modal::-webkit-scrollbar-track { background: transparent; }
+    .analyzer-modal::-webkit-scrollbar-thumb { background: rgba(34,110,145,.28); border-radius: 3px; }
+    .analyzer-modal-close {
+      position: sticky;
+      top: 16px;
+      float: right;
+      margin: 16px 16px 0 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(8,19,58,.12);
+      background: rgba(255,255,255,.82);
+      color: #08133a; font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s ease, transform .2s ease;
+      z-index: 10;
+    }
+    .analyzer-modal-close:hover { background: #fff; transform: scale(1.08); }
+    .analyzer-modal-body { padding: 28px 34px 34px; padding-top: 10px; }
+    .audit-step {
+      clear: both;
+      animation: auditFade .28s ease both;
+    }
+    @keyframes auditFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .audit-form-shell {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 18px 0 4px;
+    }
+    .audit-modal-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #226e91;
+      background: rgba(34,110,145,.1);
+      border: 1px solid rgba(34,110,145,.13);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .audit-form-shell h3,
+    .audit-offer h3,
+    .audit-success h3 {
+      color: #08133a;
+      font-size: clamp(2rem, 4vw, 3.35rem);
+      line-height: .98;
+      letter-spacing: -0.055em;
+      font-weight: 950;
+      margin: 0 0 12px;
+    }
+    .audit-form-shell > p,
+    .audit-offer > p,
+    .audit-success > p {
+      color: rgba(8,19,58,.62);
+      font-size: 1rem;
+      line-height: 1.65;
+      margin: 0 0 24px;
+    }
+    .audit-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(8,19,58,.08);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 18px 48px rgba(8,19,58,.08);
+    }
+    .audit-field.full { grid-column: 1 / -1; }
+    .audit-field label {
+      display: block;
+      color: rgba(8,19,58,.58);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .audit-field input {
+      width: 100%;
+      border: 1px solid rgba(8,19,58,.12);
+      border-radius: 12px;
+      padding: 14px 15px;
+      color: #08133a;
+      background: #fff;
+      font: inherit;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .audit-field input:focus { border-color: rgba(34,110,145,.55); box-shadow: 0 0 0 4px rgba(34,110,145,.08); }
+    .audit-field input.error { border-color: #d45d5d; box-shadow: 0 0 0 4px rgba(212,93,93,.08); }
+    .audit-error {
+      min-height: 1.1em;
+      margin-top: 6px;
+      color: #b94444;
+      font-size: .78rem;
+      font-weight: 760;
+    }
+    .audit-form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .audit-primary-btn,
+    .audit-secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border-radius: 999px;
+      border: 0;
+      padding: 14px 22px;
+      font: inherit;
+      font-size: .94rem;
+      font-weight: 950;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .25s ease, background .25s ease, opacity .2s ease;
+    }
+    .audit-primary-btn { background: #226e91; color: #fff; box-shadow: 0 16px 38px rgba(34,110,145,.24); }
+    .audit-primary-btn:hover:not(:disabled) { transform: translateY(-2px); background: #1b5a78; box-shadow: 0 20px 48px rgba(34,110,145,.30); }
+    .audit-primary-btn:disabled { opacity: .58; cursor: not-allowed; transform: none; box-shadow: none; }
+    .audit-secondary-btn { background: rgba(8,19,58,.07); color: rgba(8,19,58,.68); }
+    .audit-secondary-btn:hover { transform: translateY(-2px); background: rgba(8,19,58,.11); }
+    .audit-privacy-note {
+      color: rgba(8,19,58,.46);
+      font-size: .82rem;
+      line-height: 1.5;
+      text-align: center;
+      margin: 0;
+    }
+
+    /* Loading state */
+    .analyzer-loading { text-align: center; padding: 72px 24px; }
+    .analyzer-spinner {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 3px solid rgba(34,110,145,.14);
+      border-top-color: #226e91;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .analyzer-loading-step {
+      color: rgba(8,19,58,.58);
+      font-size: .92rem;
+      min-height: 1.5em;
+      transition: opacity .4s ease;
+    }
+    .audit-loading-list {
+      max-width: 430px;
+      margin: 28px auto 0;
+      display: grid;
+      gap: 10px;
+      text-align: left;
+    }
+    .audit-loading-list span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(8,19,58,.68);
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(8,19,58,.07);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-weight: 760;
+    }
+    .audit-loading-list b { color: #226e91; }
+
+    .analyzer-dashboard {
+      clear: both;
+    }
+    .analysis-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 4px 28px;
+    }
+    .analysis-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .analysis-brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #9fd3dd 0%, #226e91 100%);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      box-shadow: 0 12px 28px rgba(34,110,145,.24);
+    }
+    .analysis-brand strong {
+      display: block;
+      font-size: 1.02rem;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+    .analysis-brand span {
+      display: block;
+      color: rgba(8,19,58,.52);
+      font-size: .82rem;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: min(54vw, 520px);
+    }
+    .analysis-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .analysis-pill {
+      border: 1px solid rgba(34,110,145,.12);
+      background: rgba(255,255,255,.72);
+      color: rgba(8,19,58,.72);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: .83rem;
+      font-weight: 850;
+      box-shadow: 0 10px 24px rgba(8,19,58,.05);
+    }
+    .analysis-pill.primary {
+      background: #226e91;
+      color: #fff;
+      border-color: #226e91;
+    }
+    .analysis-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .analysis-head h3 {
+      font-size: clamp(2.1rem, 4vw, 3.75rem);
+      letter-spacing: -0.055em;
+      line-height: .95;
+      margin: 0 0 8px;
+      font-weight: 950;
+      color: #08133a;
+    }
+    .analysis-head p {
+      margin: 0;
+      color: rgba(8,19,58,.58);
+      font-size: .98rem;
+      line-height: 1.55;
+      max-width: 640px;
+    }
+    .analysis-summary-card {
+      flex: 0 0 auto;
+      min-width: 210px;
+      background: linear-gradient(135deg, #173f66 0%, #249bc1 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 24px 50px rgba(34,110,145,.22);
+    }
+    .analysis-summary-card span {
+      display: block;
+      font-size: .8rem;
+      font-weight: 850;
+      color: rgba(255,255,255,.72);
+      margin-bottom: 14px;
+    }
+    .analysis-summary-card strong {
+      display: block;
+      font-size: 3rem;
+      line-height: .9;
+      letter-spacing: -0.06em;
+    }
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.1fr 1.05fr;
+      gap: 18px;
+    }
+    .analysis-card {
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(8,19,58,.07);
+      border-radius: 20px;
+      box-shadow: 0 18px 48px rgba(8,19,58,.08);
+      padding: 24px;
+      min-width: 0;
+    }
+    .analysis-card h4 {
+      font-size: 1.28rem;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0 0 18px;
+      color: #08133a;
+      font-weight: 900;
+    }
+    .analysis-card.stat {
+      min-height: 170px;
+    }
+    .stat-kicker {
+      color: rgba(8,19,58,.52);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .stat-number {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: .9;
+      font-weight: 950;
+      letter-spacing: -0.07em;
+      color: #08133a;
+      margin-bottom: 12px;
+    }
+    .stat-text {
+      color: rgba(8,19,58,.58);
+      font-size: .92rem;
+      line-height: 1.48;
+      margin: 0;
+    }
+    .score-card {
+      grid-row: span 2;
+    }
+    .category-card {
+      grid-column: span 2;
+    }
+    .recommend-card {
+      grid-column: span 2;
+    }
+    .site-map-card {
+      background:
+        linear-gradient(135deg, rgba(159,211,221,.32), rgba(255,255,255,.82)),
+        radial-gradient(circle at 70% 18%, rgba(34,110,145,.20), transparent 34%);
+      overflow: hidden;
+    }
+    .site-signal-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(8,19,58,.08);
+      color: rgba(8,19,58,.68);
+      font-size: .9rem;
+      font-weight: 760;
+    }
+    .site-signal-row:last-child { border-bottom: none; }
+    .signal-badge {
+      flex: 0 0 auto;
+      min-width: 42px;
+      text-align: center;
+      background: rgba(34,110,145,.12);
+      color: #226e91;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: .8rem;
+      font-weight: 950;
+    }
+
+    /* Score wheel */
+    .score-wheel-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 18px;
+    }
+    .score-wheel-svg { overflow: visible; }
+    .score-arc-bg { fill: none; stroke: rgba(8,19,58,.08); }
+    .score-arc-fill {
+      fill: none;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1), stroke 1.4s ease;
+    }
+    .score-number {
+      font-size: 2.8rem;
+      font-weight: 900;
+      fill: #08133a;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    .score-label-text {
+      font-size: .75rem;
+      fill: rgba(8,19,58,.48);
+      text-anchor: middle;
+      dominant-baseline: central;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .score-grade {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .score-summary {
+      color: rgba(8,19,58,.62);
+      font-size: .98rem;
+      line-height: 1.65;
+      text-align: left;
+      margin: 0;
+    }
+
+    /* Category bars */
+    .category-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .cat-item {
+      background: rgba(244,248,251,.9);
+      border: 1px solid rgba(8,19,58,.06);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .cat-name { font-size: .86rem; font-weight: 850; color: rgba(8,19,58,.82); }
+    .cat-score-num { font-size: .86rem; font-weight: 900; }
+    .cat-bar-track { height: 8px; border-radius: 999px; background: rgba(8,19,58,.08); overflow: hidden; }
+    .cat-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .cat-note { font-size: .78rem; color: rgba(8,19,58,.52); line-height: 1.45; margin-top: 7px; }
+
+    /* Recommendations */
+    .rec-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; }
+    .rec-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: rgba(244,248,251,.9);
+      border: 1px solid rgba(8,19,58,.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .rec-num {
+      flex: 0 0 auto;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(34,110,145,.12);
+      color: #226e91;
+      font-size: .78rem;
+      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .rec-text { font-size: .92rem; color: rgba(8,19,58,.66); line-height: 1.58; }
+    .rec-text strong { color: #08133a; font-weight: 900; }
+    .audit-section-grid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .audit-insight-card {
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(8,19,58,.07);
+      border-radius: 18px;
+      box-shadow: 0 16px 38px rgba(8,19,58,.06);
+      padding: 20px;
+    }
+    .audit-insight-card h4 {
+      margin: 0 0 10px;
+      color: #08133a;
+      font-size: 1.02rem;
+      line-height: 1.2;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+    .audit-insight-card p,
+    .audit-insight-card li {
+      color: rgba(8,19,58,.62);
+      font-size: .9rem;
+      line-height: 1.56;
+    }
+    .audit-insight-card ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .audit-insight-card li {
+      position: relative;
+      padding-left: 18px;
+    }
+    .audit-insight-card li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #9fd3dd;
+    }
+
+    /* Analyzer CTA */
+    .analyzer-result-cta {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #173f66 0%, #229abe 100%);
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: #fff;
+      box-shadow: 0 24px 52px rgba(34,110,145,.18);
+    }
+    .analyzer-result-cta p { color: rgba(255,255,255,.78); font-size: .95rem; line-height: 1.6; margin: 0; max-width: 620px; }
+    .analyzer-result-cta strong { display: block; color: #fff; font-size: 1.25rem; line-height: 1.2; margin-bottom: 4px; }
+    .analyzer-result-cta a { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #173f66; border: none; border-radius: 999px; padding: 14px 22px; font-size: .92rem; font-weight: 950; text-decoration: none; cursor: pointer; transition: transform .2s ease, background .2s ease; }
+    .analyzer-result-cta a:hover { transform: translateY(-2px); background: #eef8fb; }
+    .analyzer-result-cta button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #fff;
+      color: #173f66;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-size: .92rem;
+      font-weight: 950;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .analyzer-result-cta button:hover { transform: translateY(-2px); background: #eef8fb; }
+    .audit-offer,
+    .audit-success,
+    .audit-payment {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 18px 0 8px;
+    }
+    .audit-offer-card {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      background: #fff;
+      border: 1px solid rgba(8,19,58,.08);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 24px 62px rgba(8,19,58,.10);
+    }
+    .audit-price {
+      align-self: stretch;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #173f66 0%, #229abe 100%);
+      color: #fff;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .audit-price span { color: rgba(255,255,255,.72); font-size: .82rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .audit-price strong { display: block; font-size: clamp(3rem, 8vw, 5rem); line-height: .9; letter-spacing: -0.07em; }
+    .audit-benefits {
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .audit-benefits li {
+      color: rgba(8,19,58,.66);
+      font-size: .94rem;
+      line-height: 1.45;
+      display: flex;
+      gap: 10px;
+    }
+    .audit-benefits li::before { content: "✓"; color: #226e91; font-weight: 950; }
+    .audit-offer-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .payment-box {
+      background: #fff;
+      border: 1px solid rgba(8,19,58,.08);
+      border-radius: 22px;
+      box-shadow: 0 22px 54px rgba(8,19,58,.09);
+      padding: 24px;
+      margin-top: 22px;
+    }
+    #paymentElement {
+      min-height: 130px;
+      margin-bottom: 18px;
+    }
+    .payment-error {
+      color: #b94444;
+      font-size: .9rem;
+      font-weight: 760;
+      margin-top: 12px;
+      min-height: 1.3em;
+    }
+
+    /* SITE CLOSURE */
+    .site-closure { padding: 0 24px 86px; text-align: center; }
+    .site-closure > div { max-width: 880px; margin: 0 auto; border-top: 1px solid rgba(8,20,58,.14); padding-top: 42px; }
+    .site-closure p { color: rgba(16,19,38,.67); font-size: 1.05rem; line-height: 1.78; margin: 0; }
+
+    footer { border-top: 1px solid rgba(255,255,255,.12); padding: 36px 24px 44px; background: #0b0b0f; }
+    .footer-inner { max-width: var(--content-max); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .footer-nav, .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+    .footer-nav a, .footer-legal a { text-decoration: none; font-size: 14px; font-weight: 700; color: rgba(255,255,255,.74); letter-spacing: -0.01em; transition: color 0.25s ease; }
+    .footer-nav a:hover, .footer-legal a:hover { color: rgba(255,255,255,.98); }
+    .footer-brand { font-size: 14px; font-weight: 800; color: rgba(255,255,255,.55); letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer-copy { max-width: var(--content-max); margin: 16px auto 0; color: rgba(255,255,255,.68); font-size: 0.95rem; line-height: 1.7; text-align: center; }
+    .footer-anchor { display: block; width: 1px; height: 1px; overflow: hidden; }
+    .footer-year { margin-top: 14px; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,.5); letter-spacing: 0.04em; }
+
+    /* PRIVACY / TERMS MODAL */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(11,11,15,.6); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+    .modal { max-width: 720px; width: 100%; background: #0f1014; border-radius: 24px; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 70px rgba(0,0,0,.45); color: #fff; padding: 32px; position: relative; display: none; }
+    .modal.active { display: block; }
+    .modal h3 { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .modal p { color: rgba(255,255,255,.75); line-height: 1.75; font-size: 0.98rem; margin-bottom: 16px; }
+    .modal-list { margin: 0; padding: 0; list-style: none; color: rgba(255,255,255,.8); }
+    .modal-list li { padding: 10px 0 10px 22px; position: relative; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 0.95rem; }
+    .modal-list li:last-child { border-bottom: none; }
+    .modal-list li::before { content: "•"; position: absolute; left: 6px; top: 8px; color: #d9a74f; font-size: 1.1rem; }
+    .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; gap: 12px; }
+    .modal-btn { border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: #fff; padding: 10px 20px; border-radius: 999px; font-weight: 700; cursor: pointer; transition: transform .2s ease, box-shadow .3s ease, background .3s ease; }
+    .modal-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,.12); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+    .modal-close { position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color: #fff; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: background .2s ease, transform .2s ease; }
+    .modal-close:hover { background: rgba(255,255,255,.14); transform: translateY(-2px); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      html { scroll-behavior: smooth; }
+      body { -webkit-text-size-adjust: 100%; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+      a, button, input, select, textarea { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+      :root { --section-spacing: 88px; --section-gap: 72px; --section-gap-sm: 56px; }
+      #mainNav { padding: 10px 0; }
+      .nav-inner { padding: 0 14px; grid-template-columns: 1fr auto; row-gap: 8px; }
+      .hero-parallax { min-height: 220vh; }
+      .mask-text { font-size: clamp(4.5rem, 22vw, 18rem); }
+      .reveal-copy { top: 66%; width: min(720px, 90vw); }
+      .nav-brand { justify-self: start; }
+      .nav-actions { justify-self: end; gap: 7px; }
+      .nav-cta { font-size: 11px; padding: 10px 11px; }
+      .nav-phone { font-size: 11px; }
+      .nav-spacer { display: none; }
+      #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
+      #mainNav ul.is-open { display: flex; }
+      #mainNav a { display: inline-flex; align-items: center; justify-content: flex-start; min-height: 44px; padding: 10px 12px; border-radius: 12px; touch-action: manipulation; }
+      #mainNav .nav-cta-item { display: block; }
+      .what-we-do-grid { grid-template-columns: 1fr; }
+      .offer-stack-inner { grid-template-columns: 1fr; padding: 30px; }
+      .offer-list { grid-template-columns: 1fr; }
+      .bendo-collage { padding: 126px 20px 64px; }
+      .collage-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+      .collage-slot { min-height: 360px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .split-head { align-items: center; text-align: center; }
+      .split-shell { min-height: 430px; }
+      .split-grid { grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(4,1fr); gap: 0; padding: 0; }
+      .t1 { grid-column: 1; grid-row: 1/span 2; } .t2 { grid-column: 2; grid-row: 1/span 2; }
+      .t3 { grid-column: 1; grid-row: 3; } .t4 { grid-column: 2; grid-row: 3; }
+      .t5 { grid-column: 1; grid-row: 4; } .t6 { grid-column: 2; grid-row: 4; } .t7 { display: none; }
+      .media-overlay { padding: 30px; }
+      .contractor-panel { grid-template-columns: 1fr; }
+      .contractor-media { min-height: 360px; }
+      .contractor-icons { grid-template-columns: 1fr 1fr; }
+      .contractor-icons .icon-card { border-right: 1px solid rgba(8,20,58,.10); border-bottom: 1px solid rgba(8,20,58,.10); }
+      .contractor-icons .icon-card:nth-child(2n) { border-right: none; }
+      .contractor-icons .icon-card:nth-last-child(-n+2) { border-bottom: none; }
+      .contractor-about { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: 1fr; }
+      .video-rail { min-height: clamp(500px, 88vw, 660px); }
+      .testimonial-video { width: min(58vw, 310px); }
+      .testimonial-video.is-front { transform: translate3d(-92%,0,0) scale(1); }
+      .testimonial-video.is-middle { transform: translate3d(-36%,44px,0) scale(.94); }
+      .testimonial-video.is-back { transform: translate3d(18%,88px,0) scale(.88); }
+      .analysis-topbar, .analysis-head, .analyzer-result-cta { align-items: flex-start; flex-direction: column; }
+      .analysis-grid { grid-template-columns: 1fr; }
+      .score-card, .category-card, .recommend-card, .analyzer-result-cta { grid-column: auto; }
+      .score-card { grid-row: auto; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .audit-section-grid { grid-template-columns: 1fr; }
+      .audit-offer-card { grid-template-columns: 1fr; }
+      .analysis-summary-card { width: 100%; }
+      .analyzer-result-cta a { width: 100%; justify-content: center; }
+      .analyzer-result-cta button { width: 100%; }
+    }
+    @media (max-width: 560px) {
+      .collage-grid, .contractor-icons { grid-template-columns: 1fr; }
+      .bendo-title { margin-bottom: 30px; }
+      .collage-slot { min-height: auto; }
+      .collage-slot figure { height: 245px; }
+      .video-rail { min-height: 490px; }
+      .testimonial-video { width: 68vw; }
+      .testimonial-video.is-front { transform: translate3d(-82%,0,0) scale(1); }
+      .testimonial-video.is-middle { transform: translate3d(-38%,38px,0) scale(.93); }
+      .testimonial-video.is-back { transform: translate3d(6%,76px,0) scale(.86); }
+      .split-mosaic::before { left: -26px; top: -34px; width: 86px; height: 86px; border-radius: 26px; }
+      .split-mosaic::after { right: -24px; bottom: -32px; width: 84px; height: 84px; border-radius: 26px; }
+      .contractor-side { padding: 38px 24px; }
+      .proof-list { grid-template-columns: 1fr; }
+      .contractor-about, .contractor-projects { margin-top: 74px; }
+      .analyzer-form { padding: 22px; }
+      .analyzer-modal-backdrop { padding: 10px; }
+      .analyzer-modal { border-radius: 18px; }
+      .analyzer-modal-body { padding: 18px; padding-top: 4px; }
+      .analysis-card { padding: 18px; border-radius: 16px; }
+      .analysis-head h3 { font-size: clamp(2rem, 13vw, 3rem); }
+      .analysis-brand span { max-width: 70vw; }
+      .analysis-actions { justify-content: flex-start; }
+      .audit-form-grid { grid-template-columns: 1fr; padding: 18px; }
+      .audit-field.full { grid-column: auto; }
+      .audit-offer-actions { flex-direction: column; }
+      .audit-offer-actions .audit-primary-btn,
+      .audit-offer-actions .audit-secondary-btn { width: 100%; }
+    }
+    @media (max-width: 520px) {
+      #mainNav { padding: 8px 0; }
+      .nav-inner { grid-template-columns: 1fr; gap: 7px; }
+      .nav-brand { justify-self: center; }
+      .nav-brand span { display: none; }
+      .nav-actions { width: 100%; max-width: 100%; justify-content: space-between; }
+      .nav-cta { font-size: 10px; padding: 9px 10px; }
+      .nav-phone { font-size: 10px; }
+      .hero-parallax { min-height: 190vh; }
+      .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
+      .reveal-copy { top: 60%; padding: 0 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .hero-bg-parallax, .mask-text, .reveal-copy { transform: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-loader" id="pageLoader"></div>
+
+  <nav id="mainNav">
+    <div class="nav-inner">
+      <div class="nav-brand" style="display:flex;align-items:center;gap:12px;">
+        <img src="Asset/premium-logo-240.webp" alt="Nexus Luma Logo" width="78" height="44" decoding="async" fetchpriority="high" style="height:44px;width:auto;display:inline-block;vertical-align:middle;">
+        <span style="font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.7);">Nexus Luma</span>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-cta nav-audit-btn audit-open-trigger" type="button">Analyze My Website</button>
+        <span class="nav-phone">(336) 517-7347</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-parallax" id="home">
+    <div class="hero-sticky">
+      <div class="hero-bg-parallax"></div>
+      <div class="hero-parallax-overlay"></div>
+      <h1 class="mask-text">Design</h1>
+      <div class="reveal-copy"></div>
+    </div>
+  </section>
+
+  <div class="intro-to-astro">
+    <section class="product-intro">
+      <div class="product-overline">Premium Web Design / Lead Generation / SEO Foundation</div>
+      <h2>Design That Makes You Look Professional And Brings You More Leads</h2>
+      <p>Your website should do more than look beautiful. It should make your business feel established, explain your value clearly, and give interested visitors a reason to call, book, or request a quote. We combine premium design, persuasive structure, SEO foundations, and lead-focused calls-to-action to help turn your online presence into a customer-generating asset.</p>
+    </section>
+
+    <section class="bendo-collage" id="bendo-collage">
+      <h2 class="bendo-title">Real Businesses. Real Trust. Real Results.</h2>
+      <div class="collage-wrap">
+        <div class="collage-rect">
+          <div class="testimonial-stack">
+            <div class="video-rail" aria-label="Customer testimonial videos">
+              <article class="testimonial-video is-front" tabindex="0" role="button" aria-label="Bring customer story 01 to the front">
+                <div class="video-fallback"><img src="Naphtali-poster.jpg" alt="Naphtali customer testimonial preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="metadata" poster="Naphtali-poster.jpg" playsinline aria-label="Naphtali customer testimonial video"><source src="Naphtali-web.mp4" type="video/mp4"></video>
+                <div class="video-caption"><strong>Naphtali</strong><span>See how strong presentation builds confidence before the first call.</span></div>
+              </article>
+              <article class="testimonial-video is-middle" tabindex="0" role="button" aria-label="Bring customer story 02 to the front">
+                <div class="video-fallback"><img src="George-poster.jpg" alt="George customer testimonial preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="metadata" poster="George-poster.jpg" playsinline aria-label="George customer testimonial video"><source src="George-web.mp4" type="video/mp4"></video>
+                <div class="video-caption"><strong>George</strong><span>See how strong presentation builds confidence before the first call.</span></div>
+              </article>
+              <article class="testimonial-video is-back" tabindex="0" role="button" aria-label="Bring customer story 03 to the front">
+                <div class="video-fallback"><img src="Asset/astro fashion.webp" alt="Customer testimonial preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="metadata" poster="Asset/astro fashion.webp" aria-label="Customer testimonial video three"></video>
+                <div class="video-caption"><strong>Customer Story 03</strong><span>Customer stories help visitors see the quality behind the work.</span></div>
+              </article>
+            </div>
+            <p class="video-hint">Tap a video to hear the story</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="what-we-do" aria-labelledby="what-we-do-title">
+      <div class="what-we-do-head">
+        <div class="what-we-do-overline">What We Do</div>
+        <h2 id="what-we-do-title">We Build Premium Websites That Turn First Impressions Into Calls, Leads &amp; Bookings</h2>
+        <p class="what-we-do-subtitle">Most businesses do not need another basic website. They need a clear, professional online presence that makes them look credible, explains why customers should choose them, and turns attention into action.</p>
+      </div>
+      <div class="what-we-do-grid">
+        <article class="what-we-do-card"><h3>Professional Website Design</h3><p>Create a polished first impression that makes your business feel established, credible, and worth contacting.</p></article>
+        <article class="what-we-do-card"><h3>Lead Generation Systems</h3><p>Guide visitors toward calling, booking, requesting a quote, or submitting their information with simple conversion paths.</p></article>
+        <article class="what-we-do-card"><h3>SEO &amp; Online Visibility</h3><p>Set up clean page structure, search-friendly content, and local visibility foundations so more customers can discover you.</p></article>
+      </div>
+      <div class="what-we-do-cta"><a class="btn btn-primary" href="pricing_page_design.html">Call For Your Free Website Growth Plan</a></div>
+    </section>
+
+    <section class="offer-stack" aria-labelledby="offer-stack-title">
+      <div class="offer-stack-inner">
+        <div>
+          <div class="offer-kicker">The Nexus Luma Offer</div>
+          <h2 id="offer-stack-title">Everything You Need To Look Professional Online And Start Capturing More Leads.</h2>
+          <p>We do not just hand you a pretty homepage. We help build the online foundation your business needs to earn trust, explain your value, and make it easy for serious customers to contact you.</p>
+          <ul class="offer-list">
+            <li>Custom website design</li><li>Mobile optimization</li><li>Lead capture forms</li><li>Clear call-to-action flow</li>
+            <li>SEO foundation setup</li><li>Speed-conscious structure</li><li>Trust-building page sections</li><li>Launch support</li>
+          </ul>
+        </div>
+        <div class="offer-callout">
+          <h3>Start With A Free Website Growth Plan</h3>
+          <p>Call us and we will help identify what your website needs to look more professional, build trust faster, and turn more visitors into calls, bookings, or quote requests.</p>
+          <a class="btn btn-primary" href="tel:+13365177347">Call (336) 517-7347</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- VALUE PATH -->
+  <section class="content" id="explore">
+    <div class="feature-grid">
+      <div class="feature-card"><h3>Make Your Value Clear In Seconds</h3><p>We structure every page so visitors quickly understand what you do, who you help, and why your business is the right choice.</p></div>
+      <div class="feature-card"><h3>Make Your Business Feel Established</h3><p>Professional visuals, strong messaging, and proof-focused sections help visitors feel confident before they ever speak with you.</p></div>
+      <div class="feature-card"><h3>Move Visitors Toward The Next Step</h3><p>Every section is built to guide people toward the action that matters most: calling, booking, requesting a quote, or becoming a customer.</p></div>
+    </div>
+  </section>
+
+  <!-- REAL ESTATE TRUST -->
+  <section class="real-estate-trust" id="real-estate">
+    <div class="trust-intro">
+      <div class="overline">Immersive Websites / High-Trust Industries</div>
+      <h2>Premium Website Experiences That Make Your Business Easier To Trust.</h2>
+      <p>For real estate, products, and local services, your page has to do more than look impressive. It has to create belief fast, showcase the right proof, and make the next step feel easy.</p>
+    </div>
+    <section class="split-mosaic" id="splitMosaic" style="--splitImg: url('Asset/inside realestate.webp');">
+      <div class="split-head">
+        <h2 class="split-title">Show the value before they ever contact you.</h2>
+        <p>Immersive visuals and clear storytelling help visitors picture the result, understand the value, and feel more confident reaching out.</p>
+      </div>
+      <div class="split-shell">
+        <div class="split-grid" id="splitGrid" style="--splitImg: url('Asset/inside realestate.webp');">
+          <div class="split-tile t1" style="--posX:0%;--posY:0%;"></div>
+          <div class="split-tile t2" style="--posX:50%;--posY:0%;"></div>
+          <div class="split-tile t3" style="--posX:100%;--posY:0%;"></div>
+          <div class="split-tile t4" style="--posX:0%;--posY:100%;"></div>
+          <div class="split-tile t5" style="--posX:36%;--posY:100%;"></div>
+          <div class="split-tile t6" style="--posX:70%;--posY:100%;"></div>
+          <div class="split-tile t7" style="--posX:100%;--posY:100%;"></div>
+        </div>
+        <div class="media-overlay"><h3>Premium pages that make people <em>feel</em> ready to take action.</h3></div>
+      </div>
+    </section>
+    <div class="trust-cta">
+      <h3>Ready to make your business look like the obvious choice?</h3>
+      <p>Let's build a website that makes your business look professional, builds trust quickly, and helps more visitors become real leads.</p>
+      <a class="btn btn-primary" href="pricing_page_design.html">Get My Free Website Growth Plan</a>
+    </div>
+  </section>
+
+  <!-- CONTRACTOR SHOWCASE -->
+  <section class="contractor-showcase" id="contractors">
+    <div class="contractor-intro">
+      <div class="overline">Contractors / Remodeling / Local Services</div>
+      <h2>Make Customers Trust You Before They Pick Up The Phone.</h2>
+      <p>Local service businesses need fast proof, clear explanations, and strong visuals. We help make your work, process, reviews, and offer easy to understand so more visitors feel comfortable reaching out.</p>
+    </div>
+    <div class="contractor-panel">
+      <div class="contractor-media slideshow">
+        <img src="Asset/contractor.webp" alt="Contractor project detail" class="slide active" loading="lazy" decoding="async" />
+        <img src="Asset/cleaning lady 2.webp" alt="Residential service project" class="slide" loading="lazy" decoding="async" />
+        <img src="Asset/astro electrician.webp" alt="Electrician service visual" class="slide" loading="lazy" decoding="async" />
+      </div>
+      <div class="contractor-side">
+        <div class="kicker">Designed for high-intent leads</div>
+        <h3>Proof-led websites for businesses that want more qualified leads.</h3>
+        <p>We position the strongest trust signals first: your work, your services, your process, your reviews, and a direct path for visitors to call or request a quote.</p>
+        <ul class="proof-list">
+          <li class="proof-item"><span class="proof-dot"></span>Project visuals placed where attention goes first.</li>
+          <li class="proof-item"><span class="proof-dot"></span>Service breakdowns that remove confusion quickly.</li>
+          <li class="proof-item"><span class="proof-dot"></span>Proof, reviews, guarantees, and process cues built into the layout.</li>
+          <li class="proof-item"><span class="proof-dot"></span>CTA flow that leads from confidence to quote request.</li>
+        </ul>
+        <div class="contractor-ctaRow">
+          <a href="pricing_page_design.html" class="btn btn-primary">Call For A Free Growth Plan</a>
+          <a href="pricing_page_design.html" class="btn btn-ghost">View Pricing</a>
+        </div>
+      </div>
+    </div>
+    <div class="contractor-icons">
+      <div class="icon-card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 7 .8-5 4.5 1.5 6.7L12 17.8 5.5 20 7 13.3 2 8.8 9 8l3-6z" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <h4>Trust Fast</h4><p>Proof shows in seconds.</p>
+      </div>
+      <div class="icon-card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 7h10v10H7V7z" stroke-width="1.6"/><path d="M5 9V5h4M19 15v4h-4" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h4>Clean Layout</h4><p>No clutter. Just clarity.</p>
+      </div>
+      <div class="icon-card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c4 0 8 3 8 8 0 6-8 10-8 10S4 17 4 11c0-5 4-8 8-8z" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11a2.2 2.2 0 1 0 0-4.4A2.2 2.2 0 0 0 12 11z" stroke-width="1.6"/></svg></div>
+        <h4>Local Ready</h4><p>Built for nearby leads.</p>
+      </div>
+      <div class="icon-card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 12l4 4L18 8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z" stroke-width="1.4"/></svg></div>
+        <h4>Credibility</h4><p>Reviews, guarantees, proof.</p>
+      </div>
+    </div>
+    <div class="contractor-about">
+      <div class="contractor-aboutText">
+        <h3>Your website should make your business look as good as the work you deliver.</h3>
+        <p>We build pages that feel premium, clear, and easy to scan. Visitors can understand your services, inspect the proof, and move toward contacting you without friction.</p>
+        <p>That is what turns a good-looking website into a real business growth asset.</p>
+      </div>
+      <div class="contractor-aboutMedia"><img src="Asset/computer mockup.webp" alt="Computer mockup" loading="lazy" decoding="async" /></div>
+    </div>
+    <div class="contractor-projects">
+      <div class="contractor-projectsHead">
+        <h3>Built around the tools your business already uses.</h3>
+        <p>We design around your current tools, booking flow, contact forms, analytics, and content systems so your website feels polished without making your business harder to run.</p>
+      </div>
+      <div class="logo-marquee" aria-label="Platform logos">
+        <div class="track" aria-hidden="true">
+          <span class="logo-item"><img src="Asset/pngwing.com.webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (1).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (2).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (3).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (4).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (5).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (6).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com.webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (1).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (2).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (3).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (4).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (5).webp" alt="" loading="lazy" decoding="async" /></span>
+          <span class="logo-item"><img src="Asset/pngwing.com (6).webp" alt="" loading="lazy" decoding="async" /></span>
+        </div>
+      </div>
+      <div class="project-grid">
+        <article class="project-card">
+          <div class="project-thumb"><img src="Asset/astro man in space.webp" alt="Astronaut hero visual" loading="lazy" decoding="async" /></div>
+          <div class="project-body"><span class="tag">Product</span><h4>Make Your Offer Impossible To Ignore</h4><p>Premium presentation helps visitors understand the value and feel confident taking action.</p></div>
+        </article>
+        <article class="project-card">
+          <div class="project-thumb"><img src="Asset/luxury home.webp" alt="Luxury home exterior" loading="lazy" decoding="async" /></div>
+          <div class="project-body"><span class="tag">Real Estate</span><h4>Help Buyers Fall In Love Before They Visit</h4><p>Immersive visuals and clean structure help serious buyers connect before they inquire.</p></div>
+        </article>
+        <article class="project-card">
+          <div class="project-thumb"><img src="Asset/realestate home pj.webp" alt="Interior real estate showcase" loading="lazy" decoding="async" /></div>
+          <div class="project-body"><span class="tag">Interiors</span><h4>Make Premium Work Look Premium</h4><p>Elegant layouts help clients see the quality, detail, and professionalism behind your work.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WEBSITE ANALYZER SECTION
+  ============================================================ -->
+  <section class="analyzer-section" id="analyzer">
+    <div class="analyzer-inner">
+      <div class="analyzer-overline">Free Website Analysis</div>
+      <h2>See What Your Website Is Costing You</h2>
+      <p>Launch a free AI-powered conversion audit and see what's helping or hurting your website's ability to generate calls, leads, and customers.</p>
+      <button class="audit-launch-btn" id="auditOpenBtn" type="button">Analyze My Website</button>
+    </div>
+  </section>
+
+  <!-- ANALYZER RESULTS MODAL -->
+  <div class="analyzer-modal-backdrop" id="analyzerModalBackdrop" aria-hidden="true">
+    <div class="analyzer-modal" role="dialog" aria-modal="true" aria-labelledby="analyzerResultTitle" id="analyzerModal">
+      <button class="analyzer-modal-close" id="analyzerModalClose" type="button" aria-label="Close results">×</button>
+      <div class="analyzer-modal-body" id="analyzerModalBody">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <section class="site-closure">
+    <div>
+      <p>Your website should work as hard as you do. We create premium, conversion-focused websites that help the right people find your business, trust your work, understand your offer, and take action with confidence. Call today for a free website growth plan and see how your online presence can start turning more visitors into real opportunities.</p>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <span class="footer-anchor" id="privacy" aria-hidden="true"></span>
+    <span class="footer-anchor" id="terms" aria-hidden="true"></span>
+    <div class="footer-inner">
+      <div class="footer-brand">Nexus Luma</div>
+      <div class="footer-legal">
+        <a href="#" data-modal-trigger="privacy" aria-label="Privacy Policy">Privacy</a>
+        <a href="#" data-modal-trigger="terms" aria-label="Terms of Service">Terms</a>
+      </div>
+    </div>
+    <p class="footer-copy">Nexus Luma, a brand operated under TonoSound LLC, is a web development company providing modern web design and full-stack development for both new and established businesses. Every project is backed by our 90-day money-back guarantee, making your investment low-risk—if we fail to deliver within the agreed timeline, you'll receive a full refund. We also offer flexible payment plans to make it simple to get started and easy to scale as your business grows.</p>
+    <p class="footer-year">© 2026 Nexus Luma. All rights reserved.</p>
+  </footer>
+
+  <!-- PRIVACY / TERMS MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle" data-modal="privacy">
+      <button class="modal-close" type="button" aria-label="Close privacy dialog">×</button>
+      <h3 id="privacyTitle">Privacy Notice</h3>
+      <p>Nexus Luma, a brand operated under TonoSound LLC, respects your privacy. We do not sell, rent, or share your personal information with third parties. Information you provide may be used internally to deliver services and to inform you about other products or services offered by TonoSound LLC.</p>
+      <ul class="modal-list">
+        <li>Data is used only for legitimate business and communication purposes.</li>
+        <li>We store information securely and limit access to authorized team members.</li>
+        <li>You can request updates or deletion of your information at any time.</li>
+      </ul>
+      <div class="modal-actions"><button class="modal-btn" type="button">Close</button></div>
+    </div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="termsTitle" data-modal="terms">
+      <button class="modal-close" type="button" aria-label="Close terms dialog">×</button>
+      <h3 id="termsTitle">Terms of Service</h3>
+      <p>By working with Nexus Luma, you agree to project terms that protect both parties and keep deliverables clear. Scope, timelines, and milestones are confirmed in writing before production begins.</p>
+      <ul class="modal-list">
+        <li>Payments follow the agreed schedule or milestone plan.</li>
+        <li>Revisions are limited to the scope defined at kickoff.</li>
+        <li>Final assets are delivered once all invoices are settled.</li>
+        <li>Refund eligibility follows our 90-day guarantee policy.</li>
+      </ul>
+      <div class="modal-actions"><button class="modal-btn" type="button">Close</button></div>
+    </div>
+  </div>
+
+  <!-- GSAP -->
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollToPlugin.min.js"></script>
+
+  <script>
+    /* ============================================================
+       SLIDESHOWS
+    ============================================================ */
+    let startMosaic = null, stopMosaic = null, startContractor = null, stopContractor = null;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Split mosaic
+      const images = ["Asset/inside realestate.webp","Asset/realestate home pj.webp"];
+      let mCurrent = 0;
+      const grid = document.getElementById('splitGrid');
+      const tiles = grid ? grid.querySelectorAll('.split-tile') : [];
+      function setMosaicImage(img) { if (grid) grid.style.setProperty('--splitImg', `url('${img}')`); }
+      function animateTiles(nextIdx) {
+        tiles.forEach((tile, i) => setTimeout(() => tile.classList.add('reveal'), i * 150));
+        setTimeout(() => {
+          setMosaicImage(images[nextIdx]);
+          tiles.forEach((tile, i) => setTimeout(() => tile.classList.remove('reveal'), i * 90));
+        }, tiles.length * 150 + 300);
+      }
+      let mosaicInterval = null;
+      startMosaic = () => { if (mosaicInterval) return; mosaicInterval = setInterval(() => { const next = (mCurrent + 1) % images.length; animateTiles(next); mCurrent = next; }, 5000); };
+      stopMosaic  = () => { if (!mosaicInterval) return; clearInterval(mosaicInterval); mosaicInterval = null; };
+      startMosaic();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Contractor slideshow
+      const slides = document.querySelectorAll('.contractor-media.slideshow .slide');
+      let cCurrent = 0;
+      function showSlide(idx) { slides.forEach((img, i) => img.classList.toggle('active', i === idx)); }
+      let contractorInterval = null;
+      startContractor = () => { if (contractorInterval) return; contractorInterval = setInterval(() => { cCurrent = (cCurrent + 1) % slides.length; showSlide(cCurrent); }, 3000); };
+      stopContractor  = () => { if (!contractorInterval) return; clearInterval(contractorInterval); contractorInterval = null; };
+      startContractor();
+    });
+
+    // Video stacking
+    document.addEventListener("DOMContentLoaded", function() {
+      const cards = Array.from(document.querySelectorAll(".testimonial-video"));
+      if (!cards.length) return;
+      function setVideoOrder(frontCard) {
+        const ordered = [frontCard, ...cards.filter(c => c !== frontCard)];
+        ordered.forEach((card, index) => {
+          const video = card.querySelector("video");
+          card.classList.toggle("is-front",  index === 0);
+          card.classList.toggle("is-middle", index === 1);
+          card.classList.toggle("is-back",   index === 2);
+          card.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+          if (!video) return;
+          if (index === 0) { video.setAttribute("controls", ""); return; }
+          video.pause(); video.removeAttribute("controls");
+        });
+      }
+      cards.forEach(card => {
+        const video = card.querySelector("video");
+        if (video && !card.classList.contains("is-front")) video.removeAttribute("controls");
+        card.addEventListener("click", (e) => {
+          if (card.classList.contains("is-front") && e.target.closest("video")) return;
+          setVideoOrder(card);
+        });
+        card.addEventListener("keydown", (e) => { if (e.key !== "Enter" && e.key !== " ") return; e.preventDefault(); setVideoOrder(card); });
+      });
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { if (stopMosaic) stopMosaic(); if (stopContractor) stopContractor(); return; }
+      if (startMosaic) startMosaic(); if (startContractor) startContractor();
+    });
+
+    /* ============================================================
+       SCROLL — NATIVE-FIRST, NO WHEEL INTERCEPTION
+       The browser handles wheel/trackpad scroll natively.
+       GSAP only drives the hero parallax timeline and reveal
+       animations. enableSmoothWheelScroll() has been removed
+       entirely — it caused double-smoothing, lag, and jitter.
+    ============================================================ */
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobileView = () => window.matchMedia("(max-width: 900px)").matches;
+
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    const nav  = document.getElementById("mainNav");
+    const root = document.documentElement;
+    const loader = document.getElementById("pageLoader");
+
+    let navRaf = null;
+    function setNavHeightVar() { const h = Math.round(nav.getBoundingClientRect().height); root.style.setProperty("--navH", h + "px"); }
+    function scheduleNavMeasure() { cancelAnimationFrame(navRaf); navRaf = requestAnimationFrame(setNavHeightVar); }
+    window.addEventListener("resize", scheduleNavMeasure);
+
+    // Anchor-click smooth scroll (nav links only — no wheel interception)
+    document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        setNavHeightVar();
+        const navH = parseFloat(getComputedStyle(root).getPropertyValue("--navH")) || 0;
+        const targetY = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+        const useNative = window.matchMedia("(max-width: 900px)").matches || typeof gsap === "undefined";
+        if (useNative) { window.scrollTo({ top: targetY, behavior: "smooth" }); return; }
+        gsap.to(window, { scrollTo: { y: targetY, autoKill: true }, duration: 1.15, ease: "power2.inOut" });
+      });
+    });
+
+    // Privacy + Terms modal
+    (() => {
+      const backdrop = document.getElementById("modalBackdrop");
+      if (!backdrop) return;
+      const modals = backdrop.querySelectorAll(".modal");
+      const closeAll = () => { backdrop.classList.remove("active"); backdrop.setAttribute("aria-hidden","true"); modals.forEach(m => m.classList.remove("active")); };
+      const openModal = (name) => {
+        const modal = backdrop.querySelector(`.modal[data-modal="${name}"]`);
+        if (!modal) return;
+        modals.forEach(m => m.classList.remove("active"));
+        backdrop.classList.add("active"); backdrop.setAttribute("aria-hidden","false"); modal.classList.add("active");
+      };
+      document.querySelectorAll("[data-modal-trigger]").forEach(link => { link.addEventListener("click", (e) => { e.preventDefault(); openModal(link.dataset.modalTrigger); }); });
+      backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeAll(); });
+      backdrop.querySelectorAll(".modal-close, .modal-btn").forEach(btn => btn.addEventListener("click", closeAll));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+    })();
+
+    function preloadImage(src) { return new Promise(resolve => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = src; }); }
+
+    async function initScroll() {
+      if (reduceMotion) return;
+      const mobileMotion = isMobileView();
+      const baseEase     = mobileMotion ? "power1.out" : "power2.out";
+      const baseDuration = mobileMotion ? 0.55 : 0.7;
+      const slowDuration = mobileMotion ? 0.65 : 0.85;
+      const staggerFast  = mobileMotion ? 0.06 : 0.1;
+      const staggerSlow  = mobileMotion ? 0.1 : 0.15;
+      const nonHeroToggleActions = "play none none none";
+
+      // ── Ticker: minimal lag budget, tight sync interval ────────────
+      // lagSmoothing(0, 16) = no lag budget, 16ms threshold — eliminates
+      // the GSAP frame-skip that previously caused scroll jitter.
+      gsap.ticker.lagSmoothing(0, 16);
+
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+        limitCallbacks: true,
+        syncInterval: mobileMotion ? 100 : 40   // was 80 — tighter sync on desktop
+      });
+      ScrollTrigger.normalizeScroll(false);   // keep native scroll as-is
+
+      // ── Initial GSAP states ────────────────────────────────────────
+      gsap.set(".hero-bg-parallax", { scale: 1.08, opacity: 1, y: 0, force3D: true });
+      gsap.set(".mask-text",        { scale: 1.25, y: 0, opacity: 1, force3D: false });
+      gsap.set(".reveal-copy",      { opacity: 0, y: 36, force3D: false });
+
+      const allRevealEls = [
+        ".bendo-title",".collage-slot",".feature-card",
+        ".trust-intro",".trust-cta",".split-title",".split-tile",
+        ".contractor-intro",".contractor-media",".contractor-side",
+        ".icon-card",".contractor-aboutText",".contractor-aboutMedia",
+        ".contractor-projectsHead h3",".contractor-projectsHead p",
+        ".contractor-projects .logo-marquee",".project-card"
+      ];
+
+      if (mobileMotion) {
+        // Mobile: light parallax on hero only, everything else visible immediately
+        gsap.to(".hero-bg-parallax", {
+          scale: 1.02, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
+        });
+        gsap.to(".hero-parallax-overlay", {
+          opacity: 0.15, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
+        });
+        gsap.to(".mask-text", {
+          y: -140, ease: "none", force3D: false,
+          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
+        });
+        gsap.to(".reveal-copy", {
+          opacity: 1, y: 0, duration: baseDuration, ease: baseEase, force3D: false,
+          scrollTrigger: { trigger: ".reveal-copy", start: "top 75%", toggleActions: nonHeroToggleActions, once: true }
+        });
+        gsap.set(allRevealEls, { opacity: 1, x: 0, y: 0 });
+        return;
+      }
+
+      // ── Desktop hero parallax (UNTOUCHED) ─────────────────────────
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero-parallax",
+          start: "top top",
+          end: "+=155%",
+          scrub: 1.6,
+          pin: ".hero-sticky",
+          pinType: "fixed",
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          fastScrollEnd: false,
+          preventOverlaps: true
+        }
+      });
+      tl.to(".hero-bg-parallax", { scale: 1, ease: "none" }, 0.00)
+        .to(".mask-text",         { scale: 1, y: -40, ease: "none", force3D: false }, 0.00)
+        .to(".hero-parallax-overlay", { opacity: 0, ease: "none" }, 0.32)
+        .to(".hero-bg-parallax",  { opacity: 0, ease: "none" }, 0.64)
+        .to(".hero-sticky",       { backgroundColor: "#020308", ease: "none" }, 0.64)
+        .to(".reveal-copy",       { opacity: 1, y: 36, ease: "none", force3D: false }, 0.66)
+        .to(".reveal-copy",       { opacity: 1, y: 0,  ease: "none", force3D: false }, 0.78)
+        .to(".mask-text",         { y: -520, opacity: 0, ease: "none", force3D: false }, 0.85)
+        .to(".reveal-copy",       { opacity: 1, y: 0,  ease: "none", force3D: false }, 0.90)
+        .to(".reveal-copy",       { opacity: 0, y: -80, ease: "none", force3D: false }, 0.98);
+
+      // ── Reveal animations (desktop) ───────────────────────────────
+      // Make all reveal elements visible — scroll triggers below will
+      // animate them in from their CSS-set initial states.
+      gsap.set(allRevealEls, { opacity: 1, x: 0, y: 0 });
+
+      const revealOne = (selector, trigger, opts = {}) => {
+        gsap.fromTo(selector,
+          { opacity: 0, y: opts.y ?? 28, x: opts.x ?? 0 },
+          { opacity: 1, y: 0, x: 0, duration: opts.dur ?? baseDuration, ease: baseEase, delay: opts.delay ?? 0,
+            stagger: opts.stagger,
+            scrollTrigger: { trigger: trigger ?? selector, start: opts.start ?? "top 85%", toggleActions: nonHeroToggleActions, once: true }
+          }
+        );
+      };
+
+      revealOne(".bendo-title",   ".bendo-title",        { y: 24 });
+      gsap.fromTo(".testimonial-video",
+        { opacity: 0 },
+        { opacity: 1, duration: baseDuration, stagger: staggerFast, ease: baseEase, force3D: false,
+          scrollTrigger: { trigger: ".bendo-collage", start: "top 80%", end: "top 40%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      revealOne(".feature-card",  ".feature-grid", { stagger: staggerSlow });
+      revealOne(".trust-intro",   ".trust-intro",  { dur: slowDuration });
+      revealOne(".trust-cta",     ".trust-cta",    { dur: slowDuration, y: 48, start: "top 90%" });
+      revealOne(".split-title",   ".split-mosaic");
+      gsap.fromTo(".split-tile",
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, duration: baseDuration, stagger: staggerFast, ease: baseEase, force3D: true,
+          scrollTrigger: { trigger: ".split-shell", start: "top 85%", end: "top 45%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      revealOne(".contractor-intro",   ".contractor-intro",  { dur: slowDuration });
+      gsap.fromTo(".contractor-media",
+        { opacity: 0, x: -28 },
+        { opacity: 1, x: 0, duration: slowDuration, ease: baseEase,
+          scrollTrigger: { trigger: ".contractor-panel", start: "top 82%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      gsap.fromTo(".contractor-side",
+        { opacity: 0, x: 28 },
+        { opacity: 1, x: 0, duration: slowDuration, delay: 0.06, ease: baseEase,
+          scrollTrigger: { trigger: ".contractor-panel", start: "top 82%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      revealOne(".contractor-icons .icon-card", ".contractor-icons", { y: 22, stagger: staggerFast, start: "top 86%" });
+      gsap.fromTo(".contractor-aboutText",
+        { opacity: 0, x: -26 },
+        { opacity: 1, x: 0, duration: slowDuration, ease: baseEase,
+          scrollTrigger: { trigger: ".contractor-about", start: "top 85%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      gsap.fromTo(".contractor-aboutMedia",
+        { opacity: 0, x: 26 },
+        { opacity: 1, x: 0, duration: slowDuration, delay: 0.06, ease: baseEase,
+          scrollTrigger: { trigger: ".contractor-about", start: "top 85%", toggleActions: nonHeroToggleActions, once: true }
+        }
+      );
+      revealOne(".contractor-projectsHead h3", ".contractor-projects", { start: "top 86%" });
+      revealOne(".contractor-projectsHead p",  ".contractor-projects", { start: "top 86%", delay: 0.05 });
+      revealOne(".contractor-projects .logo-marquee", ".contractor-projects", { start: "top 84%" });
+      revealOne(".project-card", ".project-grid", { stagger: staggerSlow, start: "top 88%" });
+
+      ScrollTrigger.refresh();
+    }
+
+    window.addEventListener("load", async () => {
+      loader.classList.add("loaded");
+      scheduleNavMeasure();
+      try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e) {}
+      await preloadImage("Asset/astro man in space.webp");
+      await initScroll();
+      if (!reduceMotion) {
+        let resizeTimer;
+        window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250); });
+      }
+    });
+
+    if (reduceMotion) {
+      window.addEventListener("load", () => { loader.classList.add("loaded"); scheduleNavMeasure(); });
+    }
+
+    /* ============================================================
+       WEBSITE ANALYZER
+    ============================================================ */
+    (() => {
+      const openBtn     = document.getElementById("auditOpenBtn");
+      const backdrop    = document.getElementById("analyzerModalBackdrop");
+      const modalBody   = document.getElementById("analyzerModalBody");
+      const modalClose  = document.getElementById("analyzerModalClose");
+
+      const LOAD_STEPS = [
+        "Reviewing website structure",
+        "Checking conversion opportunities",
+        "Analyzing trust signals",
+        "Evaluating calls-to-action",
+        "Identifying growth opportunities"
+      ];
+      let currentLead = null;
+      let currentAudit = null;
+      let currentAnalyzedUrl = "";
+      let stripeInstance = null;
+      let stripeElements = null;
+      let paymentElement = null;
+
+      function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+      function isValidUrl(v) {
+        try { const u = new URL(v.trim().startsWith("http") ? v.trim() : "https://" + v.trim()); return u.hostname.includes("."); }
+        catch { return false; }
+      }
+      function normaliseUrl(v) {
+        const s = v.trim();
+        return s.startsWith("http") ? s : "https://" + s;
+      }
+
+      function openModal() {
+        backdrop.classList.add("active");
+        backdrop.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        modalBody.scrollTop = 0;
+      }
+      function closeModal() {
+        backdrop.classList.remove("active");
+        backdrop.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      modalClose.addEventListener("click", closeModal);
+      backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && backdrop.classList.contains("active")) closeModal(); });
+
+      function scoreColor(s) {
+        if (s >= 75) return "#4ade80";   // green
+        if (s >= 50) return "#facc15";   // amber
+        return "#f87272";                // red
+      }
+      function scoreGradeLabel(s) {
+        if (s >= 80) return { label: "Excellent", color: "#4ade80" };
+        if (s >= 65) return { label: "Good",      color: "#a3e635" };
+        if (s >= 45) return { label: "Needs Work",color: "#facc15" };
+        return { label: "Critical", color: "#f87272" };
+      }
+
+      function buildWheelSVG(score) {
+        const R  = 72, cx = 90, cy = 90;
+        const circumference = 2 * Math.PI * R;
+        const arcLen = circumference * (240 / 360);
+        const id = "arcFill_" + Date.now();
+        return `
+<svg class="score-wheel-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#226e91"/>
+      <stop offset="100%" stop-color="#9fd3dd"/>
+    </linearGradient>
+  </defs>
+  <circle class="score-arc-bg" cx="${cx}" cy="${cy}" r="${R}"
+    stroke-width="10"
+    stroke-dasharray="${arcLen} ${circumference - arcLen}"
+    stroke-dashoffset="${circumference * (1 - 150/360)}"
+    transform="rotate(150 ${cx} ${cy})"
+  />
+  <circle class="score-arc-fill" id="scoreArcEl" cx="${cx}" cy="${cy}" r="${R}"
+    stroke="url(#${id})"
+    stroke-width="10"
+    stroke-dasharray="${arcLen} ${circumference - arcLen}"
+    stroke-dashoffset="${circumference * (1 - 150/360) + arcLen}"
+    transform="rotate(150 ${cx} ${cy})"
+  />
+  <text class="score-number" x="${cx}" y="${cy - 8}" id="scoreNumberEl">0</text>
+  <text class="score-label-text" x="${cx}" y="${cy + 22}">/ 100</text>
+</svg>`;
+      }
+
+      function animateWheel(score) {
+        const el = document.getElementById("scoreArcEl");
+        const numEl = document.getElementById("scoreNumberEl");
+        if (!el || !numEl) return;
+
+        const R = 72, circumference = 2 * Math.PI * R, arcLen = circumference * (240/360);
+        const baseOffset = circumference * (1 - 150/360);
+        const filledOffset = baseOffset + arcLen * (1 - score/100);
+
+        const startOffset = baseOffset + arcLen;
+        el.style.strokeDashoffset = startOffset;
+        el.style.stroke = scoreColor(score);
+
+        let startTime = null;
+        const duration = 1400;
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          const p = Math.min((ts - startTime) / duration, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          el.style.strokeDashoffset = startOffset + (filledOffset - startOffset) * ease;
+          numEl.textContent = Math.round(score * ease);
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      function animateBars() {
+        document.querySelectorAll(".cat-bar-fill").forEach(bar => {
+          const target = parseFloat(bar.dataset.width || 0);
+          setTimeout(() => { bar.style.width = target + "%"; }, 200);
+        });
+      }
+
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function safeRecommendation(value) {
+        return escapeHTML(value)
+          .replace(/&lt;strong&gt;/g, "<strong>")
+          .replace(/&lt;\/strong&gt;/g, "</strong>");
+      }
+
+      function listItems(items) {
+        return (Array.isArray(items) ? items : []).map(item => `<li>${escapeHTML(item)}</li>`).join("");
+      }
+
+      function auditText(value) {
+        return escapeHTML(value || "This area has room for clearer structure and stronger conversion focus.");
+      }
+
+      function renderLeadForm() {
+        return `
+<div class="audit-step audit-form-shell">
+  <div class="audit-modal-kicker">Free AI Website Audit</div>
+  <h3 id="analyzerResultTitle">Get Your Free Website Conversion Audit</h3>
+  <p>Discover what's helping or hurting your website's ability to generate calls, leads, and customers.</p>
+  <div class="audit-form-grid" id="auditLeadForm">
+    <div class="audit-field">
+      <label for="auditFirstName">First Name</label>
+      <input id="auditFirstName" type="text" autocomplete="given-name" placeholder="First name" value="${escapeHTML(currentLead?.firstName || "")}">
+      <div class="audit-error" data-error-for="auditFirstName"></div>
+    </div>
+    <div class="audit-field">
+      <label for="auditLastName">Last Name</label>
+      <input id="auditLastName" type="text" autocomplete="family-name" placeholder="Last name" value="${escapeHTML(currentLead?.lastName || "")}">
+      <div class="audit-error" data-error-for="auditLastName"></div>
+    </div>
+    <div class="audit-field full">
+      <label for="auditEmail">Email Address</label>
+      <input id="auditEmail" type="email" autocomplete="email" placeholder="you@yourbusiness.com" value="${escapeHTML(currentLead?.email || "")}">
+      <div class="audit-error" data-error-for="auditEmail"></div>
+    </div>
+    <div class="audit-field full">
+      <label for="auditUrl">Website URL</label>
+      <input id="auditUrl" type="url" autocomplete="url" placeholder="https://yourbusiness.com" value="${escapeHTML(currentLead?.url || "")}">
+      <div class="audit-error" data-error-for="auditUrl"></div>
+    </div>
+    <div class="audit-form-actions">
+      <button class="audit-primary-btn" id="auditAnalyzeBtn" type="button" disabled>Analyze My Website</button>
+      <p class="audit-privacy-note">Your audit runs securely through our backend. API keys are never exposed in the browser.</p>
+    </div>
+  </div>
+</div>`;
+      }
+
+      function readLeadForm() {
+        return {
+          firstName: document.getElementById("auditFirstName")?.value.trim() || "",
+          lastName: document.getElementById("auditLastName")?.value.trim() || "",
+          email: document.getElementById("auditEmail")?.value.trim() || "",
+          url: document.getElementById("auditUrl")?.value.trim() || ""
+        };
+      }
+
+      function setFieldError(id, message) {
+        const input = document.getElementById(id);
+        const error = modalBody.querySelector(`[data-error-for="${id}"]`);
+        if (input) input.classList.toggle("error", Boolean(message));
+        if (error) error.textContent = message || "";
+      }
+
+      function validateLead(showErrors = false) {
+        const lead = readLeadForm();
+        const errors = {
+          auditFirstName: lead.firstName ? "" : "Please enter your first name.",
+          auditLastName: lead.lastName ? "" : "Please enter your last name.",
+          auditEmail: isValidEmail(lead.email) ? "" : "Please enter a valid email address.",
+          auditUrl: lead.url ? (isValidUrl(lead.url) ? "" : "Please enter a valid website URL.") : "Please enter your website URL."
+        };
+        if (showErrors) Object.entries(errors).forEach(([id, message]) => setFieldError(id, message));
+        return { lead, valid: !Object.values(errors).some(Boolean) };
+      }
+
+      function bindLeadForm() {
+        const button = document.getElementById("auditAnalyzeBtn");
+        const inputs = Array.from(modalBody.querySelectorAll("#auditLeadForm input"));
+        const refresh = () => {
+          const state = validateLead(false);
+          if (button) button.disabled = !state.valid;
+          inputs.forEach(input => setFieldError(input.id, ""));
+        };
+        inputs.forEach(input => input.addEventListener("input", refresh));
+        button?.addEventListener("click", submitAudit);
+        refresh();
+      }
+
+      function renderResults(data, websiteUrl) {
+        const score = Math.max(0, Math.min(100, Number(data.overall_score) || 0));
+        const summary = data.summary || "Your website report is ready.";
+        const categories = Array.isArray(data.categories) ? data.categories : [];
+        const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
+        const sections = data.audit_sections || {};
+        const { label, color } = scoreGradeLabel(score);
+        const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
+        const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
+        const avgCategory = categories.length
+          ? Math.round(categories.reduce((sum, item) => sum + (Number(item.score) || 0), 0) / categories.length)
+          : score;
+
+        const catsHTML = categories.map(c => `
+<div class="cat-item">
+  <div class="cat-header">
+    <span class="cat-name">${escapeHTML(c.name)}</span>
+    <span class="cat-score-num" style="color:${scoreColor(c.score)}">${escapeHTML(c.score)}</span>
+  </div>
+  <div class="cat-bar-track">
+    <div class="cat-bar-fill" style="background:${scoreColor(c.score)}" data-width="${Math.max(0, Math.min(100, Number(c.score) || 0))}"></div>
+  </div>
+  <div class="cat-note">${escapeHTML(c.note)}</div>
+</div>`).join("");
+
+        const recsHTML = recommendations.map((r, i) => `
+<li class="rec-item">
+  <span class="rec-num">${i+1}</span>
+  <span class="rec-text">${safeRecommendation(r)}</span>
+</li>`).join("");
+
+        return `
+<div class="analyzer-dashboard">
+  <div class="analysis-topbar">
+    <div class="analysis-brand">
+      <div class="analysis-brand-mark">NL</div>
+      <div>
+        <strong>Nexus Luma Website Analysis</strong>
+        <span>${escapeHTML(websiteUrl)}</span>
+      </div>
+    </div>
+    <div class="analysis-actions">
+      <span class="analysis-pill">Live Page Scan</span>
+      <span class="analysis-pill primary">Claude Analysis</span>
+    </div>
+  </div>
+
+  <div class="analysis-head">
+    <div>
+      <h3>Website Overview</h3>
+      <p>${escapeHTML(summary)}</p>
+    </div>
+    <div class="analysis-summary-card">
+      <span>Overall Score</span>
+      <strong>${score}</strong>
+    </div>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card score-card">
+      <h4>Performance Snapshot</h4>
+      <div class="score-wheel-wrap">
+        ${buildWheelSVG(score)}
+        <div class="score-grade" style="color:${color}">${label}</div>
+      </div>
+      <p class="score-summary">This score combines visual polish, SEO foundations, mobile clarity, trust signals, and how clearly the page guides visitors toward action.</p>
+    </div>
+
+    <div class="analysis-card stat">
+      <div class="stat-kicker">Strongest Area</div>
+      <div class="stat-number">${bestCategory ? escapeHTML(bestCategory.score) : score}</div>
+      <p class="stat-text">${bestCategory ? escapeHTML(bestCategory.name + ": " + bestCategory.note) : "The analyzer found a positive foundation to build from."}</p>
+    </div>
+
+    <div class="analysis-card stat">
+      <div class="stat-kicker">Biggest Opportunity</div>
+      <div class="stat-number">${weakestCategory ? escapeHTML(weakestCategory.score) : score}</div>
+      <p class="stat-text">${weakestCategory ? escapeHTML(weakestCategory.name + ": " + weakestCategory.note) : "The next step is tightening the offer and conversion path."}</p>
+    </div>
+
+    <div class="analysis-card category-card">
+      <h4>Category Breakdown</h4>
+      <div class="cat-grid">${catsHTML}</div>
+    </div>
+
+    <div class="analysis-card site-map-card">
+      <h4>Lead Readiness</h4>
+      <div class="site-signal-row"><span>Average category health</span><span class="signal-badge">${avgCategory}</span></div>
+      <div class="site-signal-row"><span>Priority fixes identified</span><span class="signal-badge">${recommendations.length}</span></div>
+      <div class="site-signal-row"><span>Conversion review</span><span class="signal-badge">${weakestCategory ? "Ready" : "Open"}</span></div>
+      <div class="site-signal-row"><span>Recommended next step</span><span class="signal-badge">Call</span></div>
+    </div>
+
+    <div class="analysis-card recommend-card">
+      <h4>Top Recommendations</h4>
+      <ul class="rec-list">${recsHTML}</ul>
+    </div>
+
+    <div class="audit-section-grid">
+      <article class="audit-insight-card"><h4>Website Strengths</h4><ul>${listItems(sections.strengths)}</ul></article>
+      <article class="audit-insight-card"><h4>Conversion Opportunities</h4><ul>${listItems(sections.conversion_opportunities)}</ul></article>
+      <article class="audit-insight-card"><h4>Design & User Experience</h4><p>${auditText(sections.design_user_experience)}</p></article>
+      <article class="audit-insight-card"><h4>Messaging & Offer Clarity</h4><p>${auditText(sections.messaging_offer_clarity)}</p></article>
+      <article class="audit-insight-card"><h4>Trust & Credibility Signals</h4><p>${auditText(sections.trust_credibility)}</p></article>
+      <article class="audit-insight-card"><h4>Call-To-Action Effectiveness</h4><p>${auditText(sections.cta_effectiveness)}</p></article>
+      <article class="audit-insight-card"><h4>Mobile Experience</h4><p>${auditText(sections.mobile_experience)}</p></article>
+      <article class="audit-insight-card"><h4>SEO Visibility Opportunities</h4><p>${auditText(sections.seo_visibility)}</p></article>
+      <article class="audit-insight-card"><h4>Priority Improvements</h4><ul>${listItems(sections.priority_improvements)}</ul></article>
+      <article class="audit-insight-card"><h4>Quick Wins</h4><ul>${listItems(sections.quick_wins)}</ul></article>
+      <article class="audit-insight-card"><h4>Recommended Next Steps</h4><ul>${listItems(sections.recommended_next_steps)}</ul></article>
+    </div>
+
+    <div class="analyzer-result-cta">
+      <p><strong>Ready to turn this report into more leads?</strong> Continue to see the starter package built around these audit opportunities.</p>
+      <button type="button" id="auditContinueBtn">Continue</button>
+    </div>
+  </div>
+</div>`;
+      }
+
+      function bindResults() {
+        document.getElementById("auditContinueBtn")?.addEventListener("click", () => {
+          modalBody.innerHTML = renderOffer();
+          bindOffer();
+          modalBody.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      function renderError(message) {
+        return `
+<div class="analyzer-dashboard">
+  <div class="analysis-topbar">
+    <div class="analysis-brand">
+      <div class="analysis-brand-mark">NL</div>
+      <div>
+        <strong>Website Analysis</strong>
+        <span>Real-time scan could not complete</span>
+      </div>
+    </div>
+    <span class="analysis-pill">Action Required</span>
+  </div>
+  <div class="analysis-card">
+    <h4>Analyzer Needs Attention</h4>
+    <p class="score-summary">${escapeHTML(message)}</p>
+    <div class="analyzer-result-cta" style="margin-top:20px;">
+      <p><strong>Try again or call us.</strong> You can re-enter your details or call and we can review the website manually.</p>
+      <button type="button" id="auditBackToForm">Back To Audit Form</button>
+    </div>
+  </div>
+</div>`;
+      }
+
+      function bindError() {
+        document.getElementById("auditBackToForm")?.addEventListener("click", () => {
+          modalBody.innerHTML = renderLeadForm();
+          bindLeadForm();
+        });
+      }
+
+      function renderLoading(step) {
+        return `
+<div class="analyzer-loading">
+  <div class="analyzer-spinner"></div>
+  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.05em;margin:0 0 10px;">Analyzing Your Website...</h3>
+  <div class="analyzer-loading-step">${step}</div>
+  <div class="audit-loading-list">
+    <span><b>✓</b> Reviewing website structure</span>
+    <span><b>✓</b> Checking conversion opportunities</span>
+    <span><b>✓</b> Analyzing trust signals</span>
+    <span><b>✓</b> Evaluating calls-to-action</span>
+    <span><b>✓</b> Identifying growth opportunities</span>
+  </div>
+</div>`;
+      }
+
+      let stepInterval = null;
+      function startLoadingCycle() {
+        let i = 0;
+        modalBody.innerHTML = renderLoading(LOAD_STEPS[0]);
+        stepInterval = setInterval(() => {
+          i = (i + 1) % LOAD_STEPS.length;
+          const el = modalBody.querySelector(".analyzer-loading-step");
+          if (el) { el.style.opacity = "0"; setTimeout(() => { if (el) { el.textContent = LOAD_STEPS[i]; el.style.opacity = "1"; } }, 250); }
+        }, 2200);
+      }
+      function stopLoadingCycle() { if (stepInterval) { clearInterval(stepInterval); stepInterval = null; } }
+
+      async function submitAudit() {
+        const state = validateLead(true);
+        if (!state.valid) return;
+        currentLead = { ...state.lead, url: normaliseUrl(state.lead.url) };
+        const button = document.getElementById("auditAnalyzeBtn");
+        if (button) { button.disabled = true; button.textContent = "Analyzing..."; }
+        startLoadingCycle();
+
+        try {
+          const resp = await fetch("/.netlify/functions/analyze-website", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(currentLead)
+          });
+          const payload = await resp.json().catch(() => ({}));
+          if (!resp.ok || !payload.result) {
+            throw new Error(payload.error || "The analyzer could not complete the scan.");
+          }
+
+          stopLoadingCycle();
+          currentAudit = payload.result;
+          currentAnalyzedUrl = payload.analyzed_url || currentLead.url;
+          modalBody.innerHTML = renderResults(currentAudit, currentAnalyzedUrl);
+          requestAnimationFrame(() => {
+            animateWheel(currentAudit.overall_score);
+            animateBars();
+          });
+          bindResults();
+        } catch(e) {
+          stopLoadingCycle();
+          modalBody.innerHTML = renderError(e.message || "The analyzer could not complete the scan. Please try again.");
+          bindError();
+        }
+      }
+
+      function renderOffer() {
+        return `
+<div class="audit-step audit-offer">
+  <div class="audit-modal-kicker">Website Improvement Offer</div>
+  <h3>Ready To Turn More Visitors Into Customers?</h3>
+  <p>Based on your audit, we've identified several opportunities that can improve trust, increase engagement, and help generate more calls, leads, and bookings. Instead of figuring everything out on your own, we can help you get started with a professional website improvement plan.</p>
+  <div class="audit-offer-card">
+    <div>
+      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Website Improvement Starter Package</h4>
+      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">A focused action plan that turns your audit into clear improvements for trust, clarity, calls, quote requests, bookings, and leads.</p>
+      <ul class="audit-benefits">
+        <li>Website conversion recommendations</li>
+        <li>Call-to-action improvements</li>
+        <li>Trust-building recommendations</li>
+        <li>User experience enhancements</li>
+        <li>Lead generation optimization</li>
+        <li>Clear action plan</li>
+      </ul>
+      <div class="audit-offer-actions">
+        <button class="audit-primary-btn" id="auditStartPayment" type="button">Start My Website Upgrade — $99</button>
+        <button class="audit-secondary-btn" id="auditMaybeLater" type="button">Maybe Later</button>
+      </div>
+    </div>
+    <div class="audit-price">
+      <div>
+        <span>One-Time Setup</span>
+        <strong>$99</strong>
+      </div>
+      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">A simple starter step after your free audit. No redirect, no new tab.</p>
+    </div>
+  </div>
+</div>`;
+      }
+
+      function bindOffer() {
+        document.getElementById("auditStartPayment")?.addEventListener("click", renderPayment);
+        document.getElementById("auditMaybeLater")?.addEventListener("click", () => {
+          modalBody.innerHTML = renderSuccess("No problem. Your free audit is complete, and your report can guide your next website improvements.");
+        });
+      }
+
+      function loadStripeScript() {
+        return new Promise((resolve, reject) => {
+          if (window.Stripe) { resolve(); return; }
+          const script = document.createElement("script");
+          script.src = "https://js.stripe.com/v3/";
+          script.onload = resolve;
+          script.onerror = () => reject(new Error("Stripe could not load. Please try again."));
+          document.head.appendChild(script);
+        });
+      }
+
+      async function renderPayment() {
+        modalBody.innerHTML = `
+<div class="audit-step audit-payment">
+  <div class="audit-modal-kicker">Secure Payment</div>
+  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:.98;margin:0 0 10px;">Start My Website Upgrade — $99</h3>
+  <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your Website Improvement Starter Package.</p>
+  <div class="payment-box">
+    <div id="paymentElement"><div class="analyzer-spinner" style="margin:34px auto;"></div></div>
+    <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Pay $99 And Start</button>
+    <button class="audit-secondary-btn" id="auditBackToOffer" type="button" style="margin-top:10px;width:100%;">Back To Offer</button>
+    <div class="payment-error" id="paymentError"></div>
+  </div>
+</div>`;
+        document.getElementById("auditBackToOffer")?.addEventListener("click", () => {
+          modalBody.innerHTML = renderOffer();
+          bindOffer();
+        });
+
+        const payBtn = document.getElementById("auditPayBtn");
+        const paymentError = document.getElementById("paymentError");
+        try {
+          await loadStripeScript();
+          const configResp = await fetch("/.netlify/functions/stripe-config");
+          const config = await configResp.json().catch(() => ({}));
+          if (!configResp.ok || !config.publishableKey) throw new Error(config.error || "Stripe publishable key is not configured.");
+
+          const paymentResp = await fetch("/.netlify/functions/create-upgrade-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...currentLead,
+              auditScore: currentAudit?.overall_score || ""
+            })
+          });
+          const payment = await paymentResp.json().catch(() => ({}));
+          if (!paymentResp.ok || !payment.clientSecret) throw new Error(payment.error || "Payment could not start.");
+
+          stripeInstance = window.Stripe(config.publishableKey);
+          stripeElements = stripeInstance.elements({ clientSecret: payment.clientSecret, appearance: { theme: "stripe" } });
+          paymentElement = stripeElements.create("payment");
+          paymentElement.mount("#paymentElement");
+          payBtn.disabled = false;
+          payBtn.addEventListener("click", async () => {
+            payBtn.disabled = true;
+            payBtn.textContent = "Processing...";
+            paymentError.textContent = "";
+            const result = await stripeInstance.confirmPayment({
+              elements: stripeElements,
+              redirect: "if_required"
+            });
+            if (result.error) {
+              paymentError.textContent = result.error.message || "Payment failed. Please try again.";
+              payBtn.disabled = false;
+              payBtn.textContent = "Pay $99 And Start";
+              return;
+            }
+            modalBody.innerHTML = renderSuccess("You're In! Your website improvement process has officially started.");
+          });
+        } catch(error) {
+          paymentError.textContent = error.message || "Payment is not configured yet. Please call (336) 517-7347 to start.";
+          const paymentEl = document.getElementById("paymentElement");
+          if (paymentEl) paymentEl.innerHTML = "<p style='color:rgba(8,19,58,.62);line-height:1.6;margin:0;'>Payment setup needs Stripe environment variables before it can process inside the popup.</p>";
+        }
+      }
+
+      function renderSuccess(message) {
+        return `
+<div class="audit-step audit-success">
+  <div class="audit-modal-kicker">Website Upgrade</div>
+  <h3>${escapeHTML(message)}</h3>
+  <p>We have your audit details and website information. The next step is reviewing the highest-impact improvements and turning them into a clear action plan.</p>
+  <div class="analyzer-result-cta">
+    <p><strong>Questions?</strong> You can call Nexus Luma directly and reference your website audit.</p>
+    <a href="tel:+13365177347">Call (336) 517-7347</a>
+  </div>
+</div>`;
+      }
+
+      function launchAuditModal() {
+        modalBody.innerHTML = renderLeadForm();
+        openModal();
+        bindLeadForm();
+      }
+
+      openBtn?.addEventListener("click", launchAuditModal);
+      document.querySelectorAll(".audit-open-trigger").forEach(btn => {
+        btn.addEventListener("click", launchAuditModal);
+      });
+    })();
+  </script>
+</body>
+</html>

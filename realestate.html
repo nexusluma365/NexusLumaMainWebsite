@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modular Homes — Real Estate</title>
+  <link rel="preload" as="image" href="Asset/luxury%20home.webp" fetchpriority="high">
+
+  <!--
+    ✅ WHY YOUR LAST VERSION "WASN'T WORKING" (most common causes)
+    1) Missing images => the mosaic tiles look blank (they depend on --img URL).
+    2) Layout breaks on some screens if grid rows aren't defined and tiles rely only on aspect-ratio.
+    3) Smooth scrolling feels "off" if you mix sticky + heavy effects. This version keeps it clean.
+    4) Nav links may do nothing if IDs don't exist or if you used # but didn't match sections.
+
+    ✅ This file fixes those and matches the screenshot layout:
+    - warm cream background
+    - serif headline
+    - circular CTA badge
+    - "single image split into pieces" bento collage
+    - About section with wide button + right image
+    - Why Choose Us section with circle image + stats
+    - Apple-like hover + soft motion + smooth anchor scrolling
+  -->
+
+  <style>
+    :root{
+      --bg: #f6f1ee;                    /* warm cream like screenshot */
+      --ink: #111116;
+      --muted: rgba(17,17,22,.70);
+      --line: rgba(17,17,22,.10);
+      --accent: #b06a3a;                /* warm brown button */
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --radius: 18px;
+
+      --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Cormorant Garamond", Garamond, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+
+      --wrap: min(1160px, 92vw);
+      --navH: 64px;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; }
+    body{
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none; }
+    img{ display:block; max-width:100%; }
+
+    /* Apple-like hover */
+    .lift{
+      transform: translateZ(0);
+      transition: transform .45s cubic-bezier(.2,.8,.2,1),
+                  box-shadow .45s cubic-bezier(.2,.8,.2,1),
+                  filter .45s cubic-bezier(.2,.8,.2,1);
+      will-change: transform, box-shadow, filter;
+    }
+    .lift:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 22px 70px rgba(0,0,0,.14);
+    }
+
+    /* Sticky Topbar */
+    header{
+      position: sticky;
+      top:0;
+      z-index:100;
+      background: rgba(246,241,238,.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar{
+      width: var(--wrap);
+      margin: 0 auto;
+      padding: 14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    .mark{
+      width:30px; height:30px;
+      border-radius: 10px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.55);
+      display:grid;
+      place-items:center;
+      box-shadow: 0 12px 40px rgba(0,0,0,.08);
+      font-size: 14px;
+    }
+    nav{
+      display:flex;
+      gap: 24px;
+      font-size: 13px;
+      color: rgba(17,17,22,.70);
+    }
+    nav a{
+      position:relative;
+      padding: 8px 2px;
+      transition: color .25s ease;
+    }
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:2px;
+      width:0;
+      height:2px;
+      background: rgba(17,17,22,.82);
+      transform: translateX(-50%);
+      transition: width .28s cubic-bezier(.2,.8,.2,1);
+    }
+    nav a:hover{ color: rgba(17,17,22,.92); }
+    nav a:hover::after{ width:100%; }
+
+    .phone{
+      font-size: 13px;
+      color: rgba(17,17,22,.74);
+      white-space:nowrap;
+    }
+
+    /* Sections */
+    main{ padding-bottom: 60px; }
+    section{
+      width: var(--wrap);
+      margin: 0 auto;
+      padding: 38px 0;
+      scroll-margin-top: calc(var(--navH) + 16px);
+    }
+
+    /* HERO */
+    .hero{
+      padding-top: 34px;
+      padding-bottom: 18px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1fr 1.22fr;
+      gap: 22px;
+      align-items:start;
+    }
+    .kicker{
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(17,17,22,.52);
+      margin-bottom: 10px;
+    }
+    h1{
+      font-family: var(--serif);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: .92;
+      font-size: clamp(2.6rem, 5.8vw, 4.8rem);
+    }
+
+    /* Circle CTA */
+    .circle-cta{
+      margin-top: 20px;
+      width: 128px;
+      height: 128px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.78), rgba(255,255,255,.42));
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 60px rgba(0,0,0,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    .circle-cta::before{
+      content:"";
+      position:absolute;
+      inset: 10px;
+      border-radius: 999px;
+      border: 2px solid rgba(17,17,22,.06);
+    }
+    .circle-cta button{
+      width: 92px;
+      height: 92px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color:#fff;
+      font-family: var(--serif);
+      font-weight: 600;
+      letter-spacing: .03em;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      line-height: 1.05;
+      padding: 10px;
+      transition: transform .25s cubic-bezier(.2,.8,.2,1), filter .25s ease;
+    }
+    .circle-cta button:hover{ transform: scale(1.04); filter: brightness(1.02); }
+
+    /* ✅ HERO MOSAIC: single image split into pieces */
+    .mosaic{
+      border-radius: var(--radius);
+      overflow: visible;
+    }
+    .mosaic-grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 1fr;               /* helps stabilize layout */
+      gap: 12px;                         /* white seams like screenshot */
+      padding: 14px;
+      border-radius: var(--radius);
+      background: transparent;           /* show page bg between tiles */
+    }
+
+    .tile{
+      position:relative;
+      border-radius: 10px;
+      overflow:hidden;
+      border: 1px solid rgba(17,17,22,.10);
+      background: #fff;
+      box-shadow: 0 12px 40px rgba(0,0,0,.08);
+      transform: translateZ(0);
+    }
+
+    /* The SAME image appears inside each tile via background-position */
+    .tile::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--img);
+      background-repeat:no-repeat;
+      background-size: 300% 240%;
+      background-position: var(--x) var(--y);
+      transform: scale(1.02);
+      transition: transform .5s cubic-bezier(.2,.8,.2,1);
+      will-change: transform;
+    }
+    .tile::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 25% 25%, rgba(0,0,0,.12), transparent 62%);
+      opacity:.30;
+      pointer-events:none;
+    }
+    .tile:hover::before{ transform: scale(1.06); }
+
+    /* Layout similar to the reference (top 3 tiles + big center + right strip + bottom strips) */
+    .a{ grid-column: 1 / span 4;  aspect-ratio: 1/1; }
+    .b{ grid-column: 5 / span 4;  aspect-ratio: 1/1; }
+    .c{ grid-column: 9 / span 4;  aspect-ratio: 1/1; }
+
+    .d{ grid-column: 3 / span 7;  aspect-ratio: 2.2/1; }
+    .e{ grid-column: 10 / span 3; aspect-ratio: 1/1; }
+
+    .f{ grid-column: 1 / span 5;  aspect-ratio: 2.25/1; }
+    .g{ grid-column: 6 / span 4;  aspect-ratio: 1.55/1; }
+    .h{ grid-column: 10 / span 3; aspect-ratio: 1.2/1; }
+
+    /* ABOUT */
+    .about-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items:start;
+      padding-top: 18px;
+    }
+    .title{
+      font-family: var(--serif);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+      margin-bottom: 10px;
+    }
+    .copy{
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(17,17,22,.72);
+      max-width: 580px;
+    }
+    .btn-wide{
+      margin-top: 16px;
+      width: 240px;
+      padding: 14px 18px;
+      border: 1px solid rgba(17,17,22,.12);
+      background: var(--accent);
+      color:#fff;
+      font-family: var(--serif);
+      font-weight: 600;
+      letter-spacing: .03em;
+      cursor:pointer;
+      transition: transform .25s cubic-bezier(.2,.8,.2,1), filter .25s ease;
+    }
+    .btn-wide:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+
+    .about-img{
+      overflow:hidden;
+      border: 1px solid rgba(17,17,22,.12);
+      box-shadow: 0 16px 60px rgba(0,0,0,.10);
+      background:#fff;
+    }
+    .about-img img{ width:100%; height:100%; object-fit:cover; }
+
+    /* WHY */
+    .why-title{
+      text-align:right;
+      font-family: var(--serif);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      font-size: clamp(2.1rem, 4.8vw, 3.3rem);
+      margin: 14px 0 16px;
+    }
+    .why-grid{
+      display:grid;
+      grid-template-columns: 1fr 360px 1fr;
+      gap: 24px;
+      align-items:center;
+    }
+    .why-col{
+      color: rgba(17,17,22,.72);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .why-stat{
+      font-family: var(--serif);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    .why-big{
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--ink);
+      margin-top: 18px;
+    }
+    .circle-photo{
+      width: 340px;
+      height: 340px;
+      border-radius: 999px;
+      overflow:hidden;
+      margin: 0 auto;
+      border: 1px solid rgba(17,17,22,.12);
+      box-shadow: 0 18px 70px rgba(0,0,0,.12);
+      position:relative;
+      background:#fff;
+    }
+    .circle-photo::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.12), transparent 60%);
+      opacity:.30;
+      pointer-events:none;
+    }
+    .circle-photo img{ width:100%; height:100%; object-fit:cover; }
+
+    /* Footer line CTA */
+    .footer-line{
+      width: var(--wrap);
+      margin: 0 auto 56px;
+      padding-top: 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 16px;
+      color: rgba(17,17,22,.70);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+    .arrow-cta{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .arrow-btn{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,22,.12);
+      background: var(--accent);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition: transform .25s cubic-bezier(.2,.8,.2,1);
+    }
+    .arrow-btn:hover{ transform: translateY(-2px); }
+
+    /* Apple-like reveal */
+    .reveal{
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .85s cubic-bezier(.2,.8,.2,1),
+                  transform .85s cubic-bezier(.2,.8,.2,1);
+      will-change: opacity, transform;
+    }
+    .reveal.in{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      nav{ display:none; }
+      .hero-grid{ grid-template-columns: 1fr; }
+      .about-grid{ grid-template-columns: 1fr; }
+      .why-title{ text-align:left; }
+      .why-grid{ grid-template-columns: 1fr; }
+      .circle-photo{ width: 300px; height: 300px; }
+    }
+    @media (max-width: 560px){
+      .topbar{
+        flex-wrap: wrap;
+        justify-content:center;
+        text-align:center;
+      }
+      .phone{
+        width:100%;
+        text-align:center;
+        white-space: normal;
+      }
+      .mosaic-grid{ gap: 10px; padding: 12px; }
+      .circle-cta{ width: 116px; height: 116px; }
+      .circle-cta button{ width: 86px; height: 86px; font-size: 13px; }
+      .btn-wide{ width:100%; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .lift, .tile::before, .reveal{ transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="topbar" id="topbar">
+      <div class="brand">
+        <div class="mark">⌂</div>
+        <div>EcoHaus</div>
+      </div>
+
+      <nav aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#why">Why us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="phone">+1 (555) 212-2121</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="projects">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="kicker">Modern living</div>
+          <h1>Build Modular<br/>Homes.</h1>
+
+          <div class="circle-cta lift" title="View projects">
+            <button type="button" onclick="document.querySelector('#about').scrollIntoView({behavior:'smooth'})">
+              View<br/>Projects
+            </button>
+          </div>
+        </div>
+
+        <!-- ✅ IMPORTANT: Put your real image files in /assets or use full URLs -->
+        <!-- If this image path is wrong, tiles will show blank. -->
+        <div class="mosaic reveal" style="--img: url('Asset/luxury home.webp');">
+          <div class="mosaic-grid">
+            <div class="tile a lift" style="--x: 18%; --y: 8%;"></div>
+            <div class="tile b lift" style="--x: 55%; --y: 8%;"></div>
+            <div class="tile c lift" style="--x: 90%; --y: 8%;"></div>
+
+            <div class="tile d lift" style="--x: 55%; --y: 48%;"></div>
+            <div class="tile e lift" style="--x: 92%; --y: 48%;"></div>
+
+            <div class="tile f lift" style="--x: 18%; --y: 92%;"></div>
+            <div class="tile g lift" style="--x: 56%; --y: 92%;"></div>
+            <div class="tile h lift" style="--x: 92%; --y: 92%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="about-grid">
+        <div class="reveal">
+          <h2 class="title">About Company</h2>
+          <p class="copy">
+            We build modern modular homes with clean design and real comfort.
+            Our mission is simple: help people find a place they love—without stress.
+            We focus on quality, clarity, and honest work from start to finish.
+          </p>
+          <button class="btn-wide lift" type="button">Learn More</button>
+        </div>
+
+        <div class="about-img lift reveal">
+          <!-- If this path is wrong, image won’t show -->
+          <img src="Asset/contractor.webp" alt="Builder installing roof panels" loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section id="why">
+      <h2 class="why-title reveal">Why Choose Us?</h2>
+
+      <div class="why-grid">
+        <div class="why-col reveal">
+          <div class="why-stat">10 Years of Trust</div>
+          <div>Clients rely on us—and we deliver.</div>
+
+          <div class="why-big">378 Homes</div>
+          <div>Completed across the country.</div>
+        </div>
+
+        <div class="circle-photo lift reveal">
+          <img src="Asset/inside realestate.webp" alt="Warm modern interior with glass and wood" loading="lazy" decoding="async" />
+        </div>
+
+        <div class="why-col reveal">
+          <div class="why-stat">2 sYear Warranty</div>
+          <div>We stand behind our work with long-term support and real guarantees.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <div class="footer-line reveal" id="contact">
+      <div>From dream to reality — one step</div>
+      <div class="arrow-cta">
+        <div>Go to catalog</div>
+        <button class="arrow-btn" type="button" aria-label="Go to catalog">→</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ✅ Set nav height variable for correct scroll offsets (if the header height changes)
+    function setNavH(){
+      const h = document.getElementById("topbar").getBoundingClientRect().height;
+      document.documentElement.style.setProperty("--navH", Math.round(h) + "px");
+    }
+    window.addEventListener("resize", setNavH);
+    setNavH();
+
+    // ✅ Smooth anchor scrolling (more reliable than default on some setups)
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click",(e)=>{
+        const id = a.getAttribute("href");
+        const target = document.querySelector(id);
+        if(!target) return;
+        e.preventDefault();
+        target.scrollIntoView({behavior:"smooth", block:"start"});
+      });
+    });
+
+    // ✅ Apple-like reveal on scroll
+    const els = [...document.querySelectorAll(".reveal")];
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add("in");
+      });
+    }, { threshold: 0.14 });
+    els.forEach(el => io.observe(el));
+
+    // ✅ Quick “debug”: warn you if images are missing (common "not working" issue)
+    const needed = [
+      "Asset/luxury home.webp",
+      "Asset/contractor.webp",
+      "Asset/inside realestate.webp"
+    ];
+    needed.forEach(src=>{
+      const img = new Image();
+      img.onload = ()=>{};
+      img.onerror = ()=>console.warn("Missing image:", src, "— tiles/images will appear blank until this path is valid.");
+      img.src = src;
+    });
+  </script>
+</body>
+</html>
