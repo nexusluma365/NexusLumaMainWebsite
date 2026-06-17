@@ -208,6 +208,7 @@ async function sendLeadWebhook(lead, result, analyzedUrl) {
   try {
     await fetch(process.env.LEAD_WEBHOOK_URL, {
       method: "POST",
+      redirect: "manual",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         source: "website-audit",
