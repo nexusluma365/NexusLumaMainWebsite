@@ -211,18 +211,29 @@
       border: 1px solid rgba(255,255,255,.14); box-shadow: 0 32px 80px rgba(0,0,0,.42);
       opacity: 0; transform: translate3d(0,48px,0);
       cursor: pointer;
-      transition: transform .36s cubic-bezier(.16,1,.3,1), box-shadow .34s cubic-bezier(.16,1,.3,1), opacity .24s cubic-bezier(.16,1,.3,1), filter .32s cubic-bezier(.16,1,.3,1);
+      transition: transform .36s cubic-bezier(.16,1,.3,1), box-shadow .34s cubic-bezier(.16,1,.3,1), opacity .24s cubic-bezier(.16,1,.3,1);
     }
-    .testimonial-video.is-front { z-index: 3; transform: translate3d(-86%,0,0) scale(1); filter: none; }
-    .testimonial-video.is-middle { z-index: 2; transform: translate3d(-22%,54px,0) scale(.94); filter: brightness(.82); }
-    .testimonial-video.is-back { z-index: 1; transform: translate3d(40%,102px,0) scale(.88); box-shadow: 0 22px 58px rgba(0,0,0,.34); filter: brightness(.72); }
+    .testimonial-video::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(2,3,8,0);
+      pointer-events: none;
+      z-index: 3;
+      transition: background .32s cubic-bezier(.16,1,.3,1);
+    }
+    .testimonial-video.is-front { z-index: 3; transform: translate3d(-86%,0,0) scale(1); }
+    .testimonial-video.is-middle { z-index: 2; transform: translate3d(-22%,54px,0) scale(.94); }
+    .testimonial-video.is-middle::before { background: rgba(2,3,8,.18); }
+    .testimonial-video.is-back { z-index: 1; transform: translate3d(40%,102px,0) scale(.88); box-shadow: 0 22px 58px rgba(0,0,0,.34); }
+    .testimonial-video.is-back::before { background: rgba(2,3,8,.28); }
     .testimonial-video.is-front, .testimonial-video.is-middle, .testimonial-video.is-back { opacity: 1; }
     .testimonial-video video, .testimonial-video img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .testimonial-video video { position: absolute; inset: 0; z-index: 2; background: transparent; pointer-events: none; }
     .testimonial-video.is-front video { pointer-events: auto; }
     .video-fallback { position: absolute; inset: 0; z-index: 1; }
     .video-fallback::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,3,8,.08), rgba(2,3,8,.78)); }
-    .video-caption { position: absolute; left: 22px; right: 22px; bottom: 22px; z-index: 3; color: #fff; text-shadow: 0 12px 28px rgba(0,0,0,.45); pointer-events: none; }
+    .video-caption { position: absolute; left: 22px; right: 22px; bottom: 22px; z-index: 4; color: #fff; text-shadow: 0 12px 28px rgba(0,0,0,.45); pointer-events: none; }
     .video-caption strong { display: block; font-size: 1.05rem; line-height: 1.18; margin-bottom: 7px; }
     .video-caption span { display: block; color: rgba(255,255,255,.76); font-size: .88rem; line-height: 1.45; }
     .video-hint { margin: 18px auto 0; color: rgba(255,255,255,.62); font-size: .88rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-align: center; }
@@ -300,7 +311,8 @@
     .contractor-projectsHead h3 { color: #101326; font-size: clamp(1.9rem, 3vw, 2.8rem); line-height: 1.1; font-weight: 850; opacity: 0; transform: translateY(18px); margin: 0 0 12px; }
     .contractor-projectsHead p { color: rgba(16,19,38,.64); font-size: 1rem; line-height: 1.66; opacity: 0; transform: translateY(18px); margin: 0; }
     .logo-marquee { width: 100%; height: 56px; overflow: hidden; margin: 34px 0 54px; --marquee-gap: 16px; opacity: 0; transform: translateY(18px); -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%); }
-    .logo-marquee .track { display: inline-flex; gap: var(--marquee-gap); align-items: center; width: max-content; animation: marquee 24s linear infinite; will-change: transform; }
+    .logo-marquee .track { display: inline-flex; gap: var(--marquee-gap); align-items: center; width: max-content; animation: marquee 24s linear infinite; animation-play-state: paused; will-change: transform; }
+    .logo-marquee.is-running .track { animation-play-state: running; }
     .logo-marquee .logo-item { width: 112px; height: 54px; display: grid; place-items: center; background: #fff; border: 1px solid rgba(8,20,58,.10); border-radius: 8px; box-shadow: 0 10px 28px rgba(8,20,58,.08); }
     .logo-marquee img { max-width: 74px; max-height: 34px; object-fit: contain; display: block; }
     @keyframes marquee { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
@@ -1154,6 +1166,8 @@
       .bendo-collage { padding: 126px 20px 64px; }
       .collage-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
       .collage-slot { min-height: 360px; }
+      .collage-slot img { filter: none; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+      .collage-slot:hover img { filter: none; transform: none; }
       .feature-grid { grid-template-columns: 1fr; }
       .split-head { align-items: center; text-align: center; }
       .split-shell { min-height: 430px; }
@@ -1171,7 +1185,7 @@
       .contractor-about { grid-template-columns: 1fr; }
       .project-grid { grid-template-columns: 1fr; }
       .video-rail { min-height: clamp(500px, 88vw, 660px); }
-      .testimonial-video { width: min(58vw, 310px); }
+      .testimonial-video { width: min(58vw, 310px); transition: transform .28s cubic-bezier(.16,1,.3,1), opacity .2s cubic-bezier(.16,1,.3,1); }
       .testimonial-video.is-front { transform: translate3d(-92%,0,0) scale(1); }
       .testimonial-video.is-middle { transform: translate3d(-36%,44px,0) scale(.94); }
       .testimonial-video.is-back { transform: translate3d(18%,88px,0) scale(.88); }
@@ -1594,6 +1608,19 @@
       } else {
         contractorVisible = true;
         startContractor();
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const marquee = document.querySelector(".logo-marquee");
+      if (!marquee) return;
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          marquee.classList.toggle("is-running", entries.some(entry => entry.isIntersecting));
+        }, { rootMargin: "220px 0px" });
+        observer.observe(marquee);
+      } else {
+        marquee.classList.add("is-running");
       }
     });
 
