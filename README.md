@@ -28,7 +28,7 @@ Required for the AI audit:
 
 ```text
 ANTHROPIC_API_KEY
-ANTHROPIC_MODEL
+ANTHROPIC_MODEL=claude-sonnet-4-6
 ```
 
 Required for the in-modal $99 payment:

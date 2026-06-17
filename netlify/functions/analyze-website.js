@@ -282,7 +282,7 @@ exports.handler = async (event) => {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-3-5-sonnet-latest",
+        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6",
         max_tokens: 1600,
         temperature: 0.2,
         messages: [{ role: "user", content: prompt }]
@@ -291,7 +291,11 @@ exports.handler = async (event) => {
 
     if (!claudeResponse.ok) {
       const errorText = await claudeResponse.text();
-      return json(502, { error: "Claude analyzer request failed.", details: errorText.slice(0, 240) });
+      return json(502, {
+        error: "Claude analyzer request failed.",
+        details: errorText.slice(0, 500),
+        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6"
+      });
     }
 
     const claudePayload = await claudeResponse.json();
