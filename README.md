@@ -46,6 +46,26 @@ LEAD_WEBHOOK_URL
 
 Do not commit `.env` or real API keys.
 
+## Google Sheets Lead Capture
+
+The Website Analyzer can send every completed audit lead to Google Sheets through a Google Apps Script Web App.
+
+1. Open your Google Sheet.
+2. Go to `Extensions` > `Apps Script`.
+3. Paste the script from `google-apps-script/website-analyzer-leads.gs`.
+4. Run `setupLeadSheet` once to create and format the columns.
+5. Deploy as a Web App:
+   - Execute as: `Me`
+   - Who has access: `Anyone`
+6. Copy the Web App URL.
+7. Add that URL to Netlify as:
+
+```text
+LEAD_WEBHOOK_URL
+```
+
+The sheet records the lead details, submitted website, analyzed website, score, category breakdown, recommendations, audit sections, and raw JSON backup.
+
 ## Netlify Deployment
 
 1. Push this folder to GitHub.
@@ -76,4 +96,3 @@ This checks inline page JavaScript and Netlify function syntax.
 - Claude and Stripe keys are only used by Netlify functions.
 - The audit and payment flow stay inside the same modal.
 - Stripe is configured for card payments so visitors do not leave the page.
-
