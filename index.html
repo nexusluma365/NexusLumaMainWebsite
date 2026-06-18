@@ -1558,6 +1558,7 @@
       #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
       #mainNav ul.is-open { display: flex; }
       #mainNav a { display: inline-flex; align-items: center; justify-content: flex-start; min-height: 44px; padding: 10px 12px; border-radius: 12px; touch-action: manipulation; }
+      #mainNav a.nav-fx-button { min-height: auto; padding: 2px; justify-content: center; }
       #mainNav .nav-cta-item { display: block; }
       .what-we-do-grid { grid-template-columns: 1fr; }
       .offer-stack-inner { grid-template-columns: 1fr; padding: 30px; }
@@ -1613,6 +1614,11 @@
       .split-mosaic::after { right: -24px; bottom: -32px; width: 84px; height: 84px; border-radius: 26px; }
       .contractor-side { padding: 38px 24px; }
       .proof-list { grid-template-columns: 1fr; }
+      .btn { width: 100%; max-width: 340px; min-height: 52px; padding: 14px 18px; text-align: center; line-height: 1.18; white-space: normal; }
+      .what-we-do-cta, .trust-cta, .contractor-ctaRow { display: flex; justify-content: center; width: 100%; }
+      .offer-callout .btn, .contractor-ctaRow .btn { max-width: none; }
+      .contractor-ctaRow { flex-direction: column; align-items: stretch; gap: 10px; }
+      .contractor-ctaRow .btn-ghost { display: none; }
       .contractor-about, .contractor-projects { margin-top: 74px; }
       .analyzer-form { padding: 22px; }
       .analyzer-modal-backdrop { padding: 10px; }
@@ -1635,6 +1641,7 @@
       .nav-brand img { height: 32px !important; width: auto !important; }
       .nav-brand span { display: none; }
       .nav-actions { width: min(100%, 340px); max-width: none; justify-self: center; justify-content: center; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .nav-actions .nav-fx-button, .nav-actions .nav-fx-inner { width: 100%; }
       #mainNav .nav-fx-button { font-size: 10px; border-radius: 13px; }
       .nav-fx-inner { min-height: 34px; padding: 8px 9px; border-radius: 11px; }
       .nav-fx-blob { width: 44px; border-radius: 11px; }
