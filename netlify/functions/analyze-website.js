@@ -183,6 +183,29 @@ function claudeModel() {
   return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
 }
 
+function pageSentence(signals) {
+  const text = String(signals.visibleText || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return "";
+
+  const sentence = text
+    .split(/(?<=[.!?])\s+/)
+    .map((item) => item.trim())
+    .find((item) => item.length >= 45 && item.length <= 180);
+
+  return (sentence || text.slice(0, 150)).replace(/^["']|["']$/g, "");
+}
+
+function scoreExplanation(categories, signals) {
+  const weakest = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
+  const excerpt = pageSentence(signals);
+  const issue = weakest ? weakest.name.toLowerCase() : "clarity";
+  const quoted = excerpt ? `"${excerpt}"` : "One key line on the page";
+
+  return `${weakest ? `One major thing hurting this page is ${issue}. ` : ""}${quoted} may be too hard to understand quickly. Try making it say who you help, what they get, and what to do next in simple words.`;
+}
+
 function scoreFromParts(parts, fallback = 50) {
   const validParts = parts.filter((part) => part && Number(part.weight) > 0);
   if (!validParts.length) return clampScore(fallback, fallback);
@@ -337,6 +360,8 @@ function buildSignalAudit(signals, reason = "") {
   return {
     overall_score: overall,
     summary: `The page has a ${overall >= 70 ? "solid" : "workable"} foundation, but the biggest opportunity is making trust, offer clarity, and the next action easier to understand quickly.${sourceNote}`,
+    score_explanation: scoreExplanation(categories, signals),
+    page_excerpt: pageSentence(signals),
     categories,
     recommendations: [
       "<strong>Clarify the offer</strong> - reduce cognitive load by making the first screen explain who you help, what you offer, and why it matters.",
@@ -379,7 +404,7 @@ function buildSignalAudit(signals, reason = "") {
   };
 }
 
-function normalizeResult(result) {
+function normalizeResult(result, signals = {}) {
   const categories = CATEGORY_NAMES.map((name, index) => {
     const source = (result.categories || []).find((item) => item && item.name === name) || (result.categories || [])[index] || {};
     return {
@@ -402,6 +427,8 @@ function normalizeResult(result) {
   return {
     overall_score: categoryAverage,
     summary: String(result.summary || "Your website was reviewed for design, SEO, trust, mobile experience, and conversion opportunities.").slice(0, 420),
+    score_explanation: scoreExplanation(categories, signals),
+    page_excerpt: pageSentence(signals),
     categories,
     recommendations: (Array.isArray(result.recommendations) ? result.recommendations : [])
       .slice(0, 5)
@@ -534,7 +561,7 @@ exports.handler = async (event) => {
       }
 
       const claudePayload = await claudeResponse.json();
-      const result = normalizeResult(parseClaudeJson(claudePayload));
+      const result = normalizeResult(parseClaudeJson(claudePayload), signals);
       result.analysis_source = "claude";
       await sendLeadWebhook(lead, result, signals.finalUrl);
       return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "claude" });

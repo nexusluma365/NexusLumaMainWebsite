@@ -2231,6 +2231,7 @@
         }));
         const score = displayOverallScore(data);
         const summary = data.summary || "Your website report is ready.";
+        const scoreExplanation = data.score_explanation || "One major thing hurting this page is clarity. Try making the page say who you help, what they get, and what to do next in simple words.";
         const { label, color } = scoreGradeLabel(score);
         const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
         const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
@@ -2271,7 +2272,7 @@
         ${buildWheelSVG(score)}
         <div class="score-grade" style="color:${color}">${label}</div>
       </div>
-      <p class="score-summary">Your score reflects clarity, trust, mobile flow, SEO basics, and how easily visitors can take action.</p>
+      <p class="score-summary">${escapeHTML(scoreExplanation)}</p>
     </div>
 
     <div class="analysis-card transform-card">
