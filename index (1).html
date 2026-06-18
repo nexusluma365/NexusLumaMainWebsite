@@ -761,12 +761,14 @@
     }
     .analysis-summary-card {
       flex: 0 0 auto;
-      min-width: 210px;
-      background: linear-gradient(135deg, #173f66 0%, #249bc1 100%);
+      min-width: 280px;
+      background:
+        radial-gradient(circle at 88% 16%, rgba(92,255,170,.28), transparent 36%),
+        linear-gradient(135deg, #052915 0%, #0d6b38 58%, #16a34a 100%);
       color: #fff;
       border-radius: 18px;
       padding: 20px;
-      box-shadow: 0 24px 50px rgba(34,110,145,.22);
+      box-shadow: 0 24px 50px rgba(22,163,74,.22);
     }
     .analysis-summary-card span {
       display: block;
@@ -781,6 +783,48 @@
       line-height: .9;
       letter-spacing: -0.06em;
     }
+    .analysis-summary-values {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .analysis-summary-target {
+      text-align: right;
+    }
+    .analysis-summary-target b {
+      display: block;
+      color: #bbf7d0;
+      font-size: 1.45rem;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+    .analysis-summary-target small {
+      display: block;
+      margin-top: 4px;
+      color: rgba(255,255,255,.68);
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .summary-upgrade-btn {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.38);
+      background: rgba(255,255,255,.94);
+      color: #064e2b;
+      border-radius: 999px;
+      min-height: 44px;
+      padding: 11px 16px;
+      font: inherit;
+      font-size: .86rem;
+      font-weight: 950;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .summary-upgrade-btn:hover { transform: translateY(-2px); background: #dcfce7; }
     .analysis-grid {
       display: grid;
       grid-template-columns: 1.05fr 1.1fr 1.05fr;
@@ -2199,14 +2243,21 @@
       <p>${escapeHTML(summary)}</p>
     </div>
     <div class="analysis-summary-card">
-      <span>Overall Score</span>
-      <strong>${score}</strong>
+      <span>Improvement Target</span>
+      <div class="analysis-summary-values">
+        <strong>${score}</strong>
+        <div class="analysis-summary-target">
+          <b>+95</b>
+          <small>Target Score</small>
+        </div>
+      </div>
+      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Your Overall</button>
     </div>
   </div>
 
   <div class="analysis-grid">
     <div class="analysis-card score-card compact">
-      <h4>Overall Score</h4>
+      <h4>Your Overall Website Score</h4>
       <div class="score-wheel-wrap">
         ${buildWheelSVG(score)}
         <div class="score-grade" style="color:${color}">${label}</div>
@@ -2265,11 +2316,13 @@
       }
 
       function bindResults() {
-        document.getElementById("auditContinueBtn")?.addEventListener("click", () => {
+        const showOffer = () => {
           modalBody.innerHTML = renderOffer();
           bindOffer();
           modalBody.scrollTo({ top: 0, behavior: "smooth" });
-        });
+        };
+        document.getElementById("auditContinueBtn")?.addEventListener("click", showOffer);
+        modalBody.querySelector("[data-audit-upgrade]")?.addEventListener("click", showOffer);
       }
 
       function renderError(message) {
