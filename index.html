@@ -830,6 +830,59 @@
     .score-card {
       grid-row: span 2;
     }
+    .score-card.compact {
+      grid-row: span 1;
+    }
+    .transform-card {
+      grid-column: span 2;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.92), rgba(244,248,251,.94)),
+        radial-gradient(circle at 92% 12%, rgba(34,110,145,.18), transparent 34%);
+    }
+    .quick-review {
+      color: rgba(8,19,58,.62);
+      font-size: .98rem;
+      line-height: 1.62;
+      margin: -4px 0 18px;
+    }
+    .transform-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+    .transform-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      color: rgba(8,19,58,.66);
+      font-size: .92rem;
+      line-height: 1.48;
+      background: rgba(244,248,251,.86);
+      border: 1px solid rgba(8,19,58,.06);
+      border-radius: 13px;
+      padding: 12px 14px;
+    }
+    .transform-list b {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(34,110,145,.12);
+      color: #226e91;
+      font-size: .78rem;
+      font-weight: 950;
+    }
+    .transform-list strong {
+      display: block;
+      color: #08133a;
+      font-weight: 950;
+      margin-bottom: 2px;
+    }
     .category-card {
       grid-column: span 2;
     }
@@ -956,55 +1009,6 @@
     }
     .rec-text { font-size: .92rem; color: rgba(8,19,58,.66); line-height: 1.58; }
     .rec-text strong { color: #08133a; font-weight: 900; }
-    .audit-section-grid {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .audit-insight-card {
-      background: rgba(255,255,255,.84);
-      border: 1px solid rgba(8,19,58,.07);
-      border-radius: 18px;
-      box-shadow: 0 16px 38px rgba(8,19,58,.06);
-      padding: 20px;
-    }
-    .audit-insight-card h4 {
-      margin: 0 0 10px;
-      color: #08133a;
-      font-size: 1.02rem;
-      line-height: 1.2;
-      font-weight: 950;
-      letter-spacing: -0.02em;
-    }
-    .audit-insight-card p,
-    .audit-insight-card li {
-      color: rgba(8,19,58,.62);
-      font-size: .9rem;
-      line-height: 1.56;
-    }
-    .audit-insight-card ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-    .audit-insight-card li {
-      position: relative;
-      padding-left: 18px;
-    }
-    .audit-insight-card li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: .62em;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #9fd3dd;
-    }
-
     /* Analyzer CTA */
     .analyzer-result-cta {
       grid-column: 1 / -1;
@@ -1194,7 +1198,6 @@
       .score-card, .category-card, .recommend-card, .analyzer-result-cta { grid-column: auto; }
       .score-card { grid-row: auto; }
       .cat-grid { grid-template-columns: 1fr; }
-      .audit-section-grid { grid-template-columns: 1fr; }
       .audit-offer-card { grid-template-columns: 1fr; }
       .analysis-summary-card { width: 100%; }
       .analyzer-result-cta a { width: 100%; justify-content: center; }
@@ -2058,14 +2061,6 @@
           .replace(/&lt;\/strong&gt;/g, "</strong>");
       }
 
-      function listItems(items) {
-        return (Array.isArray(items) ? items : []).map(item => `<li>${escapeHTML(item)}</li>`).join("");
-      }
-
-      function auditText(value) {
-        return escapeHTML(value || "This area has room for clearer structure and stronger conversion focus.");
-      }
-
       function renderLeadForm() {
         return `
 <div class="audit-step audit-form-shell">
@@ -2154,7 +2149,6 @@
         const score = normalizeScore(derivedScore);
         const summary = data.summary || "Your website report is ready.";
         const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
-        const sections = data.audit_sections || {};
         const { label, color } = scoreGradeLabel(score);
         const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
         const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
@@ -2179,6 +2173,9 @@
   <span class="rec-num">${i+1}</span>
   <span class="rec-text">${safeRecommendation(r)}</span>
 </li>`).join("");
+        const quickReview = weakestCategory
+          ? `Your quickest lift is ${weakestCategory.name.toLowerCase()}. Improve that first, then tighten trust and the next-step path so more visitors know why to act.`
+          : "Your quickest lift is making the offer, proof, and next step easier to understand before visitors leave.";
 
         return `
 <div class="analyzer-dashboard">
@@ -2208,13 +2205,25 @@
   </div>
 
   <div class="analysis-grid">
-    <div class="analysis-card score-card">
-      <h4>Performance Snapshot</h4>
+    <div class="analysis-card score-card compact">
+      <h4>Overall Score</h4>
       <div class="score-wheel-wrap">
         ${buildWheelSVG(score)}
         <div class="score-grade" style="color:${color}">${label}</div>
       </div>
-      <p class="score-summary">This score combines visual polish, SEO foundations, mobile clarity, trust signals, and how clearly the page guides visitors toward action.</p>
+      <p class="score-summary">Your score reflects clarity, trust, mobile flow, SEO basics, and how easily visitors can take action.</p>
+    </div>
+
+    <div class="analysis-card transform-card">
+      <h4>Quick Review: Get Above 95+</h4>
+      <p class="quick-review">${escapeHTML(quickReview)} A 95+ site feels clear, credible, fast to understand, and easy to contact.</p>
+      <ul class="transform-list">
+        <li><b>1</b><span><strong>Make the offer obvious</strong> Show who you help, what you do, and why it matters in seconds.</span></li>
+        <li><b>2</b><span><strong>Build instant trust</strong> Put reviews, proof, guarantees, or real examples near the decision points.</span></li>
+        <li><b>3</b><span><strong>Remove friction</strong> Make calls, quotes, bookings, or forms easy to find and simple to complete.</span></li>
+        <li><b>4</b><span><strong>Guide attention</strong> Use hierarchy so visitors naturally move from interest to confidence to action.</span></li>
+        <li><b>5</b><span><strong>Make mobile effortless</strong> Keep copy scannable, buttons tap-friendly, and the next step always visible.</span></li>
+      </ul>
     </div>
 
     <div class="analysis-card stat">
@@ -2245,20 +2254,6 @@
     <div class="analysis-card recommend-card">
       <h4>Top Recommendations</h4>
       <ul class="rec-list">${recsHTML}</ul>
-    </div>
-
-    <div class="audit-section-grid">
-      <article class="audit-insight-card"><h4>Website Strengths</h4><ul>${listItems(sections.strengths)}</ul></article>
-      <article class="audit-insight-card"><h4>Conversion Opportunities</h4><ul>${listItems(sections.conversion_opportunities)}</ul></article>
-      <article class="audit-insight-card"><h4>Design & User Experience</h4><p>${auditText(sections.design_user_experience)}</p></article>
-      <article class="audit-insight-card"><h4>Messaging & Offer Clarity</h4><p>${auditText(sections.messaging_offer_clarity)}</p></article>
-      <article class="audit-insight-card"><h4>Trust & Credibility Signals</h4><p>${auditText(sections.trust_credibility)}</p></article>
-      <article class="audit-insight-card"><h4>Call-To-Action Effectiveness</h4><p>${auditText(sections.cta_effectiveness)}</p></article>
-      <article class="audit-insight-card"><h4>Mobile Experience</h4><p>${auditText(sections.mobile_experience)}</p></article>
-      <article class="audit-insight-card"><h4>SEO Visibility Opportunities</h4><p>${auditText(sections.seo_visibility)}</p></article>
-      <article class="audit-insight-card"><h4>Priority Improvements</h4><ul>${listItems(sections.priority_improvements)}</ul></article>
-      <article class="audit-insight-card"><h4>Quick Wins</h4><ul>${listItems(sections.quick_wins)}</ul></article>
-      <article class="audit-insight-card"><h4>Recommended Next Steps</h4><ul>${listItems(sections.recommended_next_steps)}</ul></article>
     </div>
 
     <div class="analyzer-result-cta">
