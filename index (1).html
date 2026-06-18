@@ -927,6 +927,34 @@
       font-weight: 950;
       margin-bottom: 2px;
     }
+    .transform-cta {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(8,19,58,.08);
+    }
+    .transform-cta h5 {
+      margin: 0 0 12px;
+      color: #08133a;
+      font-size: clamp(1.08rem, 2vw, 1.35rem);
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      font-weight: 950;
+    }
+    .transform-pill-btn {
+      width: 100%;
+      min-height: 54px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #064e2b 0%, #16a34a 100%);
+      color: #fff;
+      font: inherit;
+      font-size: .96rem;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(22,163,74,.22);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .transform-pill-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 42px rgba(22,163,74,.28); }
     .category-card {
       grid-column: span 2;
     }
@@ -2247,15 +2275,19 @@
     </div>
 
     <div class="analysis-card transform-card">
-      <h4>What The 93+ Upgrade Gives You</h4>
-      <p class="quick-review">Your site can be easier to read, easier to trust, and easier to buy from. These are the main fixes we would make first.</p>
+      <h4>Where Your Website Is Losing Customers</h4>
+      <p class="quick-review">People leave when a site feels unclear, hard to trust, or hard to use. Here is what may be hurting your site and how we fix it.</p>
       <ul class="transform-list">
-        <li><b>✓</b><span><strong>Clear offer</strong> People know what you do fast.</span></li>
-        <li><b>✓</b><span><strong>More trust</strong> Reviews and proof help people feel safe.</span></li>
-        <li><b>✓</b><span><strong>Easy next step</strong> Calls, forms, and bookings are simple to find.</span></li>
-        <li><b>✓</b><span><strong>Better flow</strong> The page guides people from looking to taking action.</span></li>
-        <li><b>✓</b><span><strong>Better phone view</strong> The site is easy to read and tap on mobile.</span></li>
+        <li><b>✓</b><span><strong>Unclear offer</strong> We make it easy to know what you do.</span></li>
+        <li><b>✓</b><span><strong>Low trust</strong> We add proof so people feel safe.</span></li>
+        <li><b>✓</b><span><strong>Hard next step</strong> We make calls, forms, and bookings easy.</span></li>
+        <li><b>✓</b><span><strong>Weak page flow</strong> We guide people to take action.</span></li>
+        <li><b>✓</b><span><strong>Mobile problems</strong> We make the site easy to use on phones.</span></li>
       </ul>
+      <div class="transform-cta">
+        <h5>Attract More Online Customers By Upgrading Your Website</h5>
+        <button class="transform-pill-btn" type="button" data-audit-upgrade>Upgrade Now</button>
+      </div>
     </div>
 
     <div class="analysis-card stat">
@@ -2279,7 +2311,7 @@
           bindOffer();
           modalBody.scrollTo({ top: 0, behavior: "smooth" });
         };
-        modalBody.querySelector("[data-audit-upgrade]")?.addEventListener("click", showOffer);
+        modalBody.querySelectorAll("[data-audit-upgrade]").forEach(button => button.addEventListener("click", showOffer));
       }
 
       function renderError(message) {
