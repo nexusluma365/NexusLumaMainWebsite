@@ -1958,12 +1958,19 @@
       backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape" && backdrop.classList.contains("active")) closeModal(); });
 
+      function normalizeScore(value) {
+        const num = Number(value);
+        return Number.isFinite(num) ? Math.max(0, Math.min(100, Math.round(num))) : 0;
+      }
+
       function scoreColor(s) {
+        s = normalizeScore(s);
         if (s >= 75) return "#4ade80";   // green
         if (s >= 50) return "#facc15";   // amber
         return "#f87272";                // red
       }
       function scoreGradeLabel(s) {
+        s = normalizeScore(s);
         if (s >= 80) return { label: "Excellent", color: "#4ade80" };
         if (s >= 65) return { label: "Good",      color: "#a3e635" };
         if (s >= 45) return { label: "Needs Work",color: "#facc15" };
@@ -1971,6 +1978,7 @@
       }
 
       function buildWheelSVG(score) {
+        score = normalizeScore(score);
         const R  = 72, cx = 90, cy = 90;
         const circumference = 2 * Math.PI * R;
         const arcLen = circumference * (240 / 360);
@@ -2002,6 +2010,7 @@
       }
 
       function animateWheel(score) {
+        score = normalizeScore(score);
         const el = document.getElementById("scoreArcEl");
         const numEl = document.getElementById("scoreNumberEl");
         if (!el || !numEl) return;
@@ -2134,9 +2143,16 @@
       }
 
       function renderResults(data, websiteUrl) {
-        const score = Math.max(0, Math.min(100, Number(data.overall_score) || 0));
+        const rawCategories = Array.isArray(data.categories) ? data.categories : [];
+        const categories = rawCategories.map(item => ({
+          ...item,
+          score: normalizeScore(item?.score)
+        }));
+        const derivedScore = categories.length
+          ? Math.round(categories.reduce((sum, item) => sum + item.score, 0) / categories.length)
+          : normalizeScore(data.overall_score);
+        const score = normalizeScore(derivedScore);
         const summary = data.summary || "Your website report is ready.";
-        const categories = Array.isArray(data.categories) ? data.categories : [];
         const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
         const sections = data.audit_sections || {};
         const { label, color } = scoreGradeLabel(score);
@@ -2153,7 +2169,7 @@
     <span class="cat-score-num" style="color:${scoreColor(c.score)}">${escapeHTML(c.score)}</span>
   </div>
   <div class="cat-bar-track">
-    <div class="cat-bar-fill" style="background:${scoreColor(c.score)}" data-width="${Math.max(0, Math.min(100, Number(c.score) || 0))}"></div>
+    <div class="cat-bar-fill" style="background:${scoreColor(c.score)}" data-width="${c.score}"></div>
   </div>
   <div class="cat-note">${escapeHTML(c.note)}</div>
 </div>`).join("");

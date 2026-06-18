@@ -183,6 +183,32 @@ function claudeModel() {
   return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
 }
 
+function scoreFromParts(parts, fallback = 50) {
+  const validParts = parts.filter((part) => part && Number(part.weight) > 0);
+  if (!validParts.length) return clampScore(fallback, fallback);
+  const totalWeight = validParts.reduce((sum, part) => sum + Number(part.weight), 0);
+  const total = validParts.reduce((sum, part) => {
+    const score = clampScore(part.score, fallback);
+    return sum + score * Number(part.weight);
+  }, 0);
+  return clampScore(Math.round(total / totalWeight), fallback);
+}
+
+function ratioScore(value, good, excellent) {
+  const num = Number(value) || 0;
+  if (num <= 0) return 0;
+  if (num >= excellent) return 100;
+  if (num >= good) return 75 + Math.round((num - good) / Math.max(1, excellent - good) * 25);
+  return Math.round(num / good * 75);
+}
+
+function inverseScore(value, excellent, poor) {
+  const num = Number(value) || 0;
+  if (num <= excellent) return 100;
+  if (num >= poor) return 20;
+  return clampScore(Math.round(100 - ((num - excellent) / Math.max(1, poor - excellent)) * 80), 50);
+}
+
 function emptySignals(url, reason) {
   return {
     finalUrl: url,
@@ -207,70 +233,104 @@ function emptySignals(url, reason) {
   };
 }
 
-function scoreFromChecks(checks, fallback = 50) {
-  if (!checks.length) return fallback;
-  return clampScore(Math.round(checks.reduce((sum, value) => sum + (value ? 1 : 0), 0) / checks.length * 100), fallback);
-}
-
 function buildSignalAudit(signals, reason = "") {
   const hasTitle = Boolean(signals.title && signals.title.length >= 10);
+  const titleLengthScore = signals.title ? inverseScore(Math.abs(signals.title.length - 58), 12, 44) : 0;
   const hasDescription = Boolean(signals.description && signals.description.length >= 40);
+  const descriptionLengthScore = signals.description ? inverseScore(Math.abs(signals.description.length - 150), 35, 100) : 0;
   const hasOneH1 = signals.h1Count === 1;
-  const hasAltCoverage = signals.imgCount === 0 || signals.imgAltCount / signals.imgCount >= 0.65;
+  const altCoverage = signals.imgCount > 0 ? signals.imgAltCount / signals.imgCount : 0;
+  const altScore = signals.imgCount === 0 ? 45 : clampScore(altCoverage * 100, 45);
   const hasContactPath = signals.formCount > 0 || signals.phoneLinks > 0 || signals.mailLinks > 0;
   const hasCTA = signals.buttonCount >= 2 || hasContactPath;
   const hasProof = signals.proofSignals >= 2;
   const hasVisibleContent = Boolean(signals.visibleText && signals.visibleText.length >= 700);
-  const isFastEnough = !signals.fetchedInMs || signals.fetchedInMs <= 2500;
-  const isReasonableSize = !signals.htmlBytes || signals.htmlBytes <= 180000;
   const hasHeadings = signals.headings.length >= 2;
+  const visibleContentScore = ratioScore(signals.visibleText.length, 650, 1800);
+  const headingScore = ratioScore(signals.headings.length, 2, 6);
+  const imageScore = ratioScore(signals.imgCount, 1, 5);
+  const speedScore = signals.fetchedInMs ? inverseScore(signals.fetchedInMs, 900, 4500) : 45;
+  const sizeScore = signals.htmlBytes ? inverseScore(signals.htmlBytes, 80000, 260000) : 45;
+  const contactScore = scoreFromParts([
+    { score: hasContactPath ? 80 : 20, weight: 3 },
+    { score: ratioScore(signals.buttonCount, 1, 4), weight: 2 },
+    { score: signals.formCount > 0 ? 90 : 35, weight: 2 },
+    { score: signals.phoneLinks > 0 || signals.mailLinks > 0 ? 80 : 30, weight: 1 }
+  ], 45);
+  const proofScore = scoreFromParts([
+    { score: ratioScore(signals.proofSignals, 2, 7), weight: 3 },
+    { score: signals.https ? 85 : 35, weight: 1 },
+    { score: altScore, weight: 1 },
+    { score: visibleContentScore, weight: 1 }
+  ], 45);
 
   const categories = [
     {
       name: "Visual Design",
-      score: scoreFromChecks([hasTitle, hasHeadings, hasVisibleContent, signals.imgCount > 0], 58),
+      score: scoreFromParts([
+        { score: imageScore, weight: 3 },
+        { score: headingScore, weight: 2 },
+        { score: visibleContentScore, weight: 2 },
+        { score: titleLengthScore, weight: 1 }
+      ], 58),
       note: signals.imgCount > 0
         ? "The page includes visual assets and headings that can support a professional first impression."
         : "The page needs stronger visual proof and more scannable structure to create confidence quickly."
     },
     {
       name: "Page Speed",
-      score: scoreFromChecks([isFastEnough, isReasonableSize, signals.htmlBytes > 0], 55),
+      score: scoreFromParts([
+        { score: speedScore, weight: 3 },
+        { score: sizeScore, weight: 2 },
+        { score: signals.htmlBytes > 0 ? 80 : 35, weight: 1 }
+      ], 55),
       note: signals.fetchedInMs
         ? `The HTML responded in about ${signals.fetchedInMs}ms; asset weight and scripts should still be kept lean.`
         : "The analyzer could not time the page response, so speed should be checked directly after the page is reachable."
     },
     {
       name: "SEO Foundations",
-      score: scoreFromChecks([hasTitle, hasDescription, hasOneH1, hasAltCoverage, signals.https, signals.localSignals > 0], 52),
+      score: scoreFromParts([
+        { score: hasTitle ? titleLengthScore : 0, weight: 2 },
+        { score: hasDescription ? descriptionLengthScore : 0, weight: 2 },
+        { score: hasOneH1 ? 90 : signals.h1Count > 0 ? 55 : 0, weight: 2 },
+        { score: altScore, weight: 1 },
+        { score: signals.https ? 90 : 30, weight: 1 },
+        { score: ratioScore(signals.localSignals, 1, 5), weight: 1 }
+      ], 52),
       note: hasDescription && hasOneH1
         ? "Core metadata and heading structure are present, which gives the page a usable SEO foundation."
         : "The page should strengthen title, meta description, H1 structure, image alt text, and local/service relevance."
     },
     {
       name: "Conversion & CTAs",
-      score: scoreFromChecks([hasCTA, hasContactPath, signals.buttonCount >= 2, signals.formCount > 0 || signals.phoneLinks > 0], 50),
+      score: contactScore,
       note: hasContactPath
-        ? "There is a visible contact path, but CTAs should be repeated around key decision points."
+        ? "There is a visible contact path; the next opportunity is reducing decision friction and repeating CTAs at natural commitment points."
         : "The page needs a clearer contact path with visible calls, quote requests, booking, or form actions."
     },
     {
       name: "Mobile Experience",
-      score: scoreFromChecks([signals.viewportMeta, hasVisibleContent, hasCTA, isReasonableSize], 54),
+      score: scoreFromParts([
+        { score: signals.viewportMeta ? 90 : 20, weight: 3 },
+        { score: visibleContentScore, weight: 2 },
+        { score: contactScore, weight: 2 },
+        { score: sizeScore, weight: 1 }
+      ], 54),
       note: signals.viewportMeta
         ? "The page includes a viewport tag; mobile readability and CTA spacing should still be tested on real devices."
         : "The page is missing a clear viewport signal, which can hurt mobile layout and readability."
     },
     {
       name: "Trust Signals",
-      score: scoreFromChecks([hasProof, signals.https, hasAltCoverage, signals.visibleText.length > 1200], 48),
+      score: proofScore,
       note: hasProof
-        ? "Trust language appears on the page, but proof should be placed near CTAs and buying decisions."
+        ? "Trust language appears on the page; it should be placed near CTAs where visitors are weighing risk and confidence."
         : "Add reviews, testimonials, portfolio proof, guarantees, certifications, or other credibility signals."
     }
   ];
 
-  const overall = Math.round(categories.reduce((sum, item) => sum + item.score, 0) / categories.length);
+  const overall = clampScore(Math.round(categories.reduce((sum, item) => sum + item.score, 0) / categories.length), 50);
   const fetchNote = signals.fetchIssue ? ` The analyzer could not fully fetch the submitted page: ${signals.fetchIssue}.` : "";
   const sourceNote = reason && !signals.fetchIssue ? " This report was generated from live page structure signals." : fetchNote;
 
@@ -279,11 +339,11 @@ function buildSignalAudit(signals, reason = "") {
     summary: `The page has a ${overall >= 70 ? "solid" : "workable"} foundation, but the biggest opportunity is making trust, offer clarity, and the next action easier to understand quickly.${sourceNote}`,
     categories,
     recommendations: [
-      "<strong>Clarify the offer</strong> - make the first screen explain who you help, what you offer, and why someone should choose you.",
-      "<strong>Strengthen trust proof</strong> - place reviews, examples, guarantees, or credentials close to the main CTA.",
-      "<strong>Improve the action path</strong> - repeat phone, quote, booking, or contact actions where visitors make decisions.",
-      "<strong>Tighten SEO foundations</strong> - use clear title tags, one focused H1, descriptive headings, and relevant service/local keywords.",
-      "<strong>Check mobile flow</strong> - make sure text, buttons, images, and forms are easy to scan and tap on a phone."
+      "<strong>Clarify the offer</strong> - reduce cognitive load by making the first screen explain who you help, what you offer, and why it matters.",
+      "<strong>Strengthen trust proof</strong> - lower perceived risk by placing reviews, examples, guarantees, or credentials near the main CTA.",
+      "<strong>Improve the action path</strong> - guide motivated visitors with clear phone, quote, booking, or contact actions at natural decision points.",
+      "<strong>Tighten SEO foundations</strong> - help searchers and visitors confirm relevance with clear titles, one focused H1, service terms, and local context.",
+      "<strong>Check mobile flow</strong> - make the page easy to scan and tap so interested visitors can act without friction."
     ],
     audit_sections: {
       strengths: [
@@ -291,18 +351,18 @@ function buildSignalAudit(signals, reason = "") {
         hasVisibleContent ? "The page has enough content for visitors and search engines to understand the business." : "The page has room to add clearer service and proof content."
       ],
       conversion_opportunities: [
-        "Make the primary CTA more specific and visible before visitors scroll away.",
-        "Place trust proof near the sections where visitors decide whether to call, book, or request a quote."
+        "Make the primary CTA specific and visible before visitors lose momentum.",
+        "Place trust proof near the sections where visitors are deciding whether to call, book, or request a quote."
       ],
-      design_user_experience: "Use a clean visual hierarchy with short sections, clear headings, proof, and repeated contact paths.",
-      messaging_offer_clarity: "The messaging should quickly explain the audience, offer, outcome, and reason to choose the business.",
-      trust_credibility: "Add or elevate reviews, testimonials, project examples, guarantees, credentials, and clear business details.",
-      cta_effectiveness: "Every major section should make the next step obvious without making the page feel repetitive or heavy.",
-      mobile_experience: "Mobile visitors need readable copy, fast-loading visuals, tap-friendly buttons, and a direct contact path.",
+      design_user_experience: "Use a clean visual hierarchy that reduces decision effort: short sections, clear headings, proof, and repeated contact paths.",
+      messaging_offer_clarity: "The messaging should quickly answer the visitor's core questions: who this is for, what changes, why it is credible, and what to do next.",
+      trust_credibility: "Add or elevate reviews, testimonials, project examples, guarantees, credentials, and clear business details to reduce perceived risk.",
+      cta_effectiveness: "Every major section should make the next step obvious at the moment interest is highest, without pressuring or overwhelming the visitor.",
+      mobile_experience: "Mobile visitors need readable copy, fast-loading visuals, tap-friendly buttons, and a direct contact path with minimal friction.",
       seo_visibility: "Build stronger SEO foundations with focused metadata, heading structure, service terms, local relevance, and image alt text.",
       priority_improvements: [
         "Clarify the above-the-fold value proposition.",
-        "Add stronger proof near the first and final CTAs.",
+        "Add confidence-building proof near the first and final CTAs.",
         "Make the contact, quote, or booking path easier to find."
       ],
       quick_wins: [
@@ -328,6 +388,7 @@ function normalizeResult(result) {
       note: String(source.note || "This area needs a clearer review.").slice(0, 220)
     };
   });
+  const categoryAverage = Math.round(categories.reduce((sum, c) => sum + c.score, 0) / categories.length);
 
   const sectionSource = result.audit_sections || {};
   const listOf = (name, fallback) => {
@@ -339,7 +400,7 @@ function normalizeResult(result) {
   const textOf = (name, fallback) => String(sectionSource[name] || fallback).slice(0, 360);
 
   return {
-    overall_score: clampScore(result.overall_score, Math.round(categories.reduce((sum, c) => sum + c.score, 0) / categories.length)),
+    overall_score: categoryAverage,
     summary: String(result.summary || "Your website was reviewed for design, SEO, trust, mobile experience, and conversion opportunities.").slice(0, 420),
     categories,
     recommendations: (Array.isArray(result.recommendations) ? result.recommendations : [])
