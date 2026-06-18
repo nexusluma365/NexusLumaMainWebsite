@@ -459,11 +459,12 @@ function normalizeResult(result, signals = {}) {
 }
 
 async function sendLeadWebhook(lead, result, analyzedUrl) {
-  if (!process.env.LEAD_WEBHOOK_URL) return;
+  if (!process.env.LEAD_WEBHOOK_URL) return { ok: false, status: "not_configured" };
   try {
-    await fetch(process.env.LEAD_WEBHOOK_URL, {
+    const response = await fetch(process.env.LEAD_WEBHOOK_URL, {
       method: "POST",
-      redirect: "manual",
+      redirect: "follow",
+      signal: timeoutSignal(12000),
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         source: "website-audit",
@@ -473,8 +474,23 @@ async function sendLeadWebhook(lead, result, analyzedUrl) {
         result
       })
     });
-  } catch {
+
+    let payload = null;
+    const contentType = response.headers.get("content-type") || "";
+    try {
+      payload = await response.clone().json();
+    } catch {
+      payload = null;
+    }
+
+    return {
+      ok: response.ok && (!payload || payload.ok !== false),
+      status: response.status,
+      message: payload?.message || payload?.error || (!contentType.includes("json") ? `Webhook returned ${contentType || "a non-JSON response"}.` : "")
+    };
+  } catch (error) {
     // Lead webhook failure should not block the visitor's report.
+    return { ok: false, status: "failed", message: error.message || "Lead webhook failed." };
   }
 }
 
@@ -539,8 +555,8 @@ exports.handler = async (event) => {
 
     if (!process.env.ANTHROPIC_API_KEY) {
       const result = buildSignalAudit(signals, "ANTHROPIC_API_KEY is not configured.");
-      await sendLeadWebhook(lead, result, signals.finalUrl);
-      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback" });
+      const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
     }
 
     const prompt = buildPrompt(url, lead, signals);
@@ -565,22 +581,22 @@ exports.handler = async (event) => {
       if (!claudeResponse.ok) {
         const errorText = await claudeResponse.text();
         const result = buildSignalAudit(signals, `Claude request failed: ${errorText.slice(0, 180)}`);
-        await sendLeadWebhook(lead, result, signals.finalUrl);
-        return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel() });
+        const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
+        return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
       }
 
       const claudePayload = await claudeResponse.json();
       const result = normalizeResult(parseClaudeJson(claudePayload), signals);
       result.analysis_source = "claude";
-      await sendLeadWebhook(lead, result, signals.finalUrl);
-      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "claude" });
+      const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "claude", lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
     } catch (error) {
       const reason = error.name === "TimeoutError" || error.name === "AbortError"
         ? "Claude took too long to respond."
         : error.message || "Claude analysis was unavailable.";
       const result = buildSignalAudit(signals, reason);
-      await sendLeadWebhook(lead, result, signals.finalUrl);
-      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel() });
+      const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
     }
   } catch (error) {
     return json(500, { error: "The analyzer could not complete the scan.", details: error.message });

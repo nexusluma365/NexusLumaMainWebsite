@@ -160,7 +160,7 @@
     .reveal-copy p { margin-top: 1rem; font-size: clamp(1.05rem, 1.9vw, 1.3rem); line-height: 1.65; opacity: .76; }
 
     /* PRODUCT INTRO */
-    .product-intro { max-width: 920px; margin: -480px auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
+    .product-intro { max-width: 920px; margin: clamp(-240px, -22vh, -160px) auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
     .intro-to-astro { position: relative; background: linear-gradient(180deg, #020308 0%, #020308 58%, #08090d 72%, #020308 100%); overflow: visible; }
     .product-intro .product-overline { font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 18px; }
     .product-intro h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1.4rem; line-height: 1.2; letter-spacing: -0.03em; color: #fff; }
@@ -1239,6 +1239,7 @@
       #mainNav { backdrop-filter: none; background: rgba(11,11,15,.96); }
       .nav-inner { padding: 0 14px; grid-template-columns: 1fr auto; row-gap: 8px; }
       .hero-parallax { min-height: 220vh; }
+      .product-intro { margin-top: clamp(-140px, -14vh, -90px); }
       .mask-text { font-size: clamp(4.5rem, 22vw, 18rem); }
       .reveal-copy { top: 66%; width: min(720px, 90vw); }
       .nav-brand { justify-self: start; }
@@ -1327,6 +1328,7 @@
       .nav-cta { font-size: 10px; padding: 9px 9px; }
       .nav-phone { font-size: 10px; }
       .hero-parallax { min-height: 190vh; }
+      .product-intro { margin-top: -72px; }
       .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
       .reveal-copy { top: 60%; padding: 0 8px; }
     }
