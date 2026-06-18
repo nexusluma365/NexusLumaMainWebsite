@@ -130,16 +130,16 @@
     #mainNav a:hover::after { width: 100%; }
 
     /* HERO */
-    .hero-parallax { min-height: 205vh; background: #020308; margin-top: 0; position: relative; }
-    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; will-change: background-color; z-index: 1; }
+    .hero-parallax { min-height: 205vh; background: #020308; margin-top: 0; position: relative; isolation: isolate; }
+    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; will-change: background-color; z-index: 1; transform: translate3d(0,0,0); backface-visibility: hidden; contain: paint; }
     .hero-bg-parallax {
       position: absolute; inset: 0;
       background-image: url("Asset/astro man in space.webp");
       background-size: cover; background-position: center;
       transform: translate3d(0,0,0) scale(1.12); transform-origin: center;
-      will-change: transform, opacity; backface-visibility: hidden;
+      will-change: transform, opacity; backface-visibility: hidden; contain: paint;
     }
-    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18), rgba(0,0,0,.52)); will-change: opacity; }
+    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18), rgba(0,0,0,.52)); will-change: opacity; transform: translate3d(0,0,0); backface-visibility: hidden; contain: paint; }
     .mask-text {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-size: clamp(7rem, 28vw, 34rem); font-weight: 900; letter-spacing: -0.06em;
@@ -148,20 +148,20 @@
       background-size: cover; background-position: center;
       -webkit-background-clip: text; background-clip: text;
       transform: translate3d(0,0,0) scale(1.28);
-      will-change: opacity; backface-visibility: hidden;
+      will-change: transform, opacity; backface-visibility: hidden;
     }
     .reveal-copy {
       position: absolute; top: 70%; left: 0; right: 0; margin: 0 auto;
       width: min(840px, 92vw); text-align: center;
       opacity: 0; color: #fff; transform: translate3d(0,42px,0);
-      backface-visibility: hidden;
+      backface-visibility: hidden; will-change: transform, opacity;
     }
     .reveal-copy h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); font-weight: 900; margin-top: 1.4rem; letter-spacing: -0.02em; }
     .reveal-copy p { margin-top: 1rem; font-size: clamp(1.05rem, 1.9vw, 1.3rem); line-height: 1.65; opacity: .76; }
 
     /* PRODUCT INTRO */
-    .product-intro { max-width: 920px; margin: clamp(-240px, -22vh, -160px) auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
-    .intro-to-astro { position: relative; background: linear-gradient(180deg, #020308 0%, #020308 58%, #08090d 72%, #020308 100%); overflow: visible; }
+    .product-intro { max-width: 920px; margin: clamp(-240px, -22vh, -160px) auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; transform: translate3d(0,0,0); backface-visibility: hidden; contain: layout paint; }
+    .intro-to-astro { position: relative; background: linear-gradient(180deg, #020308 0%, #020308 58%, #08090d 72%, #020308 100%); overflow: visible; isolation: isolate; }
     .product-intro .product-overline { font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 18px; }
     .product-intro h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1.4rem; line-height: 1.2; letter-spacing: -0.03em; color: #fff; }
     .product-intro p { font-size: clamp(1.1rem, 2vw, 1.25rem); line-height: 1.75; color: rgba(255,255,255,.74); max-width: 740px; margin: 0 auto; }
