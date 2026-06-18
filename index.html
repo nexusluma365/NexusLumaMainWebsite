@@ -2203,31 +2203,9 @@
         }));
         const score = displayOverallScore(data);
         const summary = data.summary || "Your website report is ready.";
-        const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
         const { label, color } = scoreGradeLabel(score);
         const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
         const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
-        const avgCategory = categories.length
-          ? Math.round(categories.reduce((sum, item) => sum + (Number(item.score) || 0), 0) / categories.length)
-          : score;
-
-        const catsHTML = categories.map(c => `
-<div class="cat-item">
-  <div class="cat-header">
-    <span class="cat-name">${escapeHTML(c.name)}</span>
-    <span class="cat-score-num" style="color:${scoreColor(c.score)}">${escapeHTML(c.score)}</span>
-  </div>
-  <div class="cat-bar-track">
-    <div class="cat-bar-fill" style="background:${scoreColor(c.score)}" data-width="${c.score}"></div>
-  </div>
-  <div class="cat-note">${escapeHTML(c.note)}</div>
-</div>`).join("");
-
-        const recsHTML = recommendations.map((r, i) => `
-<li class="rec-item">
-  <span class="rec-num">${i+1}</span>
-  <span class="rec-text">${safeRecommendation(r)}</span>
-</li>`).join("");
         return `
 <div class="analyzer-dashboard">
   <div class="analysis-topbar">
@@ -2291,29 +2269,6 @@
       <div class="stat-number">${weakestCategory ? escapeHTML(weakestCategory.score) : score}</div>
       <p class="stat-text">${weakestCategory ? escapeHTML(weakestCategory.name + ": " + weakestCategory.note) : "The next step is tightening the offer and conversion path."}</p>
     </div>
-
-    <div class="analysis-card category-card">
-      <h4>Category Breakdown</h4>
-      <div class="cat-grid">${catsHTML}</div>
-    </div>
-
-    <div class="analysis-card site-map-card">
-      <h4>Lead Readiness</h4>
-      <div class="site-signal-row"><span>Average category health</span><span class="signal-badge">${avgCategory}</span></div>
-      <div class="site-signal-row"><span>Priority fixes identified</span><span class="signal-badge">${recommendations.length}</span></div>
-      <div class="site-signal-row"><span>Conversion review</span><span class="signal-badge">${weakestCategory ? "Ready" : "Open"}</span></div>
-      <div class="site-signal-row"><span>Recommended next step</span><span class="signal-badge">Call</span></div>
-    </div>
-
-    <div class="analysis-card recommend-card">
-      <h4>Top Recommendations</h4>
-      <ul class="rec-list">${recsHTML}</ul>
-    </div>
-
-    <div class="analyzer-result-cta">
-      <p><strong>Get Your Overall Score Above 95, Better Conversion, More Customers</strong> Continue to see the starter package built around these audit opportunities.</p>
-      <button type="button" id="auditContinueBtn">Continue</button>
-    </div>
   </div>
 </div>`;
       }
@@ -2324,7 +2279,6 @@
           bindOffer();
           modalBody.scrollTo({ top: 0, behavior: "smooth" });
         };
-        document.getElementById("auditContinueBtn")?.addEventListener("click", showOffer);
         modalBody.querySelector("[data-audit-upgrade]")?.addEventListener("click", showOffer);
       }
 
