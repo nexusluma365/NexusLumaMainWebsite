@@ -491,13 +491,13 @@
       pointer-events: auto;
     }
     .analyzer-modal {
-      background: #f4f8fb;
-      border: 1px solid rgba(255,255,255,.78);
-      border-radius: 26px;
-      box-shadow: 0 40px 110px rgba(0,0,0,.48);
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
       width: 100%;
-      max-width: 1160px;
-      max-height: 90vh;
+      max-width: 1340px;
+      max-height: 94vh;
       overflow-y: auto;
       position: relative;
       color: #08133a;
@@ -517,18 +517,18 @@
       top: 16px;
       float: right;
       margin: 16px 16px 0 0;
-      width: 36px; height: 36px;
+      width: 48px; height: 48px;
       border-radius: 50%;
       border: 1px solid rgba(8,19,58,.12);
-      background: rgba(255,255,255,.82);
-      color: #08133a; font-size: 18px;
+      background: rgba(255,255,255,.94);
+      color: #08133a; font-size: 24px;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background .2s ease, transform .2s ease;
       z-index: 10;
     }
     .analyzer-modal-close:hover { background: #fff; transform: scale(1.08); }
-    .analyzer-modal-body { padding: 28px 34px 34px; padding-top: 10px; }
+    .analyzer-modal-body { padding: 26px 40px 44px; padding-top: 4px; }
     .audit-step {
       clear: both;
       animation: auditFade .28s ease both;
@@ -586,7 +586,7 @@
     .audit-field label {
       display: block;
       color: rgba(8,19,58,.58);
-      font-size: .76rem;
+      font-size: .82rem;
       font-weight: 900;
       letter-spacing: .09em;
       text-transform: uppercase;
@@ -595,11 +595,12 @@
     .audit-field input {
       width: 100%;
       border: 1px solid rgba(8,19,58,.12);
-      border-radius: 12px;
-      padding: 14px 15px;
+      border-radius: 16px;
+      padding: 18px 18px;
       color: #08133a;
       background: #fff;
       font: inherit;
+      font-size: 1.06rem;
       outline: none;
       transition: border-color .2s ease, box-shadow .2s ease;
     }
@@ -646,6 +647,193 @@
       line-height: 1.5;
       text-align: center;
       margin: 0;
+    }
+    .audit-flow-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 0 8px;
+    }
+    .audit-flow-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(225,243,250,.98) 0%, #f7fbfd 43%, #fff 100%);
+      border: 1px solid rgba(34,110,145,.14);
+      box-shadow: 0 34px 110px rgba(0,0,0,.22);
+      padding: clamp(34px, 6vw, 72px);
+      text-align: center;
+      contain: layout paint;
+    }
+    .audit-flow-card::before,
+    .audit-flow-card::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border: 1px solid rgba(34,110,145,.09);
+      border-radius: 34px;
+      pointer-events: none;
+    }
+    .audit-flow-card::before { left: -92px; top: 82px; }
+    .audit-flow-card::after { right: -86px; top: 36px; }
+    .audit-flow-mark {
+      width: 86px;
+      height: 86px;
+      border-radius: 26px;
+      margin: 0 auto 24px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #173f66 0%, #229abe 100%);
+      color: #fff;
+      font-size: 1.52rem;
+      font-weight: 950;
+      box-shadow: 0 20px 46px rgba(34,110,145,.26);
+    }
+    .audit-flow-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(34,110,145,.13);
+      color: rgba(8,19,58,.72);
+      font-size: .94rem;
+      font-weight: 850;
+      margin-bottom: 20px;
+    }
+    .audit-flow-slide {
+      position: relative;
+      z-index: 1;
+      animation: auditSlideIn .34s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes auditSlideIn {
+      from { opacity: 0; transform: translate3d(28px,0,0); }
+      to { opacity: 1; transform: translate3d(0,0,0); }
+    }
+    .audit-flow-card h3 {
+      color: #08133a;
+      font-size: clamp(2.5rem, 5.6vw, 4.45rem);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+      font-weight: 950;
+      margin: 0 0 14px;
+    }
+    .audit-flow-card p {
+      color: rgba(8,19,58,.62);
+      font-size: clamp(1.12rem, 2vw, 1.32rem);
+      line-height: 1.62;
+      max-width: 760px;
+      margin: 0 auto 32px;
+    }
+    .audit-progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 0 24px;
+    }
+    .audit-progress-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(34,110,145,.2);
+      transition: width .25s ease, background .25s ease;
+    }
+    .audit-progress-dots span.active {
+      width: 26px;
+      background: #226e91;
+    }
+    .audit-step-fields {
+      display: grid;
+      gap: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .audit-step-fields.two {
+      grid-template-columns: 1fr 1fr;
+    }
+    .audit-step-fields .audit-field.full {
+      grid-column: 1 / -1;
+    }
+    .audit-flow-actions {
+      display: grid;
+      gap: 14px;
+      max-width: 700px;
+      margin: 30px auto 0;
+    }
+    .audit-flow-actions.row {
+      grid-template-columns: .42fr 1fr;
+    }
+    .audit-flow-primary,
+    .audit-flow-secondary {
+      min-height: 58px;
+      border: 0;
+      border-radius: 999px;
+      padding: 18px 26px;
+      font: inherit;
+      font-size: 1.1rem;
+      font-weight: 950;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .25s ease, background .25s ease, opacity .2s ease;
+    }
+    .audit-flow-primary {
+      background: #226e91;
+      color: #fff;
+      box-shadow: 0 18px 44px rgba(34,110,145,.24);
+    }
+    .audit-flow-primary:hover:not(:disabled) { transform: translateY(-2px); background: #1b5a78; box-shadow: 0 24px 54px rgba(34,110,145,.3); }
+    .audit-flow-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .audit-flow-secondary {
+      background: rgba(8,19,58,.07);
+      color: rgba(8,19,58,.68);
+    }
+    .audit-flow-secondary:hover { transform: translateY(-2px); background: rgba(8,19,58,.1); }
+    .audit-result-score {
+      width: 178px;
+      height: 178px;
+      border-radius: 50%;
+      margin: 4px auto 20px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at center, #fff 54%, transparent 55%),
+        conic-gradient(#226e91 0deg, #9fd3dd 270deg, rgba(34,110,145,.12) 270deg);
+      box-shadow: inset 0 0 0 1px rgba(34,110,145,.08), 0 18px 44px rgba(8,19,58,.08);
+    }
+    .audit-result-score strong {
+      display: block;
+      color: #08133a;
+      font-size: 3.45rem;
+      line-height: .9;
+      letter-spacing: -0.06em;
+    }
+    .audit-result-score span {
+      display: block;
+      color: rgba(8,19,58,.46);
+      font-size: .78rem;
+      font-weight: 850;
+      margin-top: 5px;
+    }
+    .audit-brief-box {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(8,19,58,.08);
+      border-radius: 22px;
+      padding: 24px;
+      text-align: left;
+      color: rgba(8,19,58,.66);
+      line-height: 1.58;
+      font-size: 1.08rem;
+    }
+    .audit-brief-box strong {
+      display: block;
+      color: #08133a;
+      font-weight: 950;
+      margin-bottom: 6px;
     }
 
     /* Loading state */
@@ -1338,6 +1526,7 @@
       .analysis-summary-card { width: 100%; }
       .analyzer-result-cta a { width: 100%; justify-content: center; }
       .analyzer-result-cta button { width: 100%; }
+      .audit-step-fields.two, .audit-flow-actions.row { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .collage-grid, .contractor-icons { grid-template-columns: 1fr; }
@@ -2217,46 +2406,99 @@
           .replace(/&lt;\/strong&gt;/g, "</strong>");
       }
 
-      function renderLeadForm() {
+      function progressDots(active) {
+        return `<div class="audit-progress-dots" aria-hidden="true">
+          <span class="${active === 1 ? "active" : ""}"></span>
+          <span class="${active === 2 ? "active" : ""}"></span>
+          <span class="${active === 3 ? "active" : ""}"></span>
+        </div>`;
+      }
+
+      function splitFullName(value) {
+        const parts = String(value || "").trim().split(/\s+/).filter(Boolean);
+        return {
+          firstName: parts.shift() || "",
+          lastName: parts.join(" ") || "Website Owner"
+        };
+      }
+
+      function fullNameValue() {
+        return [currentLead?.firstName, currentLead?.lastName === "Website Owner" ? "" : currentLead?.lastName]
+          .filter(Boolean)
+          .join(" ");
+      }
+
+      function renderContactStep() {
         return `
-<div class="audit-step audit-form-shell">
-  <div class="audit-modal-kicker">Free AI Website Audit</div>
-  <h3 id="analyzerResultTitle">Get Your Free Website Conversion Audit</h3>
-  <p>Discover what's helping or hurting your website's ability to generate calls, leads, and customers.</p>
-  <div class="audit-form-grid" id="auditLeadForm">
-    <div class="audit-field">
-      <label for="auditFirstName">First Name</label>
-      <input id="auditFirstName" type="text" autocomplete="given-name" placeholder="First name" value="${escapeHTML(currentLead?.firstName || "")}">
-      <div class="audit-error" data-error-for="auditFirstName"></div>
-    </div>
-    <div class="audit-field">
-      <label for="auditLastName">Last Name</label>
-      <input id="auditLastName" type="text" autocomplete="family-name" placeholder="Last name" value="${escapeHTML(currentLead?.lastName || "")}">
-      <div class="audit-error" data-error-for="auditLastName"></div>
-    </div>
-    <div class="audit-field full">
-      <label for="auditEmail">Email Address</label>
-      <input id="auditEmail" type="email" autocomplete="email" placeholder="you@yourbusiness.com" value="${escapeHTML(currentLead?.email || "")}">
-      <div class="audit-error" data-error-for="auditEmail"></div>
-    </div>
-    <div class="audit-field full">
-      <label for="auditUrl">Website URL</label>
-      <input id="auditUrl" type="url" autocomplete="url" placeholder="https://yourbusiness.com" value="${escapeHTML(currentLead?.url || "")}">
-      <div class="audit-error" data-error-for="auditUrl"></div>
-    </div>
-    <div class="audit-form-actions">
-      <button class="audit-primary-btn" id="auditAnalyzeBtn" type="button" disabled>Analyze My Website</button>
-      <p class="audit-privacy-note">Your audit runs securely through our backend. API keys are never exposed in the browser.</p>
+<div class="audit-flow-shell">
+  <div class="audit-flow-card">
+    <div class="audit-flow-slide">
+      <div class="audit-flow-mark">NL</div>
+      <div class="audit-flow-pill">Free Website Analysis</div>
+      ${progressDots(1)}
+      <h3 id="analyzerResultTitle">Get a Free Website Analysis</h3>
+      <p>Start with your name and email so we can prepare your website score and show you what may be stopping more calls, bookings, and leads.</p>
+      <div class="audit-step-fields">
+        <div class="audit-field full">
+          <label for="auditFullName">Your Name</label>
+          <input id="auditFullName" type="text" autocomplete="name" placeholder="Your name" value="${escapeHTML(fullNameValue())}">
+          <div class="audit-error" data-error-for="auditFullName"></div>
+        </div>
+        <div class="audit-field full">
+          <label for="auditEmail">Email Address</label>
+          <input id="auditEmail" type="email" autocomplete="email" placeholder="you@yourbusiness.com" value="${escapeHTML(currentLead?.email || "")}">
+          <div class="audit-error" data-error-for="auditEmail"></div>
+        </div>
+      </div>
+      <div class="audit-flow-actions">
+        <button class="audit-flow-primary" id="auditContactNext" type="button" disabled>Next</button>
+        <p class="audit-privacy-note">Your analysis runs securely. We never expose API keys in the browser.</p>
+      </div>
     </div>
   </div>
 </div>`;
       }
 
-      function readLeadForm() {
+      function renderUrlStep() {
+        return `
+<div class="audit-flow-shell">
+  <div class="audit-flow-card">
+    <div class="audit-flow-slide">
+      <div class="audit-flow-mark">URL</div>
+      <div class="audit-flow-pill">Step 2 of 3</div>
+      ${progressDots(2)}
+      <h3>Enter Your Website URL</h3>
+      <p>We will review the page structure, message clarity, trust signals, mobile flow, and calls-to-action.</p>
+      <div class="audit-step-fields">
+        <div class="audit-field full">
+          <label for="auditUrl">Website URL</label>
+          <input id="auditUrl" type="url" autocomplete="url" placeholder="https://yourbusiness.com" value="${escapeHTML(currentLead?.url || "")}">
+          <div class="audit-error" data-error-for="auditUrl"></div>
+        </div>
+      </div>
+      <div class="audit-flow-actions row">
+        <button class="audit-flow-secondary" id="auditBackToContact" type="button">Back</button>
+        <button class="audit-flow-primary" id="auditAnalyzeBtn" type="button" disabled>Analyze My Website</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+      }
+
+      function readContactStep() {
+        const full = splitFullName(document.getElementById("auditFullName")?.value || "");
         return {
-          firstName: document.getElementById("auditFirstName")?.value.trim() || "",
-          lastName: document.getElementById("auditLastName")?.value.trim() || "",
+          ...full,
           email: document.getElementById("auditEmail")?.value.trim() || "",
+          url: currentLead?.url || ""
+        };
+      }
+
+      function readUrlStep() {
+        return {
+          firstName: currentLead?.firstName || "",
+          lastName: currentLead?.lastName || "Website Owner",
+          email: currentLead?.email || "",
           url: document.getElementById("auditUrl")?.value.trim() || ""
         };
       }
@@ -2268,108 +2510,112 @@
         if (error) error.textContent = message || "";
       }
 
-      function validateLead(showErrors = false) {
-        const lead = readLeadForm();
+      function validateContact(showErrors = false) {
+        const lead = readContactStep();
         const errors = {
-          auditFirstName: lead.firstName ? "" : "Please enter your first name.",
-          auditLastName: lead.lastName ? "" : "Please enter your last name.",
-          auditEmail: isValidEmail(lead.email) ? "" : "Please enter a valid email address.",
+          auditFullName: lead.firstName ? "" : "Please enter your name.",
+          auditEmail: isValidEmail(lead.email) ? "" : "Please enter a valid email address."
+        };
+        if (showErrors) Object.entries(errors).forEach(([id, message]) => setFieldError(id, message));
+        return { lead, valid: !Object.values(errors).some(Boolean) };
+      }
+
+      function validateUrl(showErrors = false) {
+        const lead = readUrlStep();
+        const errors = {
           auditUrl: lead.url ? (isValidUrl(lead.url) ? "" : "Please enter a valid website URL.") : "Please enter your website URL."
         };
         if (showErrors) Object.entries(errors).forEach(([id, message]) => setFieldError(id, message));
         return { lead, valid: !Object.values(errors).some(Boolean) };
       }
 
-      function bindLeadForm() {
-        const button = document.getElementById("auditAnalyzeBtn");
-        const inputs = Array.from(modalBody.querySelectorAll("#auditLeadForm input"));
+      function bindContactStep() {
+        const button = document.getElementById("auditContactNext");
+        const inputs = Array.from(modalBody.querySelectorAll("input"));
         const refresh = () => {
-          const state = validateLead(false);
+          const state = validateContact(false);
           if (button) button.disabled = !state.valid;
           inputs.forEach(input => setFieldError(input.id, ""));
         };
-        inputs.forEach(input => input.addEventListener("input", refresh));
+        inputs.forEach(input => {
+          input.addEventListener("input", refresh);
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !button?.disabled) button.click();
+          });
+        });
+        button?.addEventListener("click", () => {
+          const state = validateContact(true);
+          if (!state.valid) return;
+          currentLead = { ...currentLead, ...state.lead };
+          modalBody.innerHTML = renderUrlStep();
+          bindUrlStep();
+        });
+        refresh();
+      }
+
+      function bindUrlStep() {
+        const button = document.getElementById("auditAnalyzeBtn");
+        const input = document.getElementById("auditUrl");
+        const refresh = () => {
+          const state = validateUrl(false);
+          if (button) button.disabled = !state.valid;
+          if (input) setFieldError(input.id, "");
+        };
+        input?.addEventListener("input", refresh);
+        input?.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !button?.disabled) button.click();
+        });
+        document.getElementById("auditBackToContact")?.addEventListener("click", () => {
+          currentLead = { ...currentLead, ...readUrlStep() };
+          modalBody.innerHTML = renderContactStep();
+          bindContactStep();
+        });
         button?.addEventListener("click", submitAudit);
         refresh();
       }
 
       function renderResults(data, websiteUrl) {
-        const rawCategories = Array.isArray(data.categories) ? data.categories : [];
-        const categories = rawCategories.map(item => ({
-          ...item,
-          score: normalizeDisplayScore(item?.score)
-        }));
         const score = displayOverallScore(data);
-        const summary = data.summary || "Your website report is ready.";
         const scoreExplanation = data.score_explanation || "What is hurting your website is unclear messaging. Make the page quickly say who you help, what you offer, and what visitors should do next.";
         const { label, color } = scoreGradeLabel(score);
         return `
-<div class="analyzer-dashboard">
-  <div class="analysis-topbar">
-    <div class="analysis-brand">
-      <div class="analysis-brand-mark">NL</div>
-      <div>
-        <strong>Nexus Luma Website Analysis</strong>
-        <span>${escapeHTML(websiteUrl)}</span>
+<div class="audit-flow-shell">
+  <div class="audit-flow-card">
+    <div class="audit-flow-slide">
+      <div class="audit-flow-mark">✓</div>
+      <div class="audit-flow-pill">Analysis Complete</div>
+      ${progressDots(3)}
+      <h3>Your Website Score Is ${score}</h3>
+      <div class="audit-result-score" aria-label="Website score ${score} out of 100">
+        <div><strong style="color:${color}">${score}</strong><span>${escapeHTML(label)}</span></div>
       </div>
-    </div>
-    <div class="analysis-actions">
-      <span class="analysis-pill">Live Page Scan</span>
-      <span class="analysis-pill primary">Claude Analysis</span>
-    </div>
-  </div>
-
-  <div class="analysis-head">
-    <div>
-      <h3>Website Overview</h3>
-      <p>${escapeHTML(summary)}</p>
-    </div>
-    <div class="analysis-summary-card">
-      <div class="analysis-summary-values">
-        <strong>+93</strong>
-        <div class="analysis-summary-target"><small>Overall Upgrade</small></div>
+      <div class="audit-brief-box">
+        <strong>Quick Review</strong>
+        ${escapeHTML(scoreExplanation)}
       </div>
-      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Now To Get A 93 Overall</button>
-    </div>
-  </div>
-
-  <div class="analysis-grid">
-    <div class="analysis-card score-card compact">
-      <h4>Your Overall Website Score</h4>
-      <div class="score-wheel-wrap">
-        ${buildWheelSVG(score)}
-        <div class="score-grade" style="color:${color}">${label}</div>
+      <p>A stronger score can mean clearer trust, better calls-to-action, smoother mobile flow, and more visitors moving toward a call, booking, or quote request.</p>
+      <div class="audit-flow-actions">
+        <button class="audit-flow-primary" type="button" data-audit-upgrade>Upgrade My Website Score</button>
+        <button class="audit-flow-secondary" type="button" id="auditRunAgain">Analyze Another Website</button>
       </div>
-      <p class="score-summary">${escapeHTML(scoreExplanation)}</p>
+      <p class="audit-privacy-note" style="margin-top:14px;">Analyzed: ${escapeHTML(websiteUrl)}</p>
     </div>
-
-    <div class="analysis-card transform-card">
-      <h4>Where Your Website Is Losing Customers</h4>
-      <p class="quick-review">People leave when a site feels unclear, hard to trust, or hard to use. Here is what may be hurting your site and how we fix it.</p>
-      <ul class="transform-list">
-        <li><b>✓</b><span><strong>Unclear offer</strong> We make it easy to know what you do.</span></li>
-        <li><b>✓</b><span><strong>Low trust</strong> We add proof so people feel safe.</span></li>
-        <li><b>✓</b><span><strong>Hard next step</strong> We make calls, forms, and bookings easy.</span></li>
-        <li><b>✓</b><span><strong>Weak page flow</strong> We guide people to take action.</span></li>
-        <li><b>✓</b><span><strong>Mobile problems</strong> We make the site easy to use on phones.</span></li>
-      </ul>
-      <div class="transform-cta">
-        <h5>Attract More Online Customers By Upgrading Your Website</h5>
-        <button class="transform-pill-btn" type="button" data-audit-upgrade>Upgrade Now</button>
-      </div>
-    </div>
-
   </div>
 </div>`;
       }
 
       function bindResults() {
-        const showOffer = () => {
-          modalBody.innerHTML = renderOffer();
-          bindOffer();
-          modalBody.scrollTo({ top: 0, behavior: "smooth" });
-        };
-        modalBody.querySelectorAll("[data-audit-upgrade]").forEach(button => button.addEventListener("click", showOffer));
+        modalBody.querySelectorAll("[data-audit-upgrade]").forEach(button => {
+          button.addEventListener("click", () => {
+            window.location.href = "https://nexuslumaprescreen.netlify.app/";
+          });
+        });
+        document.getElementById("auditRunAgain")?.addEventListener("click", () => {
+          currentAudit = null;
+          currentAnalyzedUrl = "";
+          modalBody.innerHTML = renderContactStep();
+          bindContactStep();
+        });
       }
 
       function renderError(message) {
@@ -2398,23 +2644,29 @@
 
       function bindError() {
         document.getElementById("auditBackToForm")?.addEventListener("click", () => {
-          modalBody.innerHTML = renderLeadForm();
-          bindLeadForm();
+          modalBody.innerHTML = renderContactStep();
+          bindContactStep();
         });
       }
 
       function renderLoading(step) {
         return `
-<div class="analyzer-loading">
-  <div class="analyzer-spinner"></div>
-  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.05em;margin:0 0 10px;">Analyzing Your Website...</h3>
-  <div class="analyzer-loading-step">${step}</div>
-  <div class="audit-loading-list">
-    <span><b>✓</b> Reviewing website structure</span>
-    <span><b>✓</b> Checking conversion opportunities</span>
-    <span><b>✓</b> Analyzing trust signals</span>
-    <span><b>✓</b> Evaluating calls-to-action</span>
-    <span><b>✓</b> Identifying growth opportunities</span>
+<div class="audit-flow-shell">
+  <div class="audit-flow-card">
+    <div class="audit-flow-slide">
+      <div class="analyzer-spinner"></div>
+      <div class="audit-flow-pill">Scanning Your Website</div>
+      ${progressDots(3)}
+      <h3>Analyzing Your Website...</h3>
+      <p class="analyzer-loading-step">${step}</p>
+      <div class="audit-loading-list">
+        <span><b>✓</b> Reviewing website structure</span>
+        <span><b>✓</b> Checking conversion opportunities</span>
+        <span><b>✓</b> Analyzing trust signals</span>
+        <span><b>✓</b> Evaluating calls-to-action</span>
+        <span><b>✓</b> Identifying growth opportunities</span>
+      </div>
+    </div>
   </div>
 </div>`;
       }
@@ -2432,9 +2684,9 @@
       function stopLoadingCycle() { if (stepInterval) { clearInterval(stepInterval); stepInterval = null; } }
 
       async function submitAudit() {
-        const state = validateLead(true);
+        const state = validateUrl(true);
         if (!state.valid) return;
-        currentLead = { ...state.lead, url: normaliseUrl(state.lead.url) };
+        currentLead = { ...currentLead, ...state.lead, url: normaliseUrl(state.lead.url) };
         const button = document.getElementById("auditAnalyzeBtn");
         if (button) { button.disabled = true; button.textContent = "Analyzing..."; }
         startLoadingCycle();
@@ -2467,67 +2719,9 @@
         }
       }
 
-      function renderOffer() {
-        return `
-<div class="audit-step audit-offer">
-  <div class="audit-modal-kicker">Website Growth Upgrade</div>
-  <h3>Build a Website That Works While You Work</h3>
-  <p>Your website should not just sit online. It should create trust, explain your value, capture interest, and guide visitors toward calls, bookings, and new customers even when you are busy running the business.</p>
-  <div class="audit-offer-card">
-    <div>
-      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Turn Attention Into Action</h4>
-      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">When visitors land on your site, they should quickly feel confident, understand what you offer, and know the next step to take. This upgrade path is built to help your website become a customer-generating system, not just a digital brochure.</p>
-      <ul class="audit-benefits">
-        <li>A clearer message that makes people understand your value fast</li>
-        <li>Stronger trust signals so visitors feel safe choosing you</li>
-        <li>Better calls-to-action that guide people to call, book, or request a quote</li>
-        <li>Lead capture systems that keep working after visitors leave the page</li>
-        <li>Automation pathways so your website can help qualify and move leads forward</li>
-        <li>A cleaner customer journey designed to create more opportunities online</li>
-      </ul>
-      <div class="audit-transformations">
-        <div class="audit-transform-row">
-          <strong>Before: Visitors browse and disappear.</strong>
-          <span>After: Visitors know why you matter and how to start.</span>
-        </div>
-        <div class="audit-transform-row">
-          <strong>Before: Your website feels passive.</strong>
-          <span>After: Your website supports sales, trust, follow-up, and lead flow.</span>
-        </div>
-        <div class="audit-transform-row">
-          <strong>Before: Growth feels random.</strong>
-          <span>After: You have a clear path to more calls, bookings, and customers.</span>
-        </div>
-      </div>
-      <div class="audit-offer-actions single">
-        <button class="audit-primary-btn" id="auditStartPayment" type="button">Get Started Now For Free</button>
-      </div>
-    </div>
-    <div class="audit-price">
-      <div>
-        <span>Your Next Growth Step</span>
-        <strong>Start</strong>
-        <ul class="audit-vision-list">
-          <li>More people understanding what you do</li>
-          <li>More confidence before the first call</li>
-          <li>More leads captured from the traffic you already have</li>
-          <li>A website that works even when you are not online</li>
-        </ul>
-      </div>
-      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">Start with a free prescreen so we can see where your website can become clearer, stronger, and more ready to convert.</p>
-    </div>
-  </div>
-</div>`;
-      }
+      function renderOffer() { return renderResults(currentAudit || {}, currentAnalyzedUrl || currentLead?.url || ""); }
 
-      function bindOffer() {
-        document.getElementById("auditStartPayment")?.addEventListener("click", () => {
-          window.location.href = "https://nexuslumaprescreen.netlify.app/";
-        });
-        document.getElementById("auditMaybeLater")?.addEventListener("click", () => {
-          modalBody.innerHTML = renderSuccess("No problem. Your free audit is complete, and your report can guide your next website improvements.");
-        });
-      }
+      function bindOffer() { bindResults(); }
 
       function loadStripeScript() {
         return new Promise((resolve, reject) => {
@@ -2593,7 +2787,7 @@
             if (result.error) {
               paymentError.textContent = result.error.message || "Payment failed. Please try again.";
               payBtn.disabled = false;
-              payBtn.textContent = "Pay $99 And Start";
+              payBtn.textContent = "Start My Website Growth Plan";
               return;
             }
             modalBody.innerHTML = renderSuccess("You're In! Your website improvement process has officially started.");
@@ -2619,9 +2813,9 @@
       }
 
       function launchAuditModal() {
-        modalBody.innerHTML = renderLeadForm();
+        modalBody.innerHTML = renderContactStep();
         openModal();
-        bindLeadForm();
+        bindContactStep();
       }
 
       openBtn?.addEventListener("click", launchAuditModal);
