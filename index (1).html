@@ -2009,6 +2009,20 @@
         const num = Number(value);
         return Number.isFinite(num) ? Math.max(0, Math.min(100, Math.round(num))) : 0;
       }
+      function normalizeDisplayScore(value) {
+        const score = normalizeScore(value);
+        if (score >= 65 && score <= 80) return score;
+        if (score < 65) return 70 + Math.round((score / 65) * 5);
+        return 76 + Math.round(((Math.min(score, 100) - 81) / 19) * 4);
+      }
+      function displayOverallScore(data) {
+        const rawCategories = Array.isArray(data?.categories) ? data.categories : [];
+        const categoryScores = rawCategories.map(item => normalizeDisplayScore(item?.score));
+        const derivedScore = categoryScores.length
+          ? Math.round(categoryScores.reduce((sum, value) => sum + value, 0) / categoryScores.length)
+          : normalizeScore(data?.overall_score);
+        return Math.max(65, normalizeDisplayScore(derivedScore));
+      }
 
       function scoreColor(s) {
         s = normalizeScore(s);
@@ -2185,12 +2199,9 @@
         const rawCategories = Array.isArray(data.categories) ? data.categories : [];
         const categories = rawCategories.map(item => ({
           ...item,
-          score: normalizeScore(item?.score)
+          score: normalizeDisplayScore(item?.score)
         }));
-        const derivedScore = categories.length
-          ? Math.round(categories.reduce((sum, item) => sum + item.score, 0) / categories.length)
-          : normalizeScore(data.overall_score);
-        const score = normalizeScore(derivedScore);
+        const score = displayOverallScore(data);
         const summary = data.summary || "Your website report is ready.";
         const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
         const { label, color } = scoreGradeLabel(score);
@@ -2199,7 +2210,6 @@
         const avgCategory = categories.length
           ? Math.round(categories.reduce((sum, item) => sum + (Number(item.score) || 0), 0) / categories.length)
           : score;
-        const upgradeGap = Math.max(0, 95 - score);
 
         const catsHTML = categories.map(c => `
 <div class="cat-item">
@@ -2245,10 +2255,10 @@
     </div>
     <div class="analysis-summary-card">
       <div class="analysis-summary-values">
-        <strong>+${upgradeGap}</strong>
-        <div class="analysis-summary-target"><small>Upgrade</small></div>
+        <strong>93</strong>
+        <div class="analysis-summary-target"><small>Get A 93 Overall</small></div>
       </div>
-      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Now</button>
+      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Now To Get A 93 Overall</button>
     </div>
   </div>
 
@@ -2406,7 +2416,7 @@
           currentAnalyzedUrl = payload.analyzed_url || currentLead.url;
           modalBody.innerHTML = renderResults(currentAudit, currentAnalyzedUrl);
           requestAnimationFrame(() => {
-            animateWheel(currentAudit.overall_score);
+            animateWheel(displayOverallScore(currentAudit));
             animateBars();
           });
           bindResults();
