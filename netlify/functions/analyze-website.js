@@ -99,7 +99,8 @@ function finalizeResult(result, analyzedUrl) {
     nextResult.is_major_website = true;
     nextResult.major_website_name = profile.label;
     nextResult.score_explanation = `${profile.label} converts well because the page is fast to understand, easy to trust, and clear about what visitors should do next. Big brands win attention by using simple messaging, strong proof, clean layouts, and obvious action paths.`;
-    nextResult.benchmark_note = `High converting websites score 83 & above. ${profile.label} is a strong benchmark because visitors can quickly understand the offer, trust the brand, and take action without confusion.`;
+    nextResult.opportunity_text = `High-converting websites usually score 83 and above because they make buying feel simple. The Website Lead Conversion Plan shows how to bring that same clarity, trust, and action path into your own website.`;
+    nextResult.benchmark_note = nextResult.opportunity_text;
     nextResult.summary = `${profile.label} is a high-converting benchmark website. It works because it makes trust, clarity, speed, and the next step feel simple for the visitor.`;
     return nextResult;
   }
@@ -110,7 +111,8 @@ function finalizeResult(result, analyzedUrl) {
     score: averageBusinessScore(category.score)
   }));
   nextResult.is_major_website = false;
-  nextResult.benchmark_note = "High converting websites score 83 & above. Your website has a workable foundation, and the next level is making trust, the offer, and the next step easier to understand fast.";
+  nextResult.opportunity_text = opportunityText(nextResult.categories || [], analyzedUrl);
+  nextResult.benchmark_note = nextResult.opportunity_text;
   return nextResult;
 }
 
@@ -279,17 +281,32 @@ function scoreExplanation(categories, signals) {
   const weakest = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
   const excerpt = pageSentence(signals);
   const issue = weakest ? weakest.name.toLowerCase() : "clarity";
-  const quoted = excerpt ? ` A line like "${excerpt}" may give visitors too much to figure out at once.` : "";
+  const quoted = excerpt ? `, and wording like "${excerpt}" may make the offer harder to understand fast` : "";
   const messages = {
-    "visual design": `What is hurting your website is that the page may not look clear and trustworthy fast enough.${quoted} Use stronger visuals, cleaner sections, and simple headings so visitors know they are in the right place.`,
-    "page speed": "What is hurting your website is that the page may load a bit slower than visitors expect. A slow page can make people leave before they read your offer, so images, scripts, and heavy sections should stay lean.",
-    "seo foundations": "What is hurting your website is that search engines may not clearly understand what service you offer. Clear page titles, headings, and service words help more people find you online.",
-    "conversion & ctas": `What is hurting your website is that the next step may not be clear enough.${quoted} Use one strong offer and one easy action, like calling, booking, or requesting a quote.`,
-    "mobile experience": "What is hurting your website is that phone visitors may have to work too hard. Buttons, text, and forms should be easy to tap, read, and use on a small screen.",
-    "trust signals": "What is hurting your website is weak trust proof. Add or improve testimonials, reviews, real project examples, and clear proof so visitors feel safe choosing your business."
+    "visual design": `Your website has a solid foundation, but it may not build trust fast enough for a new visitor${quoted}. When the first impression feels unclear, potential customers often leave before calling, booking, or requesting a quote.`,
+    "page speed": "Your website has a solid foundation, but the page may feel slow for people who are ready to take action. When visitors have to wait, they often leave before calling, booking, or requesting a quote.",
+    "seo foundations": "Your website has a solid foundation, but people may not quickly see what service you offer or why it matters. When the page does not make that clear, visitors can leave without becoming leads or customers.",
+    "conversion & ctas": `Your website has a solid foundation, but the next step may not be obvious enough${quoted}. When visitors are unsure what to do next, they often leave without calling, booking, or requesting a quote.`,
+    "mobile experience": "Your website has a solid foundation, but phone visitors may have to work too hard to take action. When calling, booking, or requesting a quote feels difficult, leads can slip away.",
+    "trust signals": "Your website has a solid foundation, but it needs stronger proof that your business is the right choice. Without clear reviews, examples, or trust signals, visitors may leave instead of calling, booking, or requesting a quote."
   };
 
-  return messages[issue] || `What is hurting your website is unclear messaging.${quoted} Make the page quickly say who you help, what you offer, and what visitors should do next.`;
+  return messages[issue] || `Your website has a solid foundation, but visitors may not immediately understand why they should choose your business${quoted}. When the offer and next step are not clear, potential customers often leave without calling, booking, or requesting a quote.`;
+}
+
+function opportunityText(categories, analyzedUrl = "") {
+  const weakest = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
+  const issue = weakest ? weakest.name.toLowerCase() : "conversion";
+  const focus = {
+    "visual design": "trust and first impression",
+    "page speed": "speed and visitor patience",
+    "seo foundations": "clear service messaging",
+    "conversion & ctas": "calls, bookings, and quote requests",
+    "mobile experience": "phone visitor flow",
+    "trust signals": "reviews, proof, and confidence"
+  }[issue] || "trust, clarity, and the next step";
+  const siteName = hostnameFromUrl(analyzedUrl).replace(/\.(com|net|org|co|io)$/i, "") || "your website";
+  return `A few targeted improvements around ${focus} could help ${siteName} turn more of its existing traffic into leads and customers. High-converting websites usually score 83 and above, and the Website Lead Conversion Plan shows exactly what to improve first.`;
 }
 
 function scoreFromParts(parts, fallback = 50) {
@@ -447,6 +464,7 @@ function buildSignalAudit(signals, reason = "") {
     overall_score: overall,
     summary: `The page has a ${overall >= 70 ? "solid" : "workable"} foundation, but the biggest opportunity is making trust, offer clarity, and the next action easier to understand quickly.${sourceNote}`,
     score_explanation: scoreExplanation(categories, signals),
+    opportunity_text: opportunityText(categories, signals.finalUrl),
     page_excerpt: pageSentence(signals),
     categories,
     recommendations: [
@@ -514,6 +532,7 @@ function normalizeResult(result, signals = {}) {
     overall_score: categoryAverage,
     summary: String(result.summary || "Your website was reviewed for design, SEO, trust, mobile experience, and conversion opportunities.").slice(0, 420),
     score_explanation: scoreExplanation(categories, signals),
+    opportunity_text: opportunityText(categories, signals.finalUrl),
     page_excerpt: pageSentence(signals),
     categories,
     recommendations: (Array.isArray(result.recommendations) ? result.recommendations : [])

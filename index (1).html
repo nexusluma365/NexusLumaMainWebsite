@@ -835,6 +835,15 @@
       font-weight: 950;
       margin-bottom: 6px;
     }
+    .audit-brief-box p {
+      max-width: none;
+      margin: 0 0 14px;
+      color: rgba(8,19,58,.66);
+      font-size: inherit;
+      line-height: inherit;
+      text-align: left;
+    }
+    .audit-brief-box p:last-child { margin-bottom: 0; }
 
     /* Loading state */
     .analyzer-loading { text-align: center; padding: 72px 24px; }
@@ -2576,8 +2585,8 @@
 
       function renderResults(data, websiteUrl) {
         const score = displayOverallScore(data);
-        const scoreExplanation = data.score_explanation || "What is hurting your website is unclear messaging. Make the page quickly say who you help, what you offer, and what visitors should do next.";
-        const benchmarkNote = data.benchmark_note || "High converting websites score 83 & above. A stronger score means visitors can understand, trust, and act faster.";
+        const scoreExplanation = data.score_explanation || "Your website has a solid foundation, but visitors may not immediately understand why they should choose your business. When the offer and next step are not clear, potential customers often leave without calling, booking, or requesting a quote.";
+        const opportunityText = data.opportunity_text || data.benchmark_note || "A few targeted improvements could help turn more of your existing traffic into leads and customers. High-converting websites usually score 83 and above, and the Website Lead Conversion Plan shows exactly what to improve first.";
         const { label, color } = scoreGradeLabel(score);
         return `
 <div class="audit-flow-shell">
@@ -2589,9 +2598,10 @@
       </div>
       <div class="audit-brief-box">
         <strong>Quick Review</strong>
-        ${escapeHTML(scoreExplanation)}
+        <p>${escapeHTML(scoreExplanation)}</p>
+        <strong>Opportunity</strong>
+        <p>${escapeHTML(opportunityText)}</p>
       </div>
-      <p>${escapeHTML(benchmarkNote)}</p>
       <div class="audit-flow-actions">
         <button class="audit-flow-primary" type="button" data-audit-upgrade>Upgrade My Website Score</button>
         <button class="audit-flow-secondary" type="button" id="auditRunAgain">Analyze Another Website</button>
