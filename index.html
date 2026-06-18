@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Nexus Luma builds premium, conversion-focused websites that help businesses look professional, build trust, and turn visitors into calls, bookings, quote requests, and customers." />
   <meta name="keywords" content="Best Web designer In North Carolina" />
+  <meta property="og:title" content="Nexus Luma | Premium Web Design That Brings More Leads" />
+  <meta property="og:description" content="Get a premium website built to create trust, explain your offer clearly, and guide visitors toward calls, bookings, and quote requests." />
+  <meta property="og:image" content="Asset/premium-logo-240.webp" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
   <title>Immersive Web Designs</title>
   <link rel="icon" href="Asset/premium-logo-240.webp" type="image/webp">
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -1624,10 +1630,11 @@
     }
     @media (max-width: 520px) {
       #mainNav { padding: 8px 0; }
-      .nav-inner { grid-template-columns: auto 1fr; gap: 10px; }
-      .nav-brand { justify-self: start; }
+      .nav-inner { grid-template-columns: 1fr; gap: 8px; justify-items: center; }
+      .nav-brand { justify-self: center; gap: 0 !important; }
+      .nav-brand img { height: 32px !important; width: auto !important; }
       .nav-brand span { display: none; }
-      .nav-actions { width: auto; max-width: none; justify-self: end; justify-content: flex-end; }
+      .nav-actions { width: min(100%, 340px); max-width: none; justify-self: center; justify-content: center; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
       #mainNav .nav-fx-button { font-size: 10px; border-radius: 13px; }
       .nav-fx-inner { min-height: 34px; padding: 8px 9px; border-radius: 11px; }
       .nav-fx-blob { width: 44px; border-radius: 11px; }
@@ -1635,6 +1642,11 @@
       .product-intro { margin-top: -72px; }
       .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
       .reveal-copy { top: 60%; padding: 0 8px; }
+    }
+    @media (max-width: 360px) {
+      .nav-actions { grid-template-columns: 1fr; width: min(100%, 230px); }
+      #mainNav .nav-fx-button { width: 100%; }
+      .hero-parallax { min-height: 205vh; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
@@ -1655,9 +1667,9 @@
       <div class="nav-actions">
         <button class="nav-fx-button audit-open-trigger" type="button">
           <span class="nav-fx-blob" aria-hidden="true"></span>
-          <span class="nav-fx-inner">Analyze My Website</span>
-        </button>
-        <a class="nav-fx-button" href="pricing_page_design.html">
+        <span class="nav-fx-inner">Analyze your Website</span>
+      </button>
+        <a class="nav-fx-button" href="https://nexuslumaprescreen.netlify.app/">
           <span class="nav-fx-blob" aria-hidden="true"></span>
           <span class="nav-fx-inner">I Need a Website</span>
         </a>
@@ -1721,7 +1733,7 @@
         <article class="what-we-do-card"><h3>Lead Generation Systems</h3><p>Guide visitors toward calling, booking, requesting a quote, or submitting their information with simple conversion paths.</p></article>
         <article class="what-we-do-card"><h3>SEO &amp; Online Visibility</h3><p>Set up clean page structure, search-friendly content, and local visibility foundations so more customers can discover you.</p></article>
       </div>
-      <div class="what-we-do-cta"><a class="btn btn-primary" href="pricing_page_design.html">Call For Your Free Website Growth Plan</a></div>
+      <div class="what-we-do-cta"><a class="btn btn-primary audit-open-trigger" href="#analyzer">Analyze your Website</a></div>
     </section>
 
     <section class="offer-stack" aria-labelledby="offer-stack-title">
@@ -1738,7 +1750,7 @@
         <div class="offer-callout">
           <h3>Start With A Free Website Growth Plan</h3>
           <p>Call us and we will help identify what your website needs to look more professional, build trust faster, and turn more visitors into calls, bookings, or quote requests.</p>
-          <a class="btn btn-primary" href="tel:+13365177347">Call (336) 517-7347</a>
+          <a class="btn btn-primary audit-open-trigger" href="#analyzer">Analyze your Website</a>
         </div>
       </div>
     </section>
@@ -1781,7 +1793,7 @@
     <div class="trust-cta">
       <h3>Ready to make your business look like the obvious choice?</h3>
       <p>Let's build a website that makes your business look professional, builds trust quickly, and helps more visitors become real leads.</p>
-      <a class="btn btn-primary" href="pricing_page_design.html">Get My Free Website Growth Plan</a>
+      <a class="btn btn-primary audit-open-trigger" href="#analyzer">Analyze your Website</a>
     </div>
   </section>
 
@@ -1809,8 +1821,8 @@
           <li class="proof-item"><span class="proof-dot"></span>CTA flow that leads from confidence to quote request.</li>
         </ul>
         <div class="contractor-ctaRow">
-          <a href="pricing_page_design.html" class="btn btn-primary">Call For A Free Growth Plan</a>
-          <a href="pricing_page_design.html" class="btn btn-ghost">View Pricing</a>
+          <a href="#analyzer" class="btn btn-primary audit-open-trigger">Analyze your Website</a>
+          <a href="#analyzer" class="btn btn-ghost audit-open-trigger">Analyze your Website</a>
         </div>
       </div>
     </div>
@@ -1888,7 +1900,7 @@
       <div class="analyzer-overline">Free Website Analysis</div>
       <h2>See What Your Website Is Costing You</h2>
       <p>Launch a free AI-powered conversion audit and see what's helping or hurting your website's ability to generate calls, leads, and customers.</p>
-      <button class="audit-launch-btn" id="auditOpenBtn" type="button">Analyze My Website</button>
+      <button class="audit-launch-btn" id="auditOpenBtn" type="button">Analyze your Website</button>
     </div>
   </section>
 
@@ -2551,7 +2563,7 @@
       </div>
       <div class="audit-flow-actions row">
         <button class="audit-flow-secondary" id="auditBackToContact" type="button">Back</button>
-        <button class="audit-flow-primary" id="auditAnalyzeBtn" type="button" disabled>Analyze My Website</button>
+        <button class="audit-flow-primary" id="auditAnalyzeBtn" type="button" disabled>Analyze your Website</button>
       </div>
     </div>
   </div>
@@ -2667,8 +2679,8 @@
         <p>${escapeHTML(opportunityText)}</p>
       </div>
       <div class="audit-flow-actions">
-        <button class="audit-flow-primary" type="button" data-audit-upgrade>Upgrade My Website Score</button>
-        <button class="audit-flow-secondary" type="button" id="auditRunAgain">Analyze Another Website</button>
+        <button class="audit-flow-primary" type="button" data-audit-upgrade>Analyze your Website</button>
+        <button class="audit-flow-secondary" type="button" id="auditRunAgain">Analyze your Website</button>
       </div>
       <p class="audit-privacy-note" style="margin-top:14px;">Analyzed: ${escapeHTML(websiteUrl)}</p>
     </div>
@@ -2679,7 +2691,10 @@
       function bindResults() {
         modalBody.querySelectorAll("[data-audit-upgrade]").forEach(button => {
           button.addEventListener("click", () => {
-            window.location.href = "https://nexuslumaprescreen.netlify.app/";
+            currentAudit = null;
+            currentAnalyzedUrl = "";
+            modalBody.innerHTML = renderContactStep();
+            bindContactStep();
           });
         });
         document.getElementById("auditRunAgain")?.addEventListener("click", () => {
@@ -2814,7 +2829,7 @@
   <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your website growth plan.</p>
   <div class="payment-box">
     <div id="paymentElement"><div class="analyzer-spinner" style="margin:34px auto;"></div></div>
-    <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Start My Website Growth Plan</button>
+    <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Analyze your Website</button>
     <button class="audit-secondary-btn" id="auditBackToOffer" type="button" style="margin-top:10px;width:100%;">Back To Offer</button>
     <div class="payment-error" id="paymentError"></div>
   </div>
@@ -2859,7 +2874,7 @@
             if (result.error) {
               paymentError.textContent = result.error.message || "Payment failed. Please try again.";
               payBtn.disabled = false;
-              payBtn.textContent = "Start My Website Growth Plan";
+              payBtn.textContent = "Analyze your Website";
               return;
             }
             modalBody.innerHTML = renderSuccess("You're In! Your website improvement process has officially started.");
@@ -2892,7 +2907,10 @@
 
       openBtn?.addEventListener("click", launchAuditModal);
       document.querySelectorAll(".audit-open-trigger").forEach(btn => {
-        btn.addEventListener("click", launchAuditModal);
+        btn.addEventListener("click", (event) => {
+          event.preventDefault();
+          launchAuditModal();
+        });
       });
     })();
   </script>
