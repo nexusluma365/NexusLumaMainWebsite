@@ -26,6 +26,7 @@
     html {
       scroll-behavior: auto;
       overscroll-behavior-y: none;
+      scrollbar-gutter: stable;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -35,7 +36,12 @@
       color: #0b0b0f;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      text-rendering: geometricPrecision;
+      text-rendering: auto;
+    }
+    body.modal-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
     }
     :root {
       --navH: 78px;
@@ -59,10 +65,11 @@
     #mainNav {
       position: fixed; top: 0; width: 100%; z-index: 1000;
       padding: 16px 0;
-      background: rgba(11,11,15,.92);
-      backdrop-filter: blur(20px);
+      background: rgba(11,11,15,.97);
       border-bottom: 1px solid rgba(255,255,255,.08);
-      transform: translateZ(0);
+      transform: translate3d(0,0,0);
+      backface-visibility: hidden;
+      contain: layout paint style;
     }
     .nav-inner {
       max-width: var(--content-max); margin: 0 auto; padding: 0 24px;
@@ -394,11 +401,11 @@
     .audit-launch-btn:hover { transform: translateY(-2px); box-shadow: 0 24px 62px rgba(217,167,79,.36); }
     .audit-launch-btn:disabled { opacity: .62; cursor: not-allowed; transform: none; }
     .analyzer-form {
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.07);
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 20px;
       padding: 32px;
-      backdrop-filter: blur(12px);
+      contain: layout paint;
     }
     .analyzer-field {
       margin-bottom: 14px;
@@ -467,8 +474,7 @@
     .analyzer-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(2,3,8,.72);
-      backdrop-filter: blur(18px);
+      background: rgba(2,3,8,.84);
       z-index: 3000;
       display: flex;
       align-items: center;
@@ -477,6 +483,8 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity .3s ease;
+      transform: translate3d(0,0,0);
+      contain: layout paint style;
     }
     .analyzer-modal-backdrop.active {
       opacity: 1;
@@ -496,6 +504,10 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
       scrollbar-width: thin;
       scrollbar-color: rgba(34,110,145,.28) transparent;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      transform: translate3d(0,0,0);
+      contain: layout paint style;
     }
     .analyzer-modal::-webkit-scrollbar { width: 6px; }
     .analyzer-modal::-webkit-scrollbar-track { background: transparent; }
@@ -838,6 +850,7 @@
       box-shadow: 0 18px 48px rgba(8,19,58,.08);
       padding: 24px;
       min-width: 0;
+      contain: layout paint;
     }
     .analysis-card h4 {
       font-size: 1.28rem;
@@ -1200,7 +1213,7 @@
     .footer-year { margin-top: 14px; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,.5); letter-spacing: 0.04em; }
 
     /* PRIVACY / TERMS MODAL */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(11,11,15,.6); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(11,11,15,.74); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; contain: layout paint style; }
     .modal-backdrop.active { opacity: 1; pointer-events: auto; }
     .modal { max-width: 720px; width: 100%; background: #0f1014; border-radius: 24px; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 70px rgba(0,0,0,.45); color: #fff; padding: 32px; position: relative; display: none; }
     .modal.active { display: block; }
@@ -2007,6 +2020,7 @@
       let stripeInstance = null;
       let stripeElements = null;
       let paymentElement = null;
+      let lockedScrollY = 0;
 
       function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
       function isValidUrl(v) {
@@ -2019,15 +2033,19 @@
       }
 
       function openModal() {
+        lockedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.top = `-${lockedScrollY}px`;
+        document.body.classList.add("modal-open");
         backdrop.classList.add("active");
         backdrop.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
         modalBody.scrollTop = 0;
       }
       function closeModal() {
         backdrop.classList.remove("active");
         backdrop.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
+        document.body.classList.remove("modal-open");
+        document.body.style.top = "";
+        window.scrollTo(0, lockedScrollY);
       }
 
       modalClose.addEventListener("click", closeModal);
