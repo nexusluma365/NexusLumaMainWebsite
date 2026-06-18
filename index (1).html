@@ -2234,8 +2234,6 @@
         const summary = data.summary || "Your website report is ready.";
         const scoreExplanation = data.score_explanation || "Main issue: clarity. Make one clear offer and one clear next step.";
         const { label, color } = scoreGradeLabel(score);
-        const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
-        const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
         return `
 <div class="analyzer-dashboard">
   <div class="analysis-topbar">
@@ -2292,17 +2290,6 @@
       </div>
     </div>
 
-    <div class="analysis-card stat">
-      <div class="stat-kicker">Strongest Area</div>
-      <div class="stat-number">${bestCategory ? escapeHTML(bestCategory.score) : score}</div>
-      <p class="stat-text">${bestCategory ? escapeHTML(bestCategory.name + ": " + bestCategory.note) : "The analyzer found a positive foundation to build from."}</p>
-    </div>
-
-    <div class="analysis-card stat">
-      <div class="stat-kicker">Biggest Opportunity</div>
-      <div class="stat-number">${weakestCategory ? escapeHTML(weakestCategory.score) : score}</div>
-      <p class="stat-text">${weakestCategory ? escapeHTML(weakestCategory.name + ": " + weakestCategory.note) : "The next step is tightening the offer and conversion path."}</p>
-    </div>
   </div>
 </div>`;
       }
