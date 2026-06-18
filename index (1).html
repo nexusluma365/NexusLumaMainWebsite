@@ -162,13 +162,6 @@
       position: absolute;
       pointer-events: none;
     }
-    .nav-phone {
-      color: rgba(255,255,255,.82);
-      font-size: 13px;
-      font-weight: 850;
-      letter-spacing: .04em;
-      white-space: nowrap;
-    }
     #mainNav ul { display: flex; justify-content: center; align-items: center; gap: 48px; list-style: none; }
     #mainNav .nav-cta-item { display: none; }
     .nav-toggle {
@@ -1513,6 +1506,9 @@
     .footer-nav a, .footer-legal a { text-decoration: none; font-size: 14px; font-weight: 700; color: rgba(255,255,255,.74); letter-spacing: -0.01em; transition: color 0.25s ease; }
     .footer-nav a:hover, .footer-legal a:hover { color: rgba(255,255,255,.98); }
     .footer-brand { font-size: 14px; font-weight: 800; color: rgba(255,255,255,.55); letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer-call { margin: 18px auto 0; text-align: center; color: rgba(255,255,255,.78); font-size: 1rem; font-weight: 750; letter-spacing: .01em; }
+    .footer-call a { color: #9fd3dd; font-weight: 900; text-decoration: none; white-space: nowrap; }
+    .footer-call a:hover { color: #fff; }
     .footer-copy { max-width: var(--content-max); margin: 16px auto 0; color: rgba(255,255,255,.68); font-size: 0.95rem; line-height: 1.7; text-align: center; }
     .footer-anchor { display: block; width: 1px; height: 1px; overflow: hidden; }
     .footer-year { margin-top: 14px; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,.5); letter-spacing: 0.04em; }
@@ -1552,7 +1548,6 @@
       #mainNav .nav-fx-button { font-size: 11px; }
       .nav-fx-inner { min-height: 38px; padding: 9px 11px; border-radius: 12px; }
       .nav-fx-blob { width: 52px; border-radius: 12px; }
-      .nav-phone { font-size: 11px; }
       .nav-spacer { display: none; }
       #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
       #mainNav ul.is-open { display: flex; }
@@ -1636,7 +1631,6 @@
       #mainNav .nav-fx-button { font-size: 10px; border-radius: 13px; }
       .nav-fx-inner { min-height: 34px; padding: 8px 9px; border-radius: 11px; }
       .nav-fx-blob { width: 44px; border-radius: 11px; }
-      .nav-phone { font-size: 10px; }
       .hero-parallax { min-height: 190vh; }
       .product-intro { margin-top: -72px; }
       .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
@@ -1667,7 +1661,6 @@
           <span class="nav-fx-blob" aria-hidden="true"></span>
           <span class="nav-fx-inner">I Need a Website</span>
         </a>
-        <span class="nav-phone">(336) 517-7347</span>
       </div>
     </div>
   </nav>
@@ -1925,6 +1918,7 @@
         <a href="#" data-modal-trigger="terms" aria-label="Terms of Service">Terms</a>
       </div>
     </div>
+    <p class="footer-call">Having any Questions Call <a href="tel:+13365177347">(336) 517-7347</a></p>
     <p class="footer-copy">Nexus Luma, a brand operated under TonoSound LLC, is a web development company providing modern web design and full-stack development for both new and established businesses. Every project is backed by our 90-day money-back guarantee, making your investment low-risk—if we fail to deliver within the agreed timeline, you'll receive a full refund. We also offer flexible payment plans to make it simple to get started and easy to scale as your business grows.</p>
     <p class="footer-year">© 2026 Nexus Luma. All rights reserved.</p>
   </footer>
