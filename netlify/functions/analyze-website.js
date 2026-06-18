@@ -83,9 +83,12 @@ function collectSignals(html, finalUrl, elapsedMs) {
   const buttonCount = (html.match(/<button\b|role=["']button["']/gi) || []).length;
   const phoneLinks = (html.match(/href=["']tel:/gi) || []).length;
   const mailLinks = (html.match(/href=["']mailto:/gi) || []).length;
-  const https = finalUrl.startsWith("https://");
+  const viewportMeta = /<meta[^>]+name=["']viewport["']/i.test(html);
   const headings = extractHeadings(html);
   const visibleText = extractVisibleText(html);
+  const proofSignals = (visibleText.match(/\b(review|reviews|testimonial|testimonials|case study|portfolio|guarantee|licensed|insured|certified|award|trusted)\b/gi) || []).length;
+  const localSignals = (visibleText.match(/\b(local|near me|service area|serving|city|county|neighborhood)\b/gi) || []).length;
+  const https = finalUrl.startsWith("https://");
 
   return {
     finalUrl,
@@ -100,6 +103,9 @@ function collectSignals(html, finalUrl, elapsedMs) {
     buttonCount,
     phoneLinks,
     mailLinks,
+    viewportMeta,
+    proofSignals,
+    localSignals,
     https,
     headings,
     visibleText
@@ -177,6 +183,142 @@ function claudeModel() {
   return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
 }
 
+function emptySignals(url, reason) {
+  return {
+    finalUrl: url,
+    fetchedInMs: 0,
+    htmlBytes: 0,
+    title: "",
+    description: "",
+    h1Count: 0,
+    imgCount: 0,
+    imgAltCount: 0,
+    formCount: 0,
+    buttonCount: 0,
+    phoneLinks: 0,
+    mailLinks: 0,
+    viewportMeta: false,
+    proofSignals: 0,
+    localSignals: 0,
+    https: url.startsWith("https://"),
+    headings: [],
+    visibleText: "",
+    fetchIssue: reason || ""
+  };
+}
+
+function scoreFromChecks(checks, fallback = 50) {
+  if (!checks.length) return fallback;
+  return clampScore(Math.round(checks.reduce((sum, value) => sum + (value ? 1 : 0), 0) / checks.length * 100), fallback);
+}
+
+function buildSignalAudit(signals, reason = "") {
+  const hasTitle = Boolean(signals.title && signals.title.length >= 10);
+  const hasDescription = Boolean(signals.description && signals.description.length >= 40);
+  const hasOneH1 = signals.h1Count === 1;
+  const hasAltCoverage = signals.imgCount === 0 || signals.imgAltCount / signals.imgCount >= 0.65;
+  const hasContactPath = signals.formCount > 0 || signals.phoneLinks > 0 || signals.mailLinks > 0;
+  const hasCTA = signals.buttonCount >= 2 || hasContactPath;
+  const hasProof = signals.proofSignals >= 2;
+  const hasVisibleContent = Boolean(signals.visibleText && signals.visibleText.length >= 700);
+  const isFastEnough = !signals.fetchedInMs || signals.fetchedInMs <= 2500;
+  const isReasonableSize = !signals.htmlBytes || signals.htmlBytes <= 180000;
+  const hasHeadings = signals.headings.length >= 2;
+
+  const categories = [
+    {
+      name: "Visual Design",
+      score: scoreFromChecks([hasTitle, hasHeadings, hasVisibleContent, signals.imgCount > 0], 58),
+      note: signals.imgCount > 0
+        ? "The page includes visual assets and headings that can support a professional first impression."
+        : "The page needs stronger visual proof and more scannable structure to create confidence quickly."
+    },
+    {
+      name: "Page Speed",
+      score: scoreFromChecks([isFastEnough, isReasonableSize, signals.htmlBytes > 0], 55),
+      note: signals.fetchedInMs
+        ? `The HTML responded in about ${signals.fetchedInMs}ms; asset weight and scripts should still be kept lean.`
+        : "The analyzer could not time the page response, so speed should be checked directly after the page is reachable."
+    },
+    {
+      name: "SEO Foundations",
+      score: scoreFromChecks([hasTitle, hasDescription, hasOneH1, hasAltCoverage, signals.https, signals.localSignals > 0], 52),
+      note: hasDescription && hasOneH1
+        ? "Core metadata and heading structure are present, which gives the page a usable SEO foundation."
+        : "The page should strengthen title, meta description, H1 structure, image alt text, and local/service relevance."
+    },
+    {
+      name: "Conversion & CTAs",
+      score: scoreFromChecks([hasCTA, hasContactPath, signals.buttonCount >= 2, signals.formCount > 0 || signals.phoneLinks > 0], 50),
+      note: hasContactPath
+        ? "There is a visible contact path, but CTAs should be repeated around key decision points."
+        : "The page needs a clearer contact path with visible calls, quote requests, booking, or form actions."
+    },
+    {
+      name: "Mobile Experience",
+      score: scoreFromChecks([signals.viewportMeta, hasVisibleContent, hasCTA, isReasonableSize], 54),
+      note: signals.viewportMeta
+        ? "The page includes a viewport tag; mobile readability and CTA spacing should still be tested on real devices."
+        : "The page is missing a clear viewport signal, which can hurt mobile layout and readability."
+    },
+    {
+      name: "Trust Signals",
+      score: scoreFromChecks([hasProof, signals.https, hasAltCoverage, signals.visibleText.length > 1200], 48),
+      note: hasProof
+        ? "Trust language appears on the page, but proof should be placed near CTAs and buying decisions."
+        : "Add reviews, testimonials, portfolio proof, guarantees, certifications, or other credibility signals."
+    }
+  ];
+
+  const overall = Math.round(categories.reduce((sum, item) => sum + item.score, 0) / categories.length);
+  const fetchNote = signals.fetchIssue ? ` The analyzer could not fully fetch the submitted page: ${signals.fetchIssue}.` : "";
+  const sourceNote = reason && !signals.fetchIssue ? " This report was generated from live page structure signals." : fetchNote;
+
+  return {
+    overall_score: overall,
+    summary: `The page has a ${overall >= 70 ? "solid" : "workable"} foundation, but the biggest opportunity is making trust, offer clarity, and the next action easier to understand quickly.${sourceNote}`,
+    categories,
+    recommendations: [
+      "<strong>Clarify the offer</strong> - make the first screen explain who you help, what you offer, and why someone should choose you.",
+      "<strong>Strengthen trust proof</strong> - place reviews, examples, guarantees, or credentials close to the main CTA.",
+      "<strong>Improve the action path</strong> - repeat phone, quote, booking, or contact actions where visitors make decisions.",
+      "<strong>Tighten SEO foundations</strong> - use clear title tags, one focused H1, descriptive headings, and relevant service/local keywords.",
+      "<strong>Check mobile flow</strong> - make sure text, buttons, images, and forms are easy to scan and tap on a phone."
+    ],
+    audit_sections: {
+      strengths: [
+        hasTitle ? "The page has a readable title foundation." : "The submitted page can be shaped into a clearer conversion path.",
+        hasVisibleContent ? "The page has enough content for visitors and search engines to understand the business." : "The page has room to add clearer service and proof content."
+      ],
+      conversion_opportunities: [
+        "Make the primary CTA more specific and visible before visitors scroll away.",
+        "Place trust proof near the sections where visitors decide whether to call, book, or request a quote."
+      ],
+      design_user_experience: "Use a clean visual hierarchy with short sections, clear headings, proof, and repeated contact paths.",
+      messaging_offer_clarity: "The messaging should quickly explain the audience, offer, outcome, and reason to choose the business.",
+      trust_credibility: "Add or elevate reviews, testimonials, project examples, guarantees, credentials, and clear business details.",
+      cta_effectiveness: "Every major section should make the next step obvious without making the page feel repetitive or heavy.",
+      mobile_experience: "Mobile visitors need readable copy, fast-loading visuals, tap-friendly buttons, and a direct contact path.",
+      seo_visibility: "Build stronger SEO foundations with focused metadata, heading structure, service terms, local relevance, and image alt text.",
+      priority_improvements: [
+        "Clarify the above-the-fold value proposition.",
+        "Add stronger proof near the first and final CTAs.",
+        "Make the contact, quote, or booking path easier to find."
+      ],
+      quick_wins: [
+        "Use one specific primary CTA across the page.",
+        "Add review or portfolio proof near the top.",
+        "Tighten headings so each section explains a clear benefit."
+      ],
+      recommended_next_steps: [
+        "Turn the audit findings into a focused website improvement plan.",
+        "Prioritize changes that increase trust and lead submissions first."
+      ]
+    },
+    analysis_source: reason ? "page-signals-fallback" : "page-signals"
+  };
+}
+
 function normalizeResult(result) {
   const categories = CATEGORY_NAMES.map((name, index) => {
     const source = (result.categories || []).find((item) => item && item.name === name) || (result.categories || [])[index] || {};
@@ -244,10 +386,6 @@ exports.handler = async (event) => {
     return json(405, { error: "Use POST to analyze a website." });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return json(500, { error: "ANTHROPIC_API_KEY is not configured on the server." });
-  }
-
   let body;
   try {
     body = JSON.parse(event.body || "{}");
@@ -263,63 +401,90 @@ exports.handler = async (event) => {
   }
 
   try {
-    const startedAt = Date.now();
-    const siteResponse = await fetch(url, {
-      redirect: "follow",
-      signal: timeoutSignal(WEBSITE_FETCH_TIMEOUT_MS),
-      headers: {
-        "user-agent": "NexusLumaWebsiteAnalyzer/1.0 (+https://nexusluma.com)"
-      }
-    });
-
-    if (!siteResponse.ok) {
-      return json(422, { error: `The website returned HTTP ${siteResponse.status}. Please check the URL and try again.` });
-    }
-
-    const contentType = siteResponse.headers.get("content-type") || "";
-    if (!contentType.includes("text/html")) {
-      return json(422, { error: "The submitted URL did not return an HTML page." });
-    }
-
-    const html = (await siteResponse.text()).slice(0, 90000);
-    const signals = collectSignals(html, siteResponse.url || url, Date.now() - startedAt);
     const lead = {
       firstName: String(body.firstName || "").trim(),
       lastName: String(body.lastName || "").trim(),
       email: String(body.email || "").trim(),
       url
     };
-    const prompt = buildPrompt(url, lead, signals);
+    const startedAt = Date.now();
+    let signals;
+    let fetchIssue = "";
 
-    const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      signal: timeoutSignal(CLAUDE_TIMEOUT_MS),
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: claudeModel(),
-        max_tokens: 1100,
-        temperature: 0.2,
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
-
-    if (!claudeResponse.ok) {
-      const errorText = await claudeResponse.text();
-      return json(502, {
-        error: "Claude analyzer request failed.",
-        details: errorText.slice(0, 500),
-        model: claudeModel()
+    try {
+      const siteResponse = await fetch(url, {
+        redirect: "follow",
+        signal: timeoutSignal(WEBSITE_FETCH_TIMEOUT_MS),
+        headers: {
+          "user-agent": "NexusLumaWebsiteAnalyzer/1.0 (+https://nexusluma.com)"
+        }
       });
+
+      if (!siteResponse.ok) {
+        fetchIssue = `The website returned HTTP ${siteResponse.status}.`;
+        signals = emptySignals(url, fetchIssue);
+      } else {
+        const contentType = siteResponse.headers.get("content-type") || "";
+        if (!contentType.includes("text/html")) {
+          fetchIssue = "The submitted URL did not return an HTML page.";
+          signals = emptySignals(siteResponse.url || url, fetchIssue);
+        } else {
+          const html = (await siteResponse.text()).slice(0, 90000);
+          signals = collectSignals(html, siteResponse.url || url, Date.now() - startedAt);
+        }
+      }
+    } catch (error) {
+      fetchIssue = error.name === "TimeoutError" || error.name === "AbortError"
+        ? "The website took too long to respond."
+        : error.message || "The website could not be fetched.";
+      signals = emptySignals(url, fetchIssue);
     }
 
-    const claudePayload = await claudeResponse.json();
-    const result = normalizeResult(parseClaudeJson(claudePayload));
-    await sendLeadWebhook(lead, result, signals.finalUrl);
-    return json(200, { result, analyzed_url: signals.finalUrl });
+    if (!process.env.ANTHROPIC_API_KEY) {
+      const result = buildSignalAudit(signals, "ANTHROPIC_API_KEY is not configured.");
+      await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback" });
+    }
+
+    const prompt = buildPrompt(url, lead, signals);
+
+    try {
+      const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        signal: timeoutSignal(CLAUDE_TIMEOUT_MS),
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": process.env.ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+          model: claudeModel(),
+          max_tokens: 1100,
+          temperature: 0.2,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+
+      if (!claudeResponse.ok) {
+        const errorText = await claudeResponse.text();
+        const result = buildSignalAudit(signals, `Claude request failed: ${errorText.slice(0, 180)}`);
+        await sendLeadWebhook(lead, result, signals.finalUrl);
+        return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel() });
+      }
+
+      const claudePayload = await claudeResponse.json();
+      const result = normalizeResult(parseClaudeJson(claudePayload));
+      result.analysis_source = "claude";
+      await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "claude" });
+    } catch (error) {
+      const reason = error.name === "TimeoutError" || error.name === "AbortError"
+        ? "Claude took too long to respond."
+        : error.message || "Claude analysis was unavailable.";
+      const result = buildSignalAudit(signals, reason);
+      await sendLeadWebhook(lead, result, signals.finalUrl);
+      return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel() });
+    }
   } catch (error) {
     return json(500, { error: "The analyzer could not complete the scan.", details: error.message });
   }
