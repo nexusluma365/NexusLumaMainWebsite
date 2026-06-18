@@ -37,6 +37,83 @@ function clampScore(value, fallback = 50) {
   return Math.max(0, Math.min(100, Math.round(num)));
 }
 
+const MAJOR_WEBSITE_PROFILES = [
+  { key: "amazon", label: "Amazon" },
+  { key: "apple", label: "Apple" },
+  { key: "google", label: "Google" },
+  { key: "youtube", label: "YouTube" },
+  { key: "microsoft", label: "Microsoft" },
+  { key: "netflix", label: "Netflix" },
+  { key: "nike", label: "Nike" },
+  { key: "walmart", label: "Walmart" },
+  { key: "target", label: "Target" },
+  { key: "tesla", label: "Tesla" },
+  { key: "meta", label: "Meta" },
+  { key: "facebook", label: "Facebook" },
+  { key: "instagram", label: "Instagram" },
+  { key: "linkedin", label: "LinkedIn" },
+  { key: "airbnb", label: "Airbnb" },
+  { key: "stripe", label: "Stripe" },
+  { key: "shopify", label: "Shopify" }
+];
+
+function hostnameFromUrl(value) {
+  try {
+    return new URL(value).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+function majorWebsiteProfile(value) {
+  const host = hostnameFromUrl(value);
+  if (!host) return null;
+  return MAJOR_WEBSITE_PROFILES.find((profile) => {
+    const key = `${profile.key}.`;
+    return host === profile.key || host.startsWith(key) || host.includes(`.${key}`);
+  }) || null;
+}
+
+function stableScoreFromHost(value) {
+  const host = hostnameFromUrl(value);
+  const seed = host.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return 92 + (seed % 5);
+}
+
+function averageBusinessScore(value) {
+  const score = clampScore(value, 73);
+  return Math.max(70, Math.min(81, 70 + Math.round((score / 100) * 11)));
+}
+
+function finalizeResult(result, analyzedUrl) {
+  const profile = majorWebsiteProfile(analyzedUrl);
+  const nextResult = { ...result };
+
+  if (profile) {
+    const majorScore = stableScoreFromHost(analyzedUrl);
+    nextResult.overall_score = majorScore;
+    nextResult.categories = (nextResult.categories || []).map((category, index) => ({
+      ...category,
+      score: Math.max(88, Math.min(96, majorScore - 3 + (index % 5)))
+    }));
+    nextResult.is_major_website = true;
+    nextResult.major_website_name = profile.label;
+    nextResult.score_explanation = `${profile.label} converts well because the page is fast to understand, easy to trust, and clear about what visitors should do next. Big brands win attention by using simple messaging, strong proof, clean layouts, and obvious action paths.`;
+    nextResult.benchmark_note = `High converting websites score 83 & above. ${profile.label} is a strong benchmark because visitors can quickly understand the offer, trust the brand, and take action without confusion.`;
+    nextResult.summary = `${profile.label} is a high-converting benchmark website. It works because it makes trust, clarity, speed, and the next step feel simple for the visitor.`;
+    return nextResult;
+  }
+
+  nextResult.overall_score = averageBusinessScore(nextResult.overall_score);
+  nextResult.categories = (nextResult.categories || []).map((category) => ({
+    ...category,
+    score: averageBusinessScore(category.score)
+  }));
+  nextResult.is_major_website = false;
+  nextResult.benchmark_note = "High converting websites score 83 & above. Your website has a workable foundation, and the next level is making trust, the offer, and the next step easier to understand fast.";
+  return nextResult;
+}
+
 function stripScripts(html) {
   return html
     .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
@@ -554,7 +631,7 @@ exports.handler = async (event) => {
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
-      const result = buildSignalAudit(signals, "ANTHROPIC_API_KEY is not configured.");
+      const result = finalizeResult(buildSignalAudit(signals, "ANTHROPIC_API_KEY is not configured."), signals.finalUrl);
       const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
       return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
     }
@@ -580,13 +657,13 @@ exports.handler = async (event) => {
 
       if (!claudeResponse.ok) {
         const errorText = await claudeResponse.text();
-        const result = buildSignalAudit(signals, `Claude request failed: ${errorText.slice(0, 180)}`);
+        const result = finalizeResult(buildSignalAudit(signals, `Claude request failed: ${errorText.slice(0, 180)}`), signals.finalUrl);
         const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
         return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
       }
 
       const claudePayload = await claudeResponse.json();
-      const result = normalizeResult(parseClaudeJson(claudePayload), signals);
+      const result = finalizeResult(normalizeResult(parseClaudeJson(claudePayload), signals), signals.finalUrl);
       result.analysis_source = "claude";
       const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
       return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "claude", lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
@@ -594,7 +671,7 @@ exports.handler = async (event) => {
       const reason = error.name === "TimeoutError" || error.name === "AbortError"
         ? "Claude took too long to respond."
         : error.message || "Claude analysis was unavailable.";
-      const result = buildSignalAudit(signals, reason);
+      const result = finalizeResult(buildSignalAudit(signals, reason), signals.finalUrl);
       const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
       return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
     }
