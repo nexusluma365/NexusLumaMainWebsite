@@ -916,9 +916,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(34,110,145,.12);
-      color: #226e91;
-      font-size: .78rem;
+      background: rgba(22,163,74,.14);
+      color: #16a34a;
+      font-size: .95rem;
       font-weight: 950;
     }
     .transform-list strong {
@@ -2228,10 +2228,6 @@
   <span class="rec-num">${i+1}</span>
   <span class="rec-text">${safeRecommendation(r)}</span>
 </li>`).join("");
-        const quickReview = weakestCategory
-          ? `Your quickest lift is ${weakestCategory.name.toLowerCase()}. Improve that first, then tighten trust and the next-step path so more visitors know why to act.`
-          : "Your quickest lift is making the offer, proof, and next step easier to understand before visitors leave.";
-
         return `
 <div class="analyzer-dashboard">
   <div class="analysis-topbar">
@@ -2255,8 +2251,8 @@
     </div>
     <div class="analysis-summary-card">
       <div class="analysis-summary-values">
-        <strong>93</strong>
-        <div class="analysis-summary-target"><small>Get A 93 Overall</small></div>
+        <strong>+93</strong>
+        <div class="analysis-summary-target"><small>Overall Upgrade</small></div>
       </div>
       <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Now To Get A 93 Overall</button>
     </div>
@@ -2273,14 +2269,14 @@
     </div>
 
     <div class="analysis-card transform-card">
-      <h4>Quick Review: Get Above 95+</h4>
-      <p class="quick-review">${escapeHTML(quickReview)} A 95+ site feels clear, credible, fast to understand, and easy to contact.</p>
+      <h4>What The 93+ Upgrade Gives You</h4>
+      <p class="quick-review">Your site can be easier to read, easier to trust, and easier to buy from. These are the main fixes we would make first.</p>
       <ul class="transform-list">
-        <li><b>1</b><span><strong>Make the offer obvious</strong> Show who you help, what you do, and why it matters in seconds.</span></li>
-        <li><b>2</b><span><strong>Build instant trust</strong> Put reviews, proof, guarantees, or real examples near the decision points.</span></li>
-        <li><b>3</b><span><strong>Remove friction</strong> Make calls, quotes, bookings, or forms easy to find and simple to complete.</span></li>
-        <li><b>4</b><span><strong>Guide attention</strong> Use hierarchy so visitors naturally move from interest to confidence to action.</span></li>
-        <li><b>5</b><span><strong>Make mobile effortless</strong> Keep copy scannable, buttons tap-friendly, and the next step always visible.</span></li>
+        <li><b>✓</b><span><strong>Clear offer</strong> People know what you do fast.</span></li>
+        <li><b>✓</b><span><strong>More trust</strong> Reviews and proof help people feel safe.</span></li>
+        <li><b>✓</b><span><strong>Easy next step</strong> Calls, forms, and bookings are simple to find.</span></li>
+        <li><b>✓</b><span><strong>Better flow</strong> The page guides people from looking to taking action.</span></li>
+        <li><b>✓</b><span><strong>Better phone view</strong> The site is easy to read and tap on mobile.</span></li>
       </ul>
     </div>
 
