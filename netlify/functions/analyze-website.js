@@ -202,9 +202,17 @@ function scoreExplanation(categories, signals) {
   const weakest = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
   const excerpt = pageSentence(signals);
   const issue = weakest ? weakest.name.toLowerCase() : "clarity";
-  const quoted = excerpt ? `"${excerpt}"` : "One key line on the page";
+  const quoted = excerpt ? ` A line like "${excerpt}" may give visitors too much to figure out at once.` : "";
+  const messages = {
+    "visual design": `What is hurting your website is that the page may not look clear and trustworthy fast enough.${quoted} Use stronger visuals, cleaner sections, and simple headings so visitors know they are in the right place.`,
+    "page speed": "What is hurting your website is that the page may load a bit slower than visitors expect. A slow page can make people leave before they read your offer, so images, scripts, and heavy sections should stay lean.",
+    "seo foundations": "What is hurting your website is that search engines may not clearly understand what service you offer. Clear page titles, headings, and service words help more people find you online.",
+    "conversion & ctas": `What is hurting your website is that the next step may not be clear enough.${quoted} Use one strong offer and one easy action, like calling, booking, or requesting a quote.`,
+    "mobile experience": "What is hurting your website is that phone visitors may have to work too hard. Buttons, text, and forms should be easy to tap, read, and use on a small screen.",
+    "trust signals": "What is hurting your website is weak trust proof. Add or improve testimonials, reviews, real project examples, and clear proof so visitors feel safe choosing your business."
+  };
 
-  return `Main issue: ${issue}. This line feels crowded: ${quoted} Try one clear offer and one clear next step.`;
+  return messages[issue] || `What is hurting your website is unclear messaging.${quoted} Make the page quickly say who you help, what you offer, and what visitors should do next.`;
 }
 
 function scoreFromParts(parts, fallback = 50) {
