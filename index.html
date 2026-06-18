@@ -1176,6 +1176,29 @@
       gap: 10px;
     }
     .audit-benefits li::before { content: "✓"; color: #226e91; font-weight: 950; }
+    .audit-transformations {
+      display: grid;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .audit-transform-row {
+      background: rgba(244,248,251,.82);
+      border: 1px solid rgba(8,19,58,.07);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: rgba(8,19,58,.66);
+      font-size: .88rem;
+      line-height: 1.42;
+    }
+    .audit-transform-row strong {
+      display: block;
+      color: #08133a;
+      font-weight: 950;
+      margin-bottom: 3px;
+    }
+    .audit-transform-row span {
+      display: block;
+    }
     .audit-offer-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
     .payment-box {
       background: #fff;
@@ -2421,23 +2444,37 @@
       function renderOffer() {
         return `
 <div class="audit-step audit-offer">
-  <div class="audit-modal-kicker">Website Improvement Offer</div>
-  <h3>Ready To Turn More Visitors Into Customers?</h3>
-  <p>Based on your audit, we've identified several opportunities that can improve trust, increase engagement, and help generate more calls, leads, and bookings. Instead of figuring everything out on your own, we can help you get started with a professional website improvement plan.</p>
+  <div class="audit-modal-kicker">$99 Website Lead Conversion Plan</div>
+  <h3>Turn Your Website Into a Lead-Generating System</h3>
+  <p>Based on your audit, we'll show you exactly what to fix so your website can create more trust, more calls, more quote requests, more bookings, and more leads.</p>
   <div class="audit-offer-card">
     <div>
-      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Website Improvement Starter Package</h4>
-      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">A focused action plan that turns your audit into clear improvements for trust, clarity, calls, quote requests, bookings, and leads.</p>
+      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Website Lead Conversion Plan</h4>
+      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">A focused action plan that turns your website audit into clear improvements for trust, clarity, calls, quote requests, bookings, and lead generation.</p>
       <ul class="audit-benefits">
-        <li>Website conversion recommendations</li>
-        <li>Call-to-action improvements</li>
+        <li>Clear homepage offer improvements</li>
+        <li>Call-to-action upgrades</li>
         <li>Trust-building recommendations</li>
-        <li>User experience enhancements</li>
-        <li>Lead generation optimization</li>
-        <li>Clear action plan</li>
+        <li>Mobile user experience improvements</li>
+        <li>Lead capture and booking flow optimization</li>
+        <li>Step-by-step website action plan</li>
       </ul>
+      <div class="audit-transformations">
+        <div class="audit-transform-row">
+          <strong>Before: Visitors leave without taking action.</strong>
+          <span>After: Visitors know exactly what you do and how to contact you.</span>
+        </div>
+        <div class="audit-transform-row">
+          <strong>Before: Your website feels unclear or outdated.</strong>
+          <span>After: Your business looks professional, trustworthy, and ready to hire.</span>
+        </div>
+        <div class="audit-transform-row">
+          <strong>Before: You are guessing what to fix.</strong>
+          <span>After: You get a clear website improvement plan.</span>
+        </div>
+      </div>
       <div class="audit-offer-actions">
-        <button class="audit-primary-btn" id="auditStartPayment" type="button">Start My Website Upgrade — $99</button>
+        <button class="audit-primary-btn" id="auditStartPayment" type="button">Get My Website Lead Plan — $99</button>
         <button class="audit-secondary-btn" id="auditMaybeLater" type="button">Maybe Later</button>
       </div>
     </div>
@@ -2446,7 +2483,7 @@
         <span>One-Time Setup</span>
         <strong>$99</strong>
       </div>
-      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">A simple starter step after your free audit. No redirect, no new tab.</p>
+      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">A simple starter step to help your website turn visitors into real leads.<br>No redirect. No new tab.</p>
     </div>
   </div>
 </div>`;
@@ -2474,8 +2511,8 @@
         modalBody.innerHTML = `
 <div class="audit-step audit-payment">
   <div class="audit-modal-kicker">Secure Payment</div>
-  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:.98;margin:0 0 10px;">Start My Website Upgrade — $99</h3>
-  <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your Website Improvement Starter Package.</p>
+  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:.98;margin:0 0 10px;">Get My Website Lead Plan — $99</h3>
+  <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your Website Lead Conversion Plan.</p>
   <div class="payment-box">
     <div id="paymentElement"><div class="analyzer-spinner" style="margin:34px auto;"></div></div>
     <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Pay $99 And Start</button>
