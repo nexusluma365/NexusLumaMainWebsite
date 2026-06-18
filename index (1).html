@@ -2199,6 +2199,7 @@
         const avgCategory = categories.length
           ? Math.round(categories.reduce((sum, item) => sum + (Number(item.score) || 0), 0) / categories.length)
           : score;
+        const upgradeGap = Math.max(0, 95 - score);
 
         const catsHTML = categories.map(c => `
 <div class="cat-item">
@@ -2243,15 +2244,11 @@
       <p>${escapeHTML(summary)}</p>
     </div>
     <div class="analysis-summary-card">
-      <span>Improvement Target</span>
       <div class="analysis-summary-values">
-        <strong>${score}</strong>
-        <div class="analysis-summary-target">
-          <b>+95</b>
-          <small>Target Score</small>
-        </div>
+        <strong>+${upgradeGap}</strong>
+        <div class="analysis-summary-target"><small>Upgrade</small></div>
       </div>
-      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Your Overall</button>
+      <button class="summary-upgrade-btn" type="button" data-audit-upgrade>Upgrade Now</button>
     </div>
   </div>
 
