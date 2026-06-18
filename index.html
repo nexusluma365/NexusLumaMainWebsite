@@ -84,25 +84,84 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
-    .nav-cta {
-      text-decoration: none;
-      font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
-      padding: 12px 20px; border-radius: 999px; color: #fff;
-      background: linear-gradient(135deg, #2b2d35 0%, #16181e 100%);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 12px 30px rgba(0,0,0,.34);
-      transition: transform .2s ease, box-shadow .3s ease, background .3s ease;
-      white-space: nowrap;
-    }
-    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,.28); background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%); }
-    .nav-audit-btn {
-      border: 1px solid rgba(240,199,107,.45);
-      background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%);
-      color: #08133a;
-      font-family: inherit;
+    .nav-fx-button {
       cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .01em;
+      border-radius: 16px;
+      border: 0;
+      padding: 2px;
+      background: radial-gradient(circle 76px at 80% -10%, rgba(255,255,255,.92), #181b1b 62%);
+      position: relative;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      white-space: nowrap;
+      box-shadow: 0 14px 34px rgba(0,0,0,.26);
+      transition: transform .2s ease, box-shadow .25s ease;
     }
-    .nav-audit-btn:hover { background: linear-gradient(135deg, #f6d681 0%, #d9a74f 100%); }
+    #mainNav .nav-fx-button {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .01em;
+      text-decoration: none;
+    }
+    #mainNav .nav-fx-button:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 18px 42px rgba(0,0,0,.34); }
+    #mainNav .nav-fx-button::after {
+      content: "";
+      position: absolute;
+      width: 65%;
+      height: 60%;
+      border-radius: 120px;
+      top: 0;
+      right: 0;
+      box-shadow: 0 0 20px rgba(82,190,224,.28);
+      z-index: -1;
+      transform: none;
+      background: transparent;
+      left: auto;
+      bottom: auto;
+    }
+    #mainNav .nav-fx-button:hover::after { width: 65%; }
+    .nav-fx-blob {
+      position: absolute;
+      width: 70px;
+      height: 100%;
+      border-radius: 16px;
+      bottom: 0;
+      left: 0;
+      background: radial-gradient(circle 60px at 0% 100%, #62d8ee, rgba(34,110,145,.68), transparent);
+      box-shadow: -10px 10px 30px rgba(34,110,145,.32);
+      pointer-events: none;
+    }
+    .nav-fx-inner {
+      padding: 11px 17px;
+      border-radius: 14px;
+      color: #fff;
+      z-index: 3;
+      position: relative;
+      background: radial-gradient(circle 84px at 80% -50%, #3c4650, #07090b 72%);
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-fx-inner::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-radius: 14px;
+      background: radial-gradient(circle 60px at 0% 100%, rgba(0,225,255,.14), rgba(34,110,145,.12), transparent);
+      position: absolute;
+      pointer-events: none;
+    }
     .nav-phone {
       color: rgba(255,255,255,.82);
       font-size: 13px;
@@ -1490,7 +1549,9 @@
       .reveal-copy { top: 66%; width: min(720px, 90vw); }
       .nav-brand { justify-self: start; }
       .nav-actions { justify-self: end; gap: 7px; }
-      .nav-cta { font-size: 11px; padding: 10px 11px; }
+      #mainNav .nav-fx-button { font-size: 11px; }
+      .nav-fx-inner { min-height: 38px; padding: 9px 11px; border-radius: 12px; }
+      .nav-fx-blob { width: 52px; border-radius: 12px; }
       .nav-phone { font-size: 11px; }
       .nav-spacer { display: none; }
       #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
@@ -1572,7 +1633,9 @@
       .nav-brand { justify-self: start; }
       .nav-brand span { display: none; }
       .nav-actions { width: auto; max-width: none; justify-self: end; justify-content: flex-end; }
-      .nav-cta { font-size: 10px; padding: 9px 9px; }
+      #mainNav .nav-fx-button { font-size: 10px; border-radius: 13px; }
+      .nav-fx-inner { min-height: 34px; padding: 8px 9px; border-radius: 11px; }
+      .nav-fx-blob { width: 44px; border-radius: 11px; }
       .nav-phone { font-size: 10px; }
       .hero-parallax { min-height: 190vh; }
       .product-intro { margin-top: -72px; }
@@ -1596,7 +1659,14 @@
         <span style="font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.7);">Nexus Luma</span>
       </div>
       <div class="nav-actions">
-        <button class="nav-cta nav-audit-btn audit-open-trigger" type="button">Analyze My Website</button>
+        <button class="nav-fx-button audit-open-trigger" type="button">
+          <span class="nav-fx-blob" aria-hidden="true"></span>
+          <span class="nav-fx-inner">Analyze My Website</span>
+        </button>
+        <a class="nav-fx-button" href="pricing_page_design.html">
+          <span class="nav-fx-blob" aria-hidden="true"></span>
+          <span class="nav-fx-inner">I Need a Website</span>
+        </a>
         <span class="nav-phone">(336) 517-7347</span>
       </div>
     </div>
