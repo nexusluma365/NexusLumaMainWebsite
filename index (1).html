@@ -493,6 +493,7 @@
       overflow-y: auto;
       position: relative;
       color: #08133a;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
       scrollbar-width: thin;
       scrollbar-color: rgba(34,110,145,.28) transparent;
     }
@@ -2231,7 +2232,7 @@
         }));
         const score = displayOverallScore(data);
         const summary = data.summary || "Your website report is ready.";
-        const scoreExplanation = data.score_explanation || "One major thing hurting this page is clarity. Try making the page say who you help, what they get, and what to do next in simple words.";
+        const scoreExplanation = data.score_explanation || "Main issue: clarity. Make one clear offer and one clear next step.";
         const { label, color } = scoreGradeLabel(score);
         const bestCategory = categories.reduce((best, item) => !best || item.score > best.score ? item : best, null);
         const weakestCategory = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);

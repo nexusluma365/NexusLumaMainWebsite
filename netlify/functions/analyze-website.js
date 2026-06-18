@@ -194,7 +194,8 @@ function pageSentence(signals) {
     .map((item) => item.trim())
     .find((item) => item.length >= 45 && item.length <= 180);
 
-  return (sentence || text.slice(0, 150)).replace(/^["']|["']$/g, "");
+  const chosen = (sentence || text.slice(0, 110)).replace(/^["']|["']$/g, "");
+  return chosen.length > 120 ? `${chosen.slice(0, 117).trim()}...` : chosen;
 }
 
 function scoreExplanation(categories, signals) {
@@ -203,7 +204,7 @@ function scoreExplanation(categories, signals) {
   const issue = weakest ? weakest.name.toLowerCase() : "clarity";
   const quoted = excerpt ? `"${excerpt}"` : "One key line on the page";
 
-  return `${weakest ? `One major thing hurting this page is ${issue}. ` : ""}${quoted} may be too hard to understand quickly. Try making it say who you help, what they get, and what to do next in simple words.`;
+  return `Main issue: ${issue}. This line feels crowded: ${quoted} Try one clear offer and one clear next step.`;
 }
 
 function scoreFromParts(parts, fallback = 50) {
