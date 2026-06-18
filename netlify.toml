@@ -7,3 +7,6 @@
 
 [functions]
   node_bundler = "esbuild"
+
+[functions."analyze-website"]
+  timeout = 26

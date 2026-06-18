@@ -6,6 +6,9 @@ const CATEGORY_NAMES = [
   "Mobile Experience",
   "Trust Signals"
 ];
+const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5";
+const WEBSITE_FETCH_TIMEOUT_MS = 2500;
+const CLAUDE_TIMEOUT_MS = 5500;
 
 function json(statusCode, body) {
   return {
@@ -50,7 +53,7 @@ function extractHeadings(html) {
   const headings = [];
   const regex = /<h([1-3])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
   let match;
-  while ((match = regex.exec(html)) && headings.length < 18) {
+  while ((match = regex.exec(html)) && headings.length < 12) {
     const text = match[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
     if (text) headings.push(`H${match[1]}: ${text}`);
   }
@@ -66,7 +69,7 @@ function extractVisibleText(html) {
     .replace(/&gt;/g, ">")
     .replace(/\s+/g, " ")
     .trim()
-    .slice(0, 9000);
+    .slice(0, 4200);
 }
 
 function collectSignals(html, finalUrl, elapsedMs) {
@@ -106,7 +109,7 @@ function collectSignals(html, finalUrl, elapsedMs) {
 function buildPrompt(url, lead, signals) {
   return `You are a senior website strategist for local service businesses, premium brands, and lead-generation websites.
 
-Analyze this real website evidence and return only valid JSON. Be specific to the page evidence. Do not invent metrics you cannot infer.
+Analyze this real website evidence and return only valid compact JSON. Be specific to the page evidence. Do not invent metrics you cannot infer. Keep every note concise.
 
 Submitted URL: ${url}
 Lead name: ${[lead.firstName, lead.lastName].filter(Boolean).join(" ") || "not provided"}
@@ -118,14 +121,14 @@ ${JSON.stringify(signals, null, 2)}
 Return exactly this JSON shape:
 {
   "overall_score": 0,
-  "summary": "2 concise sentences about the current site and biggest opportunity.",
+  "summary": "1-2 concise sentences about the current site and biggest opportunity.",
   "categories": [
-    { "name": "Visual Design", "score": 0, "note": "specific observation" },
-    { "name": "Page Speed", "score": 0, "note": "specific observation" },
-    { "name": "SEO Foundations", "score": 0, "note": "specific observation" },
-    { "name": "Conversion & CTAs", "score": 0, "note": "specific observation" },
-    { "name": "Mobile Experience", "score": 0, "note": "specific observation" },
-    { "name": "Trust Signals", "score": 0, "note": "specific observation" }
+    { "name": "Visual Design", "score": 0, "note": "short specific observation" },
+    { "name": "Page Speed", "score": 0, "note": "short specific observation" },
+    { "name": "SEO Foundations", "score": 0, "note": "short specific observation" },
+    { "name": "Conversion & CTAs", "score": 0, "note": "short specific observation" },
+    { "name": "Mobile Experience", "score": 0, "note": "short specific observation" },
+    { "name": "Trust Signals", "score": 0, "note": "short specific observation" }
   ],
   "recommendations": [
     "<strong>Key action</strong> - practical recommendation based on evidence.",
@@ -159,6 +162,19 @@ function parseClaudeJson(payload) {
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) throw new Error("Claude did not return JSON.");
   return JSON.parse(match[0]);
+}
+
+function timeoutSignal(ms) {
+  if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+    return AbortSignal.timeout(ms);
+  }
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), ms);
+  return controller.signal;
+}
+
+function claudeModel() {
+  return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
 }
 
 function normalizeResult(result) {
@@ -250,6 +266,7 @@ exports.handler = async (event) => {
     const startedAt = Date.now();
     const siteResponse = await fetch(url, {
       redirect: "follow",
+      signal: timeoutSignal(WEBSITE_FETCH_TIMEOUT_MS),
       headers: {
         "user-agent": "NexusLumaWebsiteAnalyzer/1.0 (+https://nexusluma.com)"
       }
@@ -264,7 +281,7 @@ exports.handler = async (event) => {
       return json(422, { error: "The submitted URL did not return an HTML page." });
     }
 
-    const html = (await siteResponse.text()).slice(0, 180000);
+    const html = (await siteResponse.text()).slice(0, 90000);
     const signals = collectSignals(html, siteResponse.url || url, Date.now() - startedAt);
     const lead = {
       firstName: String(body.firstName || "").trim(),
@@ -276,14 +293,15 @@ exports.handler = async (event) => {
 
     const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
+      signal: timeoutSignal(CLAUDE_TIMEOUT_MS),
       headers: {
         "content-type": "application/json",
         "x-api-key": process.env.ANTHROPIC_API_KEY,
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6",
-        max_tokens: 1600,
+        model: claudeModel(),
+        max_tokens: 1100,
         temperature: 0.2,
         messages: [{ role: "user", content: prompt }]
       })
@@ -294,7 +312,7 @@ exports.handler = async (event) => {
       return json(502, {
         error: "Claude analyzer request failed.",
         details: errorText.slice(0, 500),
-        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6"
+        model: claudeModel()
       });
     }
 
