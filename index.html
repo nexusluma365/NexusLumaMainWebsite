@@ -1200,6 +1200,32 @@
       display: block;
     }
     .audit-offer-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .audit-offer-actions.single .audit-primary-btn {
+      width: 100%;
+      min-height: 64px;
+      font-size: 1.05rem;
+      justify-content: center;
+    }
+    .audit-vision-list {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+      display: grid;
+      gap: 12px;
+      color: rgba(255,255,255,.82);
+      line-height: 1.45;
+    }
+    .audit-vision-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .audit-vision-list li::before {
+      content: "✓";
+      color: #bbf7d0;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
     .payment-box {
       background: #fff;
       border: 1px solid rgba(8,19,58,.08);
@@ -2444,53 +2470,60 @@
       function renderOffer() {
         return `
 <div class="audit-step audit-offer">
-  <div class="audit-modal-kicker">$99 Website Lead Conversion Plan</div>
-  <h3>Turn Your Website Into a Lead-Generating System</h3>
-  <p>Based on your audit, we'll show you exactly what to fix so your website can create more trust, more calls, more quote requests, more bookings, and more leads.</p>
+  <div class="audit-modal-kicker">Website Growth Upgrade</div>
+  <h3>Build a Website That Works While You Work</h3>
+  <p>Your website should not just sit online. It should create trust, explain your value, capture interest, and guide visitors toward calls, bookings, and new customers even when you are busy running the business.</p>
   <div class="audit-offer-card">
     <div>
-      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Website Lead Conversion Plan</h4>
-      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">A focused action plan that turns your website audit into clear improvements for trust, clarity, calls, quote requests, bookings, and lead generation.</p>
+      <h4 style="font-size:1.55rem;line-height:1.08;letter-spacing:-.035em;margin:0 0 8px;color:#08133a;">Turn Attention Into Action</h4>
+      <p style="color:rgba(8,19,58,.62);line-height:1.62;margin:0;">When visitors land on your site, they should quickly feel confident, understand what you offer, and know the next step to take. This upgrade path is built to help your website become a customer-generating system, not just a digital brochure.</p>
       <ul class="audit-benefits">
-        <li>Clear homepage offer improvements</li>
-        <li>Call-to-action upgrades</li>
-        <li>Trust-building recommendations</li>
-        <li>Mobile user experience improvements</li>
-        <li>Lead capture and booking flow optimization</li>
-        <li>Step-by-step website action plan</li>
+        <li>A clearer message that makes people understand your value fast</li>
+        <li>Stronger trust signals so visitors feel safe choosing you</li>
+        <li>Better calls-to-action that guide people to call, book, or request a quote</li>
+        <li>Lead capture systems that keep working after visitors leave the page</li>
+        <li>Automation pathways so your website can help qualify and move leads forward</li>
+        <li>A cleaner customer journey designed to create more opportunities online</li>
       </ul>
       <div class="audit-transformations">
         <div class="audit-transform-row">
-          <strong>Before: Visitors leave without taking action.</strong>
-          <span>After: Visitors know exactly what you do and how to contact you.</span>
+          <strong>Before: Visitors browse and disappear.</strong>
+          <span>After: Visitors know why you matter and how to start.</span>
         </div>
         <div class="audit-transform-row">
-          <strong>Before: Your website feels unclear or outdated.</strong>
-          <span>After: Your business looks professional, trustworthy, and ready to hire.</span>
+          <strong>Before: Your website feels passive.</strong>
+          <span>After: Your website supports sales, trust, follow-up, and lead flow.</span>
         </div>
         <div class="audit-transform-row">
-          <strong>Before: You are guessing what to fix.</strong>
-          <span>After: You get a clear website improvement plan.</span>
+          <strong>Before: Growth feels random.</strong>
+          <span>After: You have a clear path to more calls, bookings, and customers.</span>
         </div>
       </div>
-      <div class="audit-offer-actions">
-        <button class="audit-primary-btn" id="auditStartPayment" type="button">Get My Website Lead Plan — $99</button>
-        <button class="audit-secondary-btn" id="auditMaybeLater" type="button">Maybe Later</button>
+      <div class="audit-offer-actions single">
+        <button class="audit-primary-btn" id="auditStartPayment" type="button">Get Started Now For Free</button>
       </div>
     </div>
     <div class="audit-price">
       <div>
-        <span>One-Time Setup</span>
-        <strong>$99</strong>
+        <span>Your Next Growth Step</span>
+        <strong>Start</strong>
+        <ul class="audit-vision-list">
+          <li>More people understanding what you do</li>
+          <li>More confidence before the first call</li>
+          <li>More leads captured from the traffic you already have</li>
+          <li>A website that works even when you are not online</li>
+        </ul>
       </div>
-      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">A simple starter step to help your website turn visitors into real leads.<br>No redirect. No new tab.</p>
+      <p style="color:rgba(255,255,255,.78);line-height:1.55;margin:0;">Start with a free prescreen so we can see where your website can become clearer, stronger, and more ready to convert.</p>
     </div>
   </div>
 </div>`;
       }
 
       function bindOffer() {
-        document.getElementById("auditStartPayment")?.addEventListener("click", renderPayment);
+        document.getElementById("auditStartPayment")?.addEventListener("click", () => {
+          window.location.href = "https://nexuslumaprescreen.netlify.app/";
+        });
         document.getElementById("auditMaybeLater")?.addEventListener("click", () => {
           modalBody.innerHTML = renderSuccess("No problem. Your free audit is complete, and your report can guide your next website improvements.");
         });
@@ -2511,11 +2544,11 @@
         modalBody.innerHTML = `
 <div class="audit-step audit-payment">
   <div class="audit-modal-kicker">Secure Payment</div>
-  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:.98;margin:0 0 10px;">Get My Website Lead Plan — $99</h3>
-  <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your Website Lead Conversion Plan.</p>
+  <h3 style="color:#08133a;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:.98;margin:0 0 10px;">Website Growth Upgrade</h3>
+  <p style="color:rgba(8,19,58,.62);line-height:1.65;margin:0;">Complete payment inside this popup to start your website growth plan.</p>
   <div class="payment-box">
     <div id="paymentElement"><div class="analyzer-spinner" style="margin:34px auto;"></div></div>
-    <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Pay $99 And Start</button>
+    <button class="audit-primary-btn" id="auditPayBtn" type="button" disabled>Start My Website Growth Plan</button>
     <button class="audit-secondary-btn" id="auditBackToOffer" type="button" style="margin-top:10px;width:100%;">Back To Offer</button>
     <div class="payment-error" id="paymentError"></div>
   </div>
