@@ -1,12 +1,18 @@
 [build]
-  publish = "."
   functions = "netlify/functions"
-
-[build.environment]
-  NODE_VERSION = "20"
+  publish = "."
 
 [functions]
   node_bundler = "esbuild"
 
-[functions."analyze-website"]
-  timeout = 26
+# Allow the front-end to call /api/analyze-website instead of the long
+# /.netlify/functions/analyze-website path.
+[[redirects]]
+  from = "/api/analyze-website"
+  to = "/.netlify/functions/analyze-website"
+  status = 200
+
+[[redirects]]
+  from = "/api/create-upgrade-payment"
+  to = "/.netlify/functions/create-upgrade-payment"
+  status = 200

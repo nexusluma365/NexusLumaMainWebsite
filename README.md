@@ -1,6 +1,6 @@
 # Nexus Luma Website
 
-Static Nexus Luma landing page with a single-page Website Audit lead generation flow, Claude-powered analysis, and in-modal Stripe payment for the $99 Website Improvement Starter Package.
+Static Nexus Luma landing page with a single-page Website Audit lead generation flow, Claude-powered analysis, and Stripe Checkout for the $99 Website Improvement Starter Package.
 
 ## Local Development
 
@@ -31,11 +31,16 @@ ANTHROPIC_API_KEY
 ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
-Required for the in-modal $99 payment:
+Required for the $99 Stripe Checkout payment:
+
+```text
+STRIPE_SECRET_KEY
+```
+
+Optional if you need the Stripe config endpoint elsewhere:
 
 ```text
 STRIPE_PUBLISHABLE_KEY
-STRIPE_SECRET_KEY
 ```
 
 Optional lead capture webhook:
@@ -94,5 +99,5 @@ This checks inline page JavaScript and Netlify function syntax.
 ## Notes
 
 - Claude and Stripe keys are only used by Netlify functions.
-- The audit and payment flow stay inside the same modal.
-- Stripe is configured for card payments so visitors do not leave the page.
+- The audit runs server-side through Claude, using the live page fetch as source evidence.
+- Stripe Checkout opens in the same tab and returns visitors to the site after payment.

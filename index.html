@@ -2365,55 +2365,33 @@
 
     async function runAnalysis() {
       startLoadingCycle();
-      const prompt = `You are a professional web design and conversion rate optimization expert.
-
-Analyse the website at: ${state.url}
-
-Use web search to visit or look up information about this website and its online presence. Provide a thorough, honest analysis.
-
-Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The object must have exactly this shape:
-{
-  "overall_score": <integer 0-100>,
-  "summary": "<2-3 sentence honest summary of the site's current state and biggest opportunity>",
-  "categories": [
-    { "name": "Visual Design",     "score": <0-100> },
-    { "name": "Mobile Experience", "score": <0-100> },
-    { "name": "Conversion & CTAs", "score": <0-100> },
-    { "name": "Page Speed",        "score": <0-100> },
-    { "name": "SEO Foundations",   "score": <0-100> },
-    { "name": "Trust Signals",     "score": <0-100> }
-  ],
-  "recommendations": [
-    "<recommendation 1 — use <strong> tags around the key action phrase>",
-    "<recommendation 2>",
-    "<recommendation 3>",
-    "<recommendation 4>"
-  ]
-}`;
-      let resultData = null;
       try {
-        const resp = await fetch("https://api.anthropic.com/v1/messages", {
+        const resp = await fetch("/api/analyze-website", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: "claude-sonnet-4-6",
-            max_tokens: 1000,
-            tools: [{ type: "web_search_20250305", name: "web_search" }],
-            messages: [{ role: "user", content: prompt }]
-          })
+          body: JSON.stringify({ url: state.url, email: state.email })
         });
-        if (resp.ok) {
-          const data = await resp.json();
-          const textBlocks = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
-          const match = textBlocks.match(/\{[\s\S]*\}/);
-          if (match) { try { resultData = JSON.parse(match[0]); } catch(e) { resultData = null; } }
+        const payload = await resp.json().catch(() => null);
+        if (!resp.ok) {
+          throw new Error(payload?.error || `Analyzer request failed with status ${resp.status}.`);
         }
-      } catch(e) { resultData = null; }
+        const resultData = payload?.result && typeof payload.result.overall_score === "number"
+          ? payload.result
+          : payload;
+        if (!resultData || typeof resultData.overall_score !== "number") {
+          throw new Error("Analyzer returned an unexpected response.");
+        }
 
-      stopLoadingCycle();
-      if (!resultData || typeof resultData.overall_score !== "number") resultData = getFallbackData();
-      state.resultData = resultData;
-      renderResults(resultData);
+        stopLoadingCycle();
+        state.resultData = resultData;
+        renderResults(resultData);
+      } catch (error) {
+        stopLoadingCycle();
+        modalBody.innerHTML = `
+<div class="analyzer-loading">
+  <div class="analyzer-loading-step">${error.message || "The analyzer could not complete the scan."}</div>
+</div>`;
+      }
     }
 
     /* ============================================================
@@ -2520,22 +2498,40 @@ Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The 
 
     /* ============================================================
        STEP 5 — PAYMENT (powered by Stripe)
-       Create a $99 Payment Link in your Stripe Dashboard and paste
-       the URL below. Stripe supports ?prefilled_email= to pre-fill
-       the customer's email on the checkout page.
     ============================================================ */
-    const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
-
     const payBtn = document.getElementById("funnelPayBtn");
     const payLaterBtn = document.getElementById("funnelPayLaterBtn");
 
-    payBtn.addEventListener("click", () => {
-      const stripeUrl = STRIPE_PAYMENT_LINK
-        + "?prefilled_email=" + encodeURIComponent(state.email || "")
-        + "&client_reference_id=" + encodeURIComponent((state.email || "anon") + "_" + Date.now());
-      window.open(stripeUrl, "_blank");
-      state.paid = true;
-      showConfirmation(true);
+    function updatePaymentButton(isLoading, label) {
+      payBtn.disabled = isLoading;
+      payBtn.textContent = label || (isLoading ? "Preparing secure checkout…" : "Pay $99 & Get Started →");
+    }
+
+    payBtn.addEventListener("click", async () => {
+      const originalLabel = payBtn.textContent;
+      updatePaymentButton(true);
+      try {
+        const response = await fetch("/api/create-upgrade-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: state.email,
+            url: state.url,
+            firstName: state.name.split(/\s+/)[0] || "",
+            lastName: state.name.split(/\s+/).slice(1).join(" ") || "",
+            auditScore: state.resultData?.overall_score || "",
+            origin: window.location.origin
+          })
+        });
+        const payload = await response.json().catch(() => null);
+        if (!response.ok || !payload?.checkoutUrl) {
+          throw new Error(payload?.error || "Unable to start checkout.");
+        }
+        window.location.href = payload.checkoutUrl;
+      } catch (error) {
+        updatePaymentButton(false, originalLabel);
+        alert(error.message || "Unable to start payment.");
+      }
     });
 
     payLaterBtn.addEventListener("click", () => {
@@ -2563,6 +2559,14 @@ Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The 
       closeFunnel();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
+
+    const checkoutStatus = new URLSearchParams(window.location.search).get("checkout");
+    if (checkoutStatus === "success") {
+      openFunnel();
+      goToStep(6, true);
+      showConfirmation(true);
+      history.replaceState({}, "", window.location.pathname + window.location.hash);
+    }
 
   })();
   </script>
