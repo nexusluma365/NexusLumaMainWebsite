@@ -101,7 +101,7 @@ function finalizeResult(result, analyzedUrl) {
     nextResult.score_explanation = `${profile.label} converts well because the page is fast to understand, easy to trust, and clear about what visitors should do next. Big brands win attention by using simple messaging, strong proof, clean layouts, and obvious action paths.`;
     nextResult.opportunity_text = `High-converting websites usually score 83 and above because they make buying feel simple. The Website Lead Conversion Plan shows how to bring that same clarity, trust, and action path into your own website.`;
     nextResult.benchmark_note = nextResult.opportunity_text;
-    nextResult.summary = `${profile.label} is a high-converting benchmark website. It works because it makes trust, clarity, speed, and the next step feel simple for the visitor.`;
+    nextResult.summary = `${profile.label} is a high-converting benchmark website. It works because it makes trust, clarity, speed, and the next step feel simple for the visitor. Even so, a slight tweak around ${weakestCategoryName(nextResult.categories)} could push it closer to 99.`;
     return nextResult;
   }
 
@@ -294,6 +294,25 @@ function scoreExplanation(categories, signals) {
   return messages[issue] || `Your website has a solid foundation, but visitors may not immediately understand why they should choose your business${quoted}. When the offer and next step are not clear, potential customers often leave without calling, booking, or requesting a quote.`;
 }
 
+function weakestCategoryName(categories) {
+  const weakest = (categories || []).reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
+  return weakest ? weakest.name.toLowerCase() : "the biggest friction point";
+}
+
+function scoreSummary(overall, categories, sourceNote = "") {
+  const painPoint = weakestCategoryName(categories);
+  if (overall >= 91) {
+    return `Outstanding overall. The site is strong, but a slight tweak around ${painPoint} could move it closer to 99.${sourceNote}`;
+  }
+  if (overall >= 81) {
+    return `Good foundation, but ${painPoint} is still costing calls, bookings, or quote requests.${sourceNote}`;
+  }
+  if (overall >= 70) {
+    return `Fair foundation, but ${painPoint} is likely creating friction for visitors.${sourceNote}`;
+  }
+  return `Critical issues are likely blocking leads, especially around ${painPoint}.${sourceNote}`;
+}
+
 function opportunityText(categories, analyzedUrl = "") {
   const weakest = categories.reduce((weak, item) => !weak || item.score < weak.score ? item : weak, null);
   const issue = weakest ? weakest.name.toLowerCase() : "conversion";
@@ -462,7 +481,7 @@ function buildSignalAudit(signals, reason = "") {
 
   return {
     overall_score: overall,
-    summary: `The page has a ${overall >= 70 ? "solid" : "workable"} foundation, but the biggest opportunity is making trust, offer clarity, and the next action easier to understand quickly.${sourceNote}`,
+    summary: scoreSummary(overall, categories, sourceNote),
     score_explanation: scoreExplanation(categories, signals),
     opportunity_text: opportunityText(categories, signals.finalUrl),
     page_excerpt: pageSentence(signals),
@@ -530,7 +549,7 @@ function normalizeResult(result, signals = {}) {
 
   return {
     overall_score: categoryAverage,
-    summary: String(result.summary || "Your website was reviewed for design, SEO, trust, mobile experience, and conversion opportunities.").slice(0, 420),
+    summary: scoreSummary(categoryAverage, categories, ""),
     score_explanation: scoreExplanation(categories, signals),
     opportunity_text: opportunityText(categories, signals.finalUrl),
     page_excerpt: pageSentence(signals),

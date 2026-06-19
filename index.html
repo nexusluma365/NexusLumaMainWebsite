@@ -1842,10 +1842,25 @@
         return "#f87272";                // red
       }
       function scoreGradeLabel(s) {
-        if (s >= 80) return { label: "Excellent", color: "#4ade80" };
-        if (s >= 65) return { label: "Good",      color: "#a3e635" };
-        if (s >= 45) return { label: "Needs Work",color: "#facc15" };
+        if (s >= 91) return { label: "Outstanding", color: "#4ade80" };
+        if (s >= 81) return { label: "Good", color: "#84cc16" };
+        if (s >= 70) return { label: "Fair", color: "#facc15" };
         return { label: "Critical", color: "#f87272" };
+      }
+
+      function analyzerSalesCopy(score, categories) {
+        const weakest = categories.reduce((low, item) => !low || item.score < low.score ? item : low, null);
+        const painPoint = weakest ? weakest.name.toLowerCase() : "the biggest friction point";
+        if (score >= 91) {
+          return `You are in outstanding shape. The site is strong, but a slight tweak around ${painPoint} could push this closer to 99.`;
+        }
+        if (score >= 81) {
+          return `This is good, but ${painPoint} is still holding back calls, bookings, or quote requests.`;
+        }
+        if (score >= 70) {
+          return `This is fair, but ${painPoint} is likely costing you leads and confidence.`;
+        }
+        return `This is critical, and ${painPoint} is probably blocking calls, bookings, and quote requests.`;
       }
 
       // Build animated SVG arc wheel
@@ -1924,6 +1939,7 @@
       function renderResults(data, websiteUrl) {
         const { overall_score, summary, categories, recommendations } = data;
         const { label, color } = scoreGradeLabel(overall_score);
+        const salesCopy = analyzerSalesCopy(overall_score, categories);
 
         const catsHTML = categories.map(c => `
 <div class="cat-item">
@@ -1979,7 +1995,7 @@
 <div class="rec-title">Top Recommendations</div>
 <ul class="rec-list">${recsHTML}</ul>
 <div class="analyzer-result-cta">
-  <p>Want us to fix what is costing you calls, leads, and bookings? Let's talk.</p>
+  <p>${salesCopy}</p>
   <a href="tel:+13365177347">📞 Call (336) 517-7347 — Free Website Review</a>
 </div>`;
       }
@@ -2211,10 +2227,25 @@
       return "#dc2626";
     }
     function scoreGradeLabel(s) {
-      if (s >= 80) return { label: "Excellent", color: "#4ade80" };
-      if (s >= 65) return { label: "Good", color: "#a3e635" };
-      if (s >= 45) return { label: "Needs Work", color: "#facc15" };
+      if (s >= 91) return { label: "Outstanding", color: "#4ade80" };
+      if (s >= 81) return { label: "Good", color: "#84cc16" };
+      if (s >= 70) return { label: "Fair", color: "#facc15" };
       return { label: "Critical", color: "#dc2626" };
+    }
+
+    function analyzerSalesCopy(score, categories) {
+      const weakest = categories.reduce((low, item) => !low || item.score < low.score ? item : low, null);
+      const painPoint = weakest ? weakest.name.toLowerCase() : "the biggest friction point";
+      if (score >= 91) {
+        return `You are in outstanding shape. The site is strong, but a slight tweak around ${painPoint} could push this closer to 99.`;
+      }
+      if (score >= 81) {
+        return `This is good, but ${painPoint} is still holding back calls, bookings, or quote requests.`;
+      }
+      if (score >= 70) {
+        return `This is fair, but ${painPoint} is likely costing you leads and confidence.`;
+      }
+      return `This is critical, and ${painPoint} is probably blocking calls, bookings, and quote requests.`;
     }
 
     function buildMainRing(score) {
@@ -2284,6 +2315,7 @@
     function renderResults(data) {
       const { overall_score, summary, categories, recommendations } = data;
       const { label, color } = scoreGradeLabel(overall_score);
+      const salesCopy = analyzerSalesCopy(overall_score, categories);
       const topThree = categories.slice(0, 3);
       const restCats = categories.slice(3);
 
@@ -2315,7 +2347,7 @@
           ${buildMainRing(overall_score)}
           <div class="funnel-grade" style="color:${color}">${label}</div>
         </div>
-        <p class="funnel-summary">${summary}</p>
+        <p class="funnel-summary">${summary} ${salesCopy}</p>
         <div class="funnel-subrings">${subRingsHTML}</div>
         <div class="funnel-cats-title">More To Improve</div>
         <div class="funnel-cat-list">${restCatsHTML}</div>
