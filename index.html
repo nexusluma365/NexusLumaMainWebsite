@@ -959,6 +959,49 @@
       * { animation: none !important; transition: none !important; }
       .hero-bg-parallax, .mask-text, .reveal-copy { transform: none !important; }
     }
+
+    /* ── Mobile improvements (parallax untouched) ─────────────────── */
+
+    /* Single nav button — more generous padding on mobile */
+    @media (max-width: 900px) {
+      .nav-cta-funnel { font-size: 13px; padding: 11px 20px; }
+    }
+    @media (max-width: 560px) {
+      .nav-cta-funnel { font-size: 12px; padding: 10px 16px; }
+    }
+
+    /* Fix product-intro overlap with hero on mobile.
+       The desktop -480px pull-up looks correct because GSAP pins the hero,
+       but on mobile the hero is not pinned so the intro slides up over
+       the still-visible "Design" text. Reset to 0 on mobile. */
+    @media (max-width: 900px) {
+      .product-intro { margin-top: 0; }
+    }
+
+    /* Footer responsive stacking */
+    @media (max-width: 600px) {
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .footer-nav, .footer-legal { gap: 14px; }
+    }
+
+    /* 560px extras */
+    @media (max-width: 560px) {
+      /* Fix contractor icon dividers in single-column layout */
+      .contractor-icons .icon-card { border-right: none; border-bottom: 1px solid rgba(8,20,58,.10); }
+      .contractor-icons .icon-card:last-child { border-bottom: none; }
+      /* Scale down oversized overlay headline in narrow mosaic shell */
+      .media-overlay h3 { font-size: clamp(1.4rem, 4.5vw, 2.2rem); line-height: 1.1; }
+      /* Give analyzer modal a bit more breathing room on phones */
+      .analyzer-modal { border-radius: 18px; }
+      /* Tighten up the offer callout on small screens */
+      .offer-callout { padding: 24px 20px; }
+      /* Reduce excessive section spacing between contractor blocks */
+      .contractor-about, .contractor-projects { margin-top: 56px; }
+    }
   </style>
 </head>
 
@@ -971,9 +1014,8 @@
         <img src="Asset/premium-logo-240.webp" alt="Nexus Luma Logo" width="78" height="44" decoding="async" fetchpriority="high" style="height:44px;width:auto;display:inline-block;vertical-align:middle;">
         <span style="font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.7);">Nexus Luma</span>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;justify-self:end;">
+      <div style="display:flex;align-items:center;justify-self:end;">
         <button class="nav-cta nav-cta-funnel" id="navFunnelBtn" type="button">Analyze My Website</button>
-        <a class="nav-cta" href="tel:+13365177347">Call For A Free Website Growth Plan</a>
       </div>
     </div>
   </nav>
@@ -984,7 +1026,10 @@
       <div class="hero-bg-parallax"></div>
       <div class="hero-parallax-overlay"></div>
       <h1 class="mask-text">Design</h1>
-      <div class="reveal-copy"></div>
+      <div class="reveal-copy">
+        <h2><a href="#analyzer" style="color:inherit;text-decoration:none;">See What Is Costing You Customers Online</a></h2>
+        <p>Get a free AI-powered breakdown of what may be stopping visitors from calling, booking, or requesting a quote.</p>
+      </div>
     </div>
   </section>
 
@@ -1183,12 +1228,12 @@
           <div class="project-body"><span class="tag">Product</span><h4>Make Your Offer Impossible To Ignore</h4><p>Premium presentation helps visitors understand the value and feel confident taking action.</p></div>
         </article>
         <article class="project-card">
-          <div class="project-thumb"><img src="Asset/luxury home.webp" alt="Luxury home exterior" loading="lazy" decoding="async" /></div>
-          <div class="project-body"><span class="tag">Real Estate</span><h4>Help Buyers Fall In Love Before They Visit</h4><p>Immersive visuals and clean structure help serious buyers connect before they inquire.</p></div>
-        </article>
-        <article class="project-card">
           <div class="project-thumb"><img src="Asset/realestate home pj.webp" alt="Interior real estate showcase" loading="lazy" decoding="async" /></div>
           <div class="project-body"><span class="tag">Interiors</span><h4>Make Premium Work Look Premium</h4><p>Elegant layouts help clients see the quality, detail, and professionalism behind your work.</p></div>
+        </article>
+        <article class="project-card">
+          <div class="project-thumb"><img src="Asset/luxury home.webp" alt="Luxury home exterior" loading="lazy" decoding="async" /></div>
+          <div class="project-body"><span class="tag">Real Estate</span><h4>Help Buyers Fall In Love Before They Visit</h4><p>Immersive visuals and clean structure help serious buyers connect before they inquire.</p></div>
         </article>
       </div>
     </div>
@@ -1202,6 +1247,10 @@
       <div class="analyzer-overline">Free Website Review</div>
       <h2>See What Is Costing You Customers Online</h2>
       <p>Enter your website URL and get a simple breakdown of what may be stopping visitors from calling, booking, or requesting a quote — plus what to fix first.</p>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(159,211,221,.08);border:1px solid rgba(159,211,221,.18);border-radius:999px;padding:6px 14px;margin-bottom:28px;font-size:.78rem;font-weight:700;color:rgba(159,211,221,.82);letter-spacing:.06em;text-transform:uppercase;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Powered by Claude AI (Anthropic)
+      </div>
       <div class="analyzer-form">
         <div class="analyzer-field">
           <label for="analyzerEmail">Your Email Address <span style="color:#f87272">*</span></label>
@@ -2587,22 +2636,23 @@ Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The 
     nameInput.addEventListener("input", () => { nameInput.classList.remove("error"); nameError.textContent = ""; });
 
     /* ============================================================
-       STEP 5 — PAYMENT
+       STEP 5 — PAYMENT (powered by Stripe)
+       Create a $99 Payment Link in your Stripe Dashboard and paste
+       the URL below. Stripe supports ?prefilled_email= to pre-fill
+       the customer's email on the checkout page.
     ============================================================ */
+    const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
+
     const payBtn = document.getElementById("funnelPayBtn");
     const payLaterBtn = document.getElementById("funnelPayLaterBtn");
 
     payBtn.addEventListener("click", () => {
-      // Note: this demo funnel does not process a real charge — wire your
-      // payment processor here (Stripe Checkout / Payment Links etc).
+      const stripeUrl = STRIPE_PAYMENT_LINK
+        + "?prefilled_email=" + encodeURIComponent(state.email || "")
+        + "&client_reference_id=" + encodeURIComponent((state.email || "anon") + "_" + Date.now());
+      window.open(stripeUrl, "_blank");
       state.paid = true;
-      payBtn.disabled = true;
-      payBtn.textContent = "Processing…";
-      setTimeout(() => {
-        payBtn.disabled = false;
-        payBtn.textContent = "Pay $99 & Get Started →";
-        showConfirmation(true);
-      }, 900);
+      showConfirmation(true);
     });
 
     payLaterBtn.addEventListener("click", () => {
