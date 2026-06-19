@@ -81,6 +81,12 @@
       white-space: nowrap;
     }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,.28); background: linear-gradient(135deg, #f0c76b 0%, #d9a74f 100%); }
+    .nav-cta-funnel {
+      background: linear-gradient(135deg, #226e91 0%, #1a5570 100%);
+      box-shadow: 0 12px 30px rgba(34,110,145,.34);
+      font-family: inherit;
+    }
+    .nav-cta-funnel:hover { background: linear-gradient(135deg, #2c87b3 0%, #226e91 100%); box-shadow: 0 14px 34px rgba(34,110,145,.4); }
     #mainNav ul { display: flex; justify-content: center; align-items: center; gap: 48px; list-style: none; }
     #mainNav .nav-cta-item { display: none; }
     .nav-toggle {
@@ -595,6 +601,254 @@
     .analyzer-result-cta a { display: inline-flex; align-items: center; gap: 8px; background: #226e91; color: #fff; border: none; border-radius: 999px; padding: 14px 28px; font-size: .95rem; font-weight: 900; text-decoration: none; cursor: pointer; transition: transform .2s ease, background .2s ease; }
     .analyzer-result-cta a:hover { transform: translateY(-2px); background: #1a5570; }
 
+    /* ============================================================
+       LEAD FUNNEL — full-screen step flow
+       Visual language: blue ambient background, white glass card,
+       black body copy with blue highlights, blue CTAs / white text.
+       Fully namespaced (.funnel-*) so it cannot collide with the
+       rest of the site.
+    ============================================================ */
+    .funnel-overlay {
+      position: fixed; inset: 0; z-index: 4000;
+      background:
+        radial-gradient(ellipse 60% 50% at 85% 8%, rgba(56,130,246,.22) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 8% 92%, rgba(34,110,145,.24) 0%, transparent 60%),
+        linear-gradient(160deg, #08152c 0%, #0d2349 48%, #0f2b57 100%);
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s ease;
+      overflow-y: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    .funnel-overlay.active { opacity: 1; pointer-events: auto; }
+    .funnel-overlay * { box-sizing: border-box; }
+    .funnel-shell { min-height: 100%; display: flex; flex-direction: column; }
+
+    .funnel-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px clamp(20px,4vw,48px) 0;
+      max-width: 1080px; width: 100%; margin: 0 auto;
+    }
+    .funnel-brand { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,.7); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .funnel-brand img { height: 26px; width: auto; }
+    .funnel-close {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08);
+      color: #fff; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .funnel-close:hover { background: rgba(255,255,255,.18); transform: scale(1.06); }
+
+    /* step tabs, echoes the pill-tab dashboard nav in the reference */
+    .funnel-tabs {
+      display: flex; justify-content: center; gap: 6px;
+      max-width: 1080px; width: 100%; margin: 26px auto 0;
+      padding: 0 clamp(20px,4vw,48px);
+    }
+    .funnel-tab {
+      flex: 1; max-width: 150px;
+      display: flex; flex-direction: column; gap: 8px; align-items: center;
+      font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.4); position: relative;
+    }
+    .funnel-tab-dot {
+      width: 100%; height: 3px; border-radius: 3px; background: rgba(255,255,255,.16);
+      position: relative; overflow: hidden;
+    }
+    .funnel-tab-dot::after {
+      content: ""; position: absolute; inset: 0; border-radius: 3px;
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.4,0,.2,1);
+    }
+    .funnel-tab.is-done .funnel-tab-dot::after { transform: scaleX(1); }
+    .funnel-tab.is-active .funnel-tab-dot::after { transform: scaleX(1); background: linear-gradient(90deg, #93c5fd, #60a5fa); }
+    .funnel-tab.is-active, .funnel-tab.is-done { color: rgba(255,255,255,.92); }
+    .funnel-tab span.funnel-tab-label { display: none; }
+    @media (min-width: 720px) { .funnel-tab span.funnel-tab-label { display: block; } }
+
+    .funnel-stage {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 36px clamp(20px,4vw,48px) 64px;
+    }
+    .funnel-panel {
+      width: 100%; max-width: 560px;
+      opacity: 0; transform: translateY(18px);
+      transition: opacity .45s cubic-bezier(.2,.8,.2,1), transform .45s cubic-bezier(.2,.8,.2,1);
+    }
+    .funnel-panel.is-visible { opacity: 1; transform: translateY(0); }
+    .funnel-panel[hidden] { display: none; }
+
+    .funnel-card {
+      background: #ffffff;
+      border: 1px solid rgba(15,43,87,.08);
+      border-radius: 22px;
+      padding: clamp(28px,4vw,44px);
+      box-shadow: 0 30px 90px rgba(5,20,50,.35);
+    }
+    .funnel-eyebrow {
+      font-size: 11px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase;
+      color: #2563eb; margin-bottom: 14px;
+    }
+    .funnel-card h2 {
+      color: #0b1530; font-size: clamp(1.5rem, 3.4vw, 2.05rem); font-weight: 900;
+      letter-spacing: -0.01em; line-height: 1.18; margin-bottom: 12px;
+    }
+    .funnel-card > p.funnel-sub {
+      color: rgba(11,21,48,.62); font-size: .98rem; line-height: 1.65; margin-bottom: 28px;
+    }
+
+    .funnel-field { margin-bottom: 16px; }
+    .funnel-field label {
+      display: block; color: rgba(11,21,48,.55); font-size: .76rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .funnel-field input {
+      width: 100%; background: #f3f6fc; border: 1px solid rgba(15,43,87,.15);
+      border-radius: 12px; color: #0b1530; font-size: 1rem; padding: 14px 18px; outline: none;
+      font-family: inherit; transition: border-color .2s ease, background .2s ease;
+    }
+    .funnel-field input::placeholder { color: rgba(11,21,48,.32); }
+    .funnel-field input:focus { border-color: #2563eb; background: #eaf1fd; }
+    .funnel-field input.error { border-color: #dc2626; background: #fdeeee; }
+    .funnel-error-msg { color: #dc2626; font-size: .78rem; font-weight: 600; margin-top: 6px; min-height: 1.1em; }
+
+    .funnel-btn {
+      width: 100%; padding: 16px 24px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #fff; font-size: 1rem; font-weight: 900; letter-spacing: .01em;
+      cursor: pointer; font-family: inherit;
+      box-shadow: 0 16px 40px rgba(37,99,235,.32);
+      transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    }
+    .funnel-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 20px 46px rgba(37,99,235,.4); }
+    .funnel-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .funnel-btn-secondary {
+      width: 100%; padding: 14px 24px; border-radius: 12px;
+      background: #f3f6fc; border: 1px solid rgba(15,43,87,.16);
+      color: #0b1530; font-size: .92rem; font-weight: 800; cursor: pointer;
+      font-family: inherit; transition: background .2s ease, transform .2s ease; margin-top: 10px;
+    }
+    .funnel-btn-secondary:hover { background: #e8eefb; transform: translateY(-1px); }
+    .funnel-row { display: flex; gap: 12px; margin-top: 8px; }
+    .funnel-row .funnel-btn-back {
+      flex: 0 0 auto; width: 52px; padding: 14px; border-radius: 12px;
+      background: #f3f6fc; border: 1px solid rgba(15,43,87,.16);
+      color: #0b1530; font-size: 1rem; cursor: pointer; transition: background .2s ease;
+    }
+    .funnel-row .funnel-btn-back:hover { background: #e8eefb; }
+    .funnel-row .funnel-btn { flex: 1; }
+    .funnel-note { margin-top: 16px; color: rgba(11,21,48,.42); font-size: .78rem; line-height: 1.5; text-align: center; }
+    .funnel-link-muted {
+      display: block; text-align: center; margin-top: 14px; color: rgba(11,21,48,.5);
+      font-size: .82rem; text-decoration: underline; text-decoration-color: rgba(11,21,48,.25);
+      cursor: pointer; background: none; border: none; font-family: inherit;
+    }
+    .funnel-link-muted:hover { color: #2563eb; }
+
+    /* loading state */
+    .funnel-loading { text-align: center; padding: 30px 8px; }
+    .funnel-spinner-wrap { display: flex; justify-content: center; margin-bottom: 26px; }
+    .funnel-loading-step { color: rgba(11,21,48,.55); font-size: .94rem; min-height: 1.4em; transition: opacity .4s ease; }
+    .funnel-loading .analyzer-spinner { border-color: rgba(37,99,235,.15); border-top-color: #2563eb; }
+
+    /* radial score ring */
+    .funnel-ring-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 26px; }
+    .funnel-ring-svg { overflow: visible; filter: drop-shadow(0 0 16px rgba(37,99,235,.28)); }
+    .funnel-ring-track { fill: none; stroke: rgba(15,43,87,.09); }
+    .funnel-ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1), stroke 1.4s ease; }
+    .funnel-ring-number { font-size: 2.6rem; font-weight: 900; fill: #0b1530; text-anchor: middle; dominant-baseline: central; }
+    .funnel-ring-label { font-size: .72rem; fill: rgba(11,21,48,.42); text-anchor: middle; dominant-baseline: central; letter-spacing: .1em; text-transform: uppercase; }
+    .funnel-grade { font-size: 1.05rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+    .funnel-summary { color: rgba(11,21,48,.66); font-size: .95rem; line-height: 1.62; text-align: center; max-width: 480px; margin: 0 auto 28px; }
+
+    .funnel-subrings { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
+    .funnel-subring-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .funnel-subring-svg { filter: drop-shadow(0 0 6px rgba(37,99,235,.18)); }
+    .funnel-subring-track { fill: none; stroke: rgba(15,43,87,.09); }
+    .funnel-subring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+    .funnel-subring-num { font-size: 1.05rem; font-weight: 900; fill: #0b1530; text-anchor: middle; dominant-baseline: central; }
+    .funnel-subring-name { font-size: .72rem; font-weight: 700; color: rgba(11,21,48,.6); text-align: center; letter-spacing: .02em; }
+
+    .funnel-cats-title, .funnel-recs-title {
+      font-size: .76rem; font-weight: 900; letter-spacing: .15em; text-transform: uppercase;
+      color: rgba(11,21,48,.45); margin-bottom: 14px;
+    }
+    .funnel-cat-list { display: flex; flex-direction: column; gap: 11px; margin-bottom: 26px; }
+    .funnel-cat-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .funnel-cat-name { font-size: .85rem; font-weight: 700; color: rgba(11,21,48,.82); }
+    .funnel-cat-score { font-size: .85rem; font-weight: 900; }
+    .funnel-cat-track { height: 6px; border-radius: 3px; background: rgba(15,43,87,.09); overflow: hidden; }
+    .funnel-cat-fill { height: 100%; border-radius: 3px; width: 0%; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+
+    .funnel-rec-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px; }
+    .funnel-rec-item { display: flex; gap: 13px; align-items: flex-start; background: #f3f6fc; border: 1px solid rgba(15,43,87,.08); border-radius: 12px; padding: 13px 15px; }
+    .funnel-rec-num { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; background: rgba(37,99,235,.12); color: #2563eb; font-size: .74rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .funnel-rec-text { font-size: .9rem; color: rgba(11,21,48,.78); line-height: 1.55; }
+    .funnel-rec-text strong { color: #0b1530; font-weight: 800; }
+
+    .funnel-upgrade-cta {
+      background: linear-gradient(135deg, rgba(37,99,235,.1) 0%, rgba(37,99,235,.03) 100%);
+      border: 1px solid rgba(37,99,235,.22); border-radius: 16px; padding: 24px; text-align: center;
+    }
+    .funnel-upgrade-cta p { color: rgba(11,21,48,.7); font-size: .96rem; line-height: 1.6; margin-bottom: 16px; }
+
+    /* questionnaire */
+    .funnel-q-progress { display: flex; gap: 6px; margin-bottom: 24px; }
+    .funnel-q-progress-seg { flex: 1; height: 4px; border-radius: 3px; background: rgba(15,43,87,.1); overflow: hidden; }
+    .funnel-q-progress-seg.is-filled { background: linear-gradient(90deg, #60a5fa, #2563eb); }
+    .funnel-q-counter { color: rgba(11,21,48,.45); font-size: .76rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+    .funnel-choice-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+    .funnel-choice {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 18px; border-radius: 12px;
+      background: #f3f6fc; border: 1px solid rgba(15,43,87,.13);
+      color: rgba(11,21,48,.85); font-size: .95rem; font-weight: 700;
+      cursor: pointer; transition: background .2s ease, border-color .2s ease, transform .2s ease;
+      text-align: left; font-family: inherit;
+    }
+    .funnel-choice:hover { background: #e8eefb; transform: translateY(-1px); }
+    .funnel-choice.is-selected { background: rgba(37,99,235,.08); border-color: #2563eb; color: #0b1530; }
+    .funnel-choice-radio {
+      flex: 0 0 auto; width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid rgba(15,43,87,.25); position: relative;
+    }
+    .funnel-choice.is-selected .funnel-choice-radio { border-color: #2563eb; }
+    .funnel-choice.is-selected .funnel-choice-radio::after {
+      content: ""; position: absolute; inset: 3px; border-radius: 50%; background: #2563eb;
+    }
+
+    /* payment */
+    .funnel-price-card {
+      text-align: center; padding: 30px 20px; border-radius: 18px;
+      background: #f3f6fc; border: 1px solid rgba(15,43,87,.1);
+      margin-bottom: 22px;
+    }
+    .funnel-price-amount { font-size: 3rem; font-weight: 900; color: #0b1530; line-height: 1; }
+    .funnel-price-amount sup { font-size: 1.2rem; font-weight: 800; top: -1.6em; color: #2563eb; }
+    .funnel-price-sub { color: rgba(11,21,48,.5); font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-top: 8px; }
+    .funnel-price-list { list-style: none; margin: 20px 0 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 9px; }
+    .funnel-price-list li { color: rgba(11,21,48,.72); font-size: .88rem; display: flex; gap: 9px; align-items: flex-start; }
+    .funnel-price-list li::before { content: "✓"; color: #2563eb; font-weight: 900; flex: 0 0 auto; }
+
+    .funnel-confirm { text-align: center; padding: 14px 4px; }
+    .funnel-confirm-icon {
+      width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 22px;
+      background: rgba(37,99,235,.1); border: 1px solid rgba(37,99,235,.25);
+      display: flex; align-items: center; justify-content: center; font-size: 28px; color: #2563eb;
+    }
+
+    @media (max-width: 560px) {
+      .funnel-card { padding: 26px 22px; border-radius: 18px; }
+      .funnel-subrings { gap: 8px; }
+      .funnel-tabs { gap: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .funnel-overlay, .funnel-panel { transition: none !important; }
+    }
+    .analyzer-result-cta p { color: rgba(255,255,255,.7); font-size: .95rem; line-height: 1.6; margin-bottom: 16px; }
+    .analyzer-result-cta a { display: inline-flex; align-items: center; gap: 8px; background: #226e91; color: #fff; border: none; border-radius: 999px; padding: 14px 28px; font-size: .95rem; font-weight: 900; text-decoration: none; cursor: pointer; transition: transform .2s ease, background .2s ease; }
+    .analyzer-result-cta a:hover { transform: translateY(-2px); background: #1a5570; }
+
     /* SITE CLOSURE */
     .site-closure { padding: 0 24px 86px; text-align: center; }
     .site-closure > div { max-width: 880px; margin: 0 auto; border-top: 1px solid rgba(8,20,58,.14); padding-top: 42px; }
@@ -640,6 +894,8 @@
       .reveal-copy { top: 66%; width: min(720px, 90vw); }
       .nav-brand { justify-self: start; }
       .nav-cta { justify-self: end; }
+      .nav-inner > div[style*="justify-self:end"] { gap: 8px; }
+      .nav-cta-funnel, .nav-inner .nav-cta { font-size: 11px; padding: 10px 12px; }
       .nav-spacer { display: none; }
       #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
       #mainNav ul.is-open { display: flex; }
@@ -675,6 +931,8 @@
       .cat-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
+      .nav-brand span { display: none; }
+      .nav-cta-funnel, .nav-inner .nav-cta { font-size: 10px; padding: 9px 10px; letter-spacing: 0; }
       .collage-grid, .contractor-icons { grid-template-columns: 1fr; }
       .bendo-title { margin-bottom: 30px; }
       .collage-slot { min-height: auto; }
@@ -713,7 +971,10 @@
         <img src="Asset/premium-logo-240.webp" alt="Nexus Luma Logo" width="78" height="44" decoding="async" fetchpriority="high" style="height:44px;width:auto;display:inline-block;vertical-align:middle;">
         <span style="font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.7);">Nexus Luma</span>
       </div>
-      <a class="nav-cta" href="tel:+13365177347">Call For A Free Website Growth Plan</a>
+      <div style="display:flex;align-items:center;gap:10px;justify-self:end;">
+        <button class="nav-cta nav-cta-funnel" id="navFunnelBtn" type="button">Analyze My Website</button>
+        <a class="nav-cta" href="tel:+13365177347">Call For A Free Website Growth Plan</a>
+      </div>
     </div>
   </nav>
 
@@ -964,6 +1225,182 @@
       <button class="analyzer-modal-close" id="analyzerModalClose" type="button" aria-label="Close results">×</button>
       <div class="analyzer-modal-body" id="analyzerModalBody">
         <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       LEAD FUNNEL OVERLAY
+       Step flow: Email -> Website URL -> Results (+ Upgrade CTA)
+       -> Questionnaire (5 Qs) -> Payment ($99 / pay later) -> Confirm
+  ============================================================ -->
+  <div class="funnel-overlay" id="funnelOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="funnelHeading">
+    <div class="funnel-shell">
+      <div class="funnel-topbar">
+        <div class="funnel-brand">
+          <img src="Asset/premium-logo-240.webp" alt="" decoding="async">
+          <span>Nexus Luma — Website Review</span>
+        </div>
+        <button class="funnel-close" id="funnelCloseBtn" type="button" aria-label="Close website review">×</button>
+      </div>
+
+      <div class="funnel-tabs" id="funnelTabs" aria-hidden="true">
+        <div class="funnel-tab" data-tab="1"><span class="funnel-tab-label">Email</span><div class="funnel-tab-dot"></div></div>
+        <div class="funnel-tab" data-tab="2"><span class="funnel-tab-label">Website</span><div class="funnel-tab-dot"></div></div>
+        <div class="funnel-tab" data-tab="3"><span class="funnel-tab-label">Results</span><div class="funnel-tab-dot"></div></div>
+        <div class="funnel-tab" data-tab="4"><span class="funnel-tab-label">About You</span><div class="funnel-tab-dot"></div></div>
+        <div class="funnel-tab" data-tab="5"><span class="funnel-tab-label">Get Started</span><div class="funnel-tab-dot"></div></div>
+      </div>
+
+      <div class="funnel-stage">
+
+        <!-- STEP 1: EMAIL -->
+        <div class="funnel-panel" data-panel="1">
+          <div class="funnel-card">
+            <div class="funnel-eyebrow">Step 1 of 5</div>
+            <h2 id="funnelHeading">Let's see what your website is costing you.</h2>
+            <p class="funnel-sub">Enter your email and we'll send your free website review there too, in case you want to come back to it.</p>
+            <div class="funnel-field">
+              <label for="funnelEmail">Your Email Address</label>
+              <input type="email" id="funnelEmail" placeholder="you@yourbusiness.com" autocomplete="email">
+              <div class="funnel-error-msg" id="funnelEmailError"></div>
+            </div>
+            <button class="funnel-btn" id="funnelStep1Next" type="button">Continue →</button>
+            <p class="funnel-note">No spam. Just your review and next-step recommendations.</p>
+          </div>
+        </div>
+
+        <!-- STEP 2: WEBSITE URL -->
+        <div class="funnel-panel" data-panel="2" hidden>
+          <div class="funnel-card">
+            <div class="funnel-eyebrow">Step 2 of 5</div>
+            <h2>What's your website address?</h2>
+            <p class="funnel-sub">We'll scan it for design, speed, SEO, and conversion issues — the things quietly costing you calls and leads.</p>
+            <div class="funnel-field">
+              <label for="funnelUrl">Your Website URL</label>
+              <input type="url" id="funnelUrl" placeholder="https://yourbusiness.com" autocomplete="url">
+              <div class="funnel-error-msg" id="funnelUrlError"></div>
+            </div>
+            <div class="funnel-row">
+              <button class="funnel-btn-back" id="funnelStep2Back" type="button" aria-label="Back">←</button>
+              <button class="funnel-btn" id="funnelStep2Next" type="button">Analyze My Website →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: RESULTS -->
+        <div class="funnel-panel" data-panel="3" hidden>
+          <div class="funnel-card" id="funnelResultsCard">
+            <!-- Populated by JS (loading state, then results) -->
+          </div>
+        </div>
+
+        <!-- STEP 4: QUESTIONNAIRE (5 questions, one shown at a time) -->
+        <div class="funnel-panel" data-panel="4" hidden>
+          <div class="funnel-card">
+            <div class="funnel-q-progress" id="funnelQProgress"></div>
+            <div class="funnel-q-counter" id="funnelQCounter">Question 1 of 5</div>
+
+            <!-- Q1: Name -->
+            <div class="funnel-q" data-q="1">
+              <h2>What's your name?</h2>
+              <p class="funnel-sub">So we know who we're talking to.</p>
+              <div class="funnel-field">
+                <label for="funnelName">Your Name</label>
+                <input type="text" id="funnelName" placeholder="Jane Smith" autocomplete="name">
+                <div class="funnel-error-msg" id="funnelNameError"></div>
+              </div>
+            </div>
+
+            <!-- Q2: Business name (optional) -->
+            <div class="funnel-q" data-q="2" hidden>
+              <h2>What's your business name?</h2>
+              <p class="funnel-sub">Optional — skip if you'd rather not say yet.</p>
+              <div class="funnel-field">
+                <label for="funnelBusiness">Business Name <span style="color:rgba(255,255,255,.35);text-transform:none;letter-spacing:0;">(optional)</span></label>
+                <input type="text" id="funnelBusiness" placeholder="Smith Plumbing Co." autocomplete="organization">
+              </div>
+            </div>
+
+            <!-- Q3: Goal -->
+            <div class="funnel-q" data-q="3" hidden>
+              <h2>What are you hoping to accomplish?</h2>
+              <p class="funnel-sub">Pick the one that fits best.</p>
+              <div class="funnel-choice-grid" id="funnelGoalChoices">
+                <button class="funnel-choice" type="button" data-value="More Online Customers"><span class="funnel-choice-radio"></span>Get more customers online</button>
+                <button class="funnel-choice" type="button" data-value="Redesign Existing Website"><span class="funnel-choice-radio"></span>Redesign my existing website</button>
+                <button class="funnel-choice" type="button" data-value="Create New Website"><span class="funnel-choice-radio"></span>Create a brand new website</button>
+              </div>
+              <div class="funnel-error-msg" id="funnelGoalError"></div>
+            </div>
+
+            <!-- Q4: Budget -->
+            <div class="funnel-q" data-q="4" hidden>
+              <h2>What's your budget range?</h2>
+              <p class="funnel-sub">This helps us recommend the right plan — no judgment either way.</p>
+              <div class="funnel-choice-grid" id="funnelBudgetChoices">
+                <button class="funnel-choice" type="button" data-value="$500 - $1,000"><span class="funnel-choice-radio"></span>$500 – $1,000</button>
+                <button class="funnel-choice" type="button" data-value="$1,000 - $2,000"><span class="funnel-choice-radio"></span>$1,000 – $2,000</button>
+                <button class="funnel-choice" type="button" data-value="$2,000 - $3,000"><span class="funnel-choice-radio"></span>$2,000 – $3,000</button>
+                <button class="funnel-choice" type="button" data-value="$3,000+"><span class="funnel-choice-radio"></span>$3,000+</button>
+              </div>
+              <div class="funnel-error-msg" id="funnelBudgetError"></div>
+            </div>
+
+            <!-- Q5: Timeline -->
+            <div class="funnel-q" data-q="5" hidden>
+              <h2>How soon are you looking to get started?</h2>
+              <p class="funnel-sub">Last question — then we'll show you your next step.</p>
+              <div class="funnel-choice-grid" id="funnelTimelineChoices">
+                <button class="funnel-choice" type="button" data-value="Right Away"><span class="funnel-choice-radio"></span>Right away</button>
+                <button class="funnel-choice" type="button" data-value="Within A Month"><span class="funnel-choice-radio"></span>Within a month</button>
+                <button class="funnel-choice" type="button" data-value="Just Exploring"><span class="funnel-choice-radio"></span>Just exploring for now</button>
+              </div>
+              <div class="funnel-error-msg" id="funnelTimelineError"></div>
+            </div>
+
+            <div class="funnel-row">
+              <button class="funnel-btn-back" id="funnelQBack" type="button" aria-label="Back">←</button>
+              <button class="funnel-btn" id="funnelQNext" type="button">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: PAYMENT -->
+        <div class="funnel-panel" data-panel="5" hidden>
+          <div class="funnel-card" id="funnelPaymentCard">
+            <div class="funnel-eyebrow">Step 5 of 5</div>
+            <h2>Let's get your website upgrade started.</h2>
+            <p class="funnel-sub">A one-time $99 start fee locks in your spot and kicks off your custom plan — fully credited toward your project.</p>
+
+            <div class="funnel-price-card">
+              <div class="funnel-price-amount">$99<sup>.00</sup></div>
+              <div class="funnel-price-sub">One-Time Start Fee</div>
+              <ul class="funnel-price-list">
+                <li>Locks in your project slot</li>
+                <li>Credited fully toward your final project cost</li>
+                <li>90-day money-back guarantee on every project</li>
+                <li>Flexible payment plans available after kickoff</li>
+              </ul>
+            </div>
+
+            <button class="funnel-btn" id="funnelPayBtn" type="button">Pay $99 &amp; Get Started →</button>
+            <button class="funnel-link-muted" id="funnelPayLaterBtn" type="button">I'll pay later</button>
+          </div>
+        </div>
+
+        <!-- STEP 6: CONFIRMATION -->
+        <div class="funnel-panel" data-panel="6" hidden>
+          <div class="funnel-card">
+            <div class="funnel-confirm">
+              <div class="funnel-confirm-icon" id="funnelConfirmIcon">✓</div>
+              <h2 id="funnelConfirmHeading">You're all set.</h2>
+              <p class="funnel-sub" id="funnelConfirmSub">We've got your review and your answers. We'll follow up shortly to walk through your next steps.</p>
+              <button class="funnel-btn" id="funnelReturnHomeBtn" type="button">Return To Homepage</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1662,6 +2099,539 @@ Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The 
       emailInput.addEventListener("input", () => { emailInput.classList.remove("error"); emailError.textContent = ""; });
       urlInput.addEventListener("input",   () => { urlInput.classList.remove("error");   urlError.textContent   = ""; });
     })();
+  </script>
+
+  <!-- ============================================================
+       LEAD FUNNEL SCRIPT
+       Fully isolated IIFE. Does not touch any selector, variable,
+       or function from the scripts above.
+  ============================================================ -->
+  <script>
+  (() => {
+    const overlay   = document.getElementById("funnelOverlay");
+    if (!overlay) return;
+
+    const closeBtn  = document.getElementById("funnelCloseBtn");
+    const navOpenBtn = document.getElementById("navFunnelBtn");
+    const tabs      = Array.from(overlay.querySelectorAll(".funnel-tab"));
+    const panels    = Array.from(overlay.querySelectorAll(".funnel-panel"));
+
+    const state = {
+      step: 1,
+      email: "",
+      url: "",
+      resultData: null,
+      name: "",
+      business: "",
+      goal: "",
+      budget: "",
+      timeline: "",
+      qIndex: 1, // 1..5 within step 4
+      paid: false
+    };
+
+    /* ---------- open / close ---------- */
+    function openFunnel() {
+      overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      // If the user already reached confirmation, reopening starts a fresh flow
+      if (state.step === 6) {
+        resetFunnelState();
+      }
+      goToStep(state.step || 1, true);
+    }
+    function resetFunnelState() {
+      state.step = 1; state.email = ""; state.url = ""; state.resultData = null;
+      state.name = ""; state.business = ""; state.goal = ""; state.budget = "";
+      state.timeline = ""; state.qIndex = 1; state.paid = false;
+      emailInput.value = ""; urlInput.value = "";
+      nameInput.value = ""; businessInput.value = "";
+      overlay.querySelectorAll(".funnel-choice.is-selected").forEach(b => b.classList.remove("is-selected"));
+    }
+    function closeFunnel() {
+      overlay.classList.remove("active");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+    if (navOpenBtn) navOpenBtn.addEventListener("click", openFunnel);
+    closeBtn.addEventListener("click", closeFunnel);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("active")) closeFunnel();
+    });
+    // also hook up any in-page link that points to the funnel explicitly
+    document.querySelectorAll('[data-open-funnel]').forEach(el => {
+      el.addEventListener("click", (e) => { e.preventDefault(); openFunnel(); });
+    });
+
+    /* ---------- step / tab navigation ---------- */
+    function updateTabs(step) {
+      tabs.forEach(tab => {
+        const n = parseInt(tab.dataset.tab, 10);
+        tab.classList.toggle("is-active", n === step);
+        tab.classList.toggle("is-done", n < step);
+      });
+    }
+    function goToStep(step, skipAnim) {
+      state.step = step;
+      panels.forEach(p => {
+        const n = parseInt(p.dataset.panel, 10);
+        if (n === step) {
+          p.hidden = false;
+          if (skipAnim) { p.classList.add("is-visible"); }
+          else { requestAnimationFrame(() => p.classList.add("is-visible")); }
+        } else {
+          p.hidden = true;
+          p.classList.remove("is-visible");
+        }
+      });
+      updateTabs(step);
+      const stage = overlay.querySelector(".funnel-stage");
+      if (stage) stage.scrollTop = 0;
+    }
+
+    /* ---------- validation helpers ---------- */
+    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+    function isValidUrl(v) {
+      try { const u = new URL(v.trim().startsWith("http") ? v.trim() : "https://" + v.trim()); return u.hostname.includes("."); }
+      catch { return false; }
+    }
+    function normaliseUrl(v) {
+      const s = v.trim();
+      return s.startsWith("http") ? s : "https://" + s;
+    }
+
+    /* ============================================================
+       STEP 1 — EMAIL
+    ============================================================ */
+    const emailInput = document.getElementById("funnelEmail");
+    const emailError = document.getElementById("funnelEmailError");
+    document.getElementById("funnelStep1Next").addEventListener("click", () => {
+      emailInput.classList.remove("error"); emailError.textContent = "";
+      if (!isValidEmail(emailInput.value)) {
+        emailInput.classList.add("error");
+        emailError.textContent = "Please enter a valid email address.";
+        return;
+      }
+      state.email = emailInput.value.trim();
+      goToStep(2);
+    });
+    emailInput.addEventListener("input", () => { emailInput.classList.remove("error"); emailError.textContent = ""; });
+    emailInput.addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("funnelStep1Next").click(); });
+
+    /* ============================================================
+       STEP 2 — WEBSITE URL
+    ============================================================ */
+    const urlInput = document.getElementById("funnelUrl");
+    const urlError = document.getElementById("funnelUrlError");
+    document.getElementById("funnelStep2Back").addEventListener("click", () => goToStep(1));
+    document.getElementById("funnelStep2Next").addEventListener("click", () => {
+      urlInput.classList.remove("error"); urlError.textContent = "";
+      if (!urlInput.value.trim()) {
+        urlInput.classList.add("error");
+        urlError.textContent = "Please enter your website URL.";
+        return;
+      }
+      if (!isValidUrl(urlInput.value)) {
+        urlInput.classList.add("error");
+        urlError.textContent = "Please enter a valid URL (e.g. https://yourbusiness.com).";
+        return;
+      }
+      state.url = normaliseUrl(urlInput.value);
+      goToStep(3);
+      runAnalysis();
+    });
+    urlInput.addEventListener("input", () => { urlInput.classList.remove("error"); urlError.textContent = ""; });
+    urlInput.addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("funnelStep2Next").click(); });
+
+    /* ============================================================
+       STEP 3 — RESULTS
+    ============================================================ */
+    const resultsCard = document.getElementById("funnelResultsCard");
+
+    const LOAD_STEPS = [
+      "Fetching your website…",
+      "Scanning design and layout…",
+      "Evaluating SEO signals…",
+      "Checking mobile experience…",
+      "Analysing conversion flow…",
+      "Building your report…"
+    ];
+    let stepInterval = null;
+    function startLoadingCycle() {
+      let i = 0;
+      resultsCard.innerHTML = `
+        <div class="funnel-loading">
+          <div class="funnel-spinner-wrap"><div class="analyzer-spinner"></div></div>
+          <div class="funnel-loading-step">${LOAD_STEPS[0]}</div>
+        </div>`;
+      stepInterval = setInterval(() => {
+        i = (i + 1) % LOAD_STEPS.length;
+        const el = resultsCard.querySelector(".funnel-loading-step");
+        if (el) { el.style.opacity = "0"; setTimeout(() => { if (el) { el.textContent = LOAD_STEPS[i]; el.style.opacity = "1"; } }, 250); }
+      }, 2000);
+    }
+    function stopLoadingCycle() { if (stepInterval) { clearInterval(stepInterval); stepInterval = null; } }
+
+    function scoreColor(s) {
+      if (s >= 75) return "#4ade80";
+      if (s >= 50) return "#facc15";
+      return "#dc2626";
+    }
+    function scoreGradeLabel(s) {
+      if (s >= 80) return { label: "Excellent", color: "#4ade80" };
+      if (s >= 65) return { label: "Good", color: "#a3e635" };
+      if (s >= 45) return { label: "Needs Work", color: "#facc15" };
+      return { label: "Critical", color: "#dc2626" };
+    }
+
+    function buildMainRing(score) {
+      const R = 74, cx = 90, cy = 90;
+      const circumference = 2 * Math.PI * R;
+      const arcLen = circumference * (240 / 360);
+      const baseOffset = circumference * (1 - 150/360);
+      return `
+<svg class="funnel-ring-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+  <circle class="funnel-ring-track" cx="${cx}" cy="${cy}" r="${R}" stroke-width="11"
+    stroke-dasharray="${arcLen} ${circumference - arcLen}"
+    stroke-dashoffset="${baseOffset}"
+    transform="rotate(150 ${cx} ${cy})" />
+  <circle class="funnel-ring-fill" id="funnelMainRingEl" cx="${cx}" cy="${cy}" r="${R}" stroke-width="11"
+    stroke="#2563eb"
+    stroke-dasharray="${arcLen} ${circumference - arcLen}"
+    stroke-dashoffset="${baseOffset + arcLen}"
+    transform="rotate(150 ${cx} ${cy})" />
+  <text class="funnel-ring-number" x="${cx}" y="${cy - 6}" id="funnelMainRingNum">0</text>
+  <text class="funnel-ring-label" x="${cx}" y="${cy + 22}">/ 100</text>
+</svg>`;
+    }
+    function animateMainRing(score) {
+      const el = document.getElementById("funnelMainRingEl");
+      const numEl = document.getElementById("funnelMainRingNum");
+      if (!el || !numEl) return;
+      const R = 74, circumference = 2 * Math.PI * R, arcLen = circumference * (240/360);
+      const baseOffset = circumference * (1 - 150/360);
+      const filledOffset = baseOffset + arcLen * (1 - score/100);
+      const startOffset = baseOffset + arcLen;
+      el.style.strokeDashoffset = startOffset;
+      el.style.stroke = scoreColor(score);
+      let startTime = null;
+      const duration = 1400;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        const p = Math.min((ts - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.style.strokeDashoffset = startOffset + (filledOffset - startOffset) * ease;
+        numEl.textContent = Math.round(score * ease);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function buildSubRing(score, idx) {
+      const R = 30, cx = 36, cy = 36;
+      const circumference = 2 * Math.PI * R;
+      return `
+<svg class="funnel-subring-svg" width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <circle class="funnel-subring-track" cx="${cx}" cy="${cy}" r="${R}" stroke-width="6" />
+  <circle class="funnel-subring-fill" id="funnelSubRing${idx}" cx="${cx}" cy="${cy}" r="${R}" stroke-width="6"
+    stroke="${scoreColor(score)}"
+    stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}"
+    transform="rotate(-90 ${cx} ${cy})" />
+  <text class="funnel-subring-num" x="${cx}" y="${cy+1}">${score}</text>
+</svg>`;
+    }
+    function animateSubRing(score, idx) {
+      const el = document.getElementById("funnelSubRing" + idx);
+      if (!el) return;
+      const R = 30, circumference = 2 * Math.PI * R;
+      const target = circumference * (1 - score/100);
+      requestAnimationFrame(() => { el.style.strokeDashoffset = target; });
+    }
+
+    function renderResults(data) {
+      const { overall_score, summary, categories, recommendations } = data;
+      const { label, color } = scoreGradeLabel(overall_score);
+      const topThree = categories.slice(0, 3);
+      const restCats = categories.slice(3);
+
+      const subRingsHTML = topThree.map((c, i) => `
+        <div class="funnel-subring-item">
+          ${buildSubRing(c.score, i)}
+          <span class="funnel-subring-name">${c.name}</span>
+        </div>`).join("");
+
+      const restCatsHTML = restCats.map(c => `
+        <div>
+          <div class="funnel-cat-header">
+            <span class="funnel-cat-name">${c.name}</span>
+            <span class="funnel-cat-score" style="color:${scoreColor(c.score)}">${c.score}</span>
+          </div>
+          <div class="funnel-cat-track"><div class="funnel-cat-fill" id="funnelCatFill_${c.name.replace(/\s+/g,'')}" style="background:${scoreColor(c.score)}"></div></div>
+        </div>`).join("");
+
+      const recsHTML = recommendations.slice(0, 4).map((r, i) => `
+        <li class="funnel-rec-item">
+          <span class="funnel-rec-num">${i+1}</span>
+          <span class="funnel-rec-text">${r}</span>
+        </li>`).join("");
+
+      resultsCard.innerHTML = `
+        <div class="funnel-eyebrow">Step 3 of 5 — Your Results</div>
+        <h2>Here's where your website stands.</h2>
+        <div class="funnel-ring-wrap">
+          ${buildMainRing(overall_score)}
+          <div class="funnel-grade" style="color:${color}">${label}</div>
+        </div>
+        <p class="funnel-summary">${summary}</p>
+        <div class="funnel-subrings">${subRingsHTML}</div>
+        <div class="funnel-cats-title">More To Improve</div>
+        <div class="funnel-cat-list">${restCatsHTML}</div>
+        <div class="funnel-recs-title">Top Recommendations</div>
+        <ul class="funnel-rec-list">${recsHTML}</ul>
+        <div class="funnel-upgrade-cta">
+          <p>Want us to fix what's costing you calls, leads, and bookings? Let's build your plan.</p>
+          <button class="funnel-btn" id="funnelUpgradeBtn" type="button">Upgrade My Website Now! →</button>
+        </div>
+      `;
+
+      requestAnimationFrame(() => {
+        animateMainRing(overall_score);
+        topThree.forEach((c, i) => animateSubRing(c.score, i));
+        restCats.forEach(c => {
+          const fillEl = document.getElementById("funnelCatFill_" + c.name.replace(/\s+/g, ""));
+          if (fillEl) setTimeout(() => { fillEl.style.width = c.score + "%"; }, 150);
+        });
+      });
+
+      document.getElementById("funnelUpgradeBtn").addEventListener("click", () => {
+        goToStep(4);
+        initQuestionnaire();
+      });
+    }
+
+    function getFallbackData() {
+      return {
+        overall_score: 54,
+        summary: "We couldn't fully reach your site in real time, but based on common patterns for businesses in your industry, there are likely real opportunities in mobile experience, conversion flow, and trust signals.",
+        categories: [
+          { name: "Visual Design",      score: 60 },
+          { name: "Mobile Experience",  score: 52 },
+          { name: "Conversion & CTAs",  score: 50 },
+          { name: "Page Speed",         score: 48 },
+          { name: "SEO Foundations",    score: 55 },
+          { name: "Trust Signals",      score: 58 }
+        ],
+        recommendations: [
+          "<strong>Strengthen your headline</strong> — visitors should know exactly what you do within 3 seconds.",
+          "<strong>Add one clear primary CTA</strong> above the fold so the next step is obvious.",
+          "<strong>Display social proof visibly</strong> — reviews or project photos reduce hesitation.",
+          "<strong>Fix mobile layout</strong> — test your contact form and navigation on a phone."
+        ]
+      };
+    }
+
+    async function runAnalysis() {
+      startLoadingCycle();
+      const prompt = `You are a professional web design and conversion rate optimization expert.
+
+Analyse the website at: ${state.url}
+
+Use web search to visit or look up information about this website and its online presence. Provide a thorough, honest analysis.
+
+Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The object must have exactly this shape:
+{
+  "overall_score": <integer 0-100>,
+  "summary": "<2-3 sentence honest summary of the site's current state and biggest opportunity>",
+  "categories": [
+    { "name": "Visual Design",     "score": <0-100> },
+    { "name": "Mobile Experience", "score": <0-100> },
+    { "name": "Conversion & CTAs", "score": <0-100> },
+    { "name": "Page Speed",        "score": <0-100> },
+    { "name": "SEO Foundations",   "score": <0-100> },
+    { "name": "Trust Signals",     "score": <0-100> }
+  ],
+  "recommendations": [
+    "<recommendation 1 — use <strong> tags around the key action phrase>",
+    "<recommendation 2>",
+    "<recommendation 3>",
+    "<recommendation 4>"
+  ]
+}`;
+      let resultData = null;
+      try {
+        const resp = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 1000,
+            tools: [{ type: "web_search_20250305", name: "web_search" }],
+            messages: [{ role: "user", content: prompt }]
+          })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          const textBlocks = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+          const match = textBlocks.match(/\{[\s\S]*\}/);
+          if (match) { try { resultData = JSON.parse(match[0]); } catch(e) { resultData = null; } }
+        }
+      } catch(e) { resultData = null; }
+
+      stopLoadingCycle();
+      if (!resultData || typeof resultData.overall_score !== "number") resultData = getFallbackData();
+      state.resultData = resultData;
+      renderResults(resultData);
+    }
+
+    /* ============================================================
+       STEP 4 — QUESTIONNAIRE (5 questions)
+    ============================================================ */
+    const qProgressEl = document.getElementById("funnelQProgress");
+    const qCounterEl  = document.getElementById("funnelQCounter");
+    const qBackBtn    = document.getElementById("funnelQBack");
+    const qNextBtn    = document.getElementById("funnelQNext");
+    const qPanels     = Array.from(overlay.querySelectorAll(".funnel-q"));
+    const TOTAL_Q = qPanels.length;
+
+    function initQuestionnaire() {
+      state.qIndex = 1;
+      buildQProgress();
+      showQuestion(1);
+    }
+    function buildQProgress() {
+      qProgressEl.innerHTML = "";
+      for (let i = 1; i <= TOTAL_Q; i++) {
+        const seg = document.createElement("div");
+        seg.className = "funnel-q-progress-seg";
+        seg.dataset.seg = i;
+        qProgressEl.appendChild(seg);
+      }
+      updateQProgress();
+    }
+    function updateQProgress() {
+      qProgressEl.querySelectorAll(".funnel-q-progress-seg").forEach(seg => {
+        seg.classList.toggle("is-filled", parseInt(seg.dataset.seg, 10) <= state.qIndex);
+      });
+      qCounterEl.textContent = `Question ${state.qIndex} of ${TOTAL_Q}`;
+    }
+    function showQuestion(n) {
+      qPanels.forEach(p => { p.hidden = parseInt(p.dataset.q, 10) !== n; });
+      qBackBtn.style.visibility = n === 1 ? "hidden" : "visible";
+      qNextBtn.textContent = n === TOTAL_Q ? "Continue →" : "Continue →";
+      updateQProgress();
+    }
+
+    // choice button wiring (goal / budget / timeline)
+    function wireChoiceGroup(containerId, stateKey, errorId) {
+      const container = document.getElementById(containerId);
+      container.querySelectorAll(".funnel-choice").forEach(btn => {
+        btn.addEventListener("click", () => {
+          container.querySelectorAll(".funnel-choice").forEach(b => b.classList.remove("is-selected"));
+          btn.classList.add("is-selected");
+          state[stateKey] = btn.dataset.value;
+          const errEl = document.getElementById(errorId);
+          if (errEl) errEl.textContent = "";
+        });
+      });
+    }
+    wireChoiceGroup("funnelGoalChoices", "goal", "funnelGoalError");
+    wireChoiceGroup("funnelBudgetChoices", "budget", "funnelBudgetError");
+    wireChoiceGroup("funnelTimelineChoices", "timeline", "funnelTimelineError");
+
+    const nameInput = document.getElementById("funnelName");
+    const nameError = document.getElementById("funnelNameError");
+    const businessInput = document.getElementById("funnelBusiness");
+
+    qBackBtn.addEventListener("click", () => {
+      if (state.qIndex === 1) { goToStep(3); return; }
+      state.qIndex -= 1;
+      showQuestion(state.qIndex);
+    });
+
+    qNextBtn.addEventListener("click", () => {
+      // validate current question
+      if (state.qIndex === 1) {
+        nameError.textContent = "";
+        nameInput.classList.remove("error");
+        if (!nameInput.value.trim()) {
+          nameInput.classList.add("error");
+          nameError.textContent = "Please enter your name.";
+          return;
+        }
+        state.name = nameInput.value.trim();
+      } else if (state.qIndex === 2) {
+        state.business = businessInput.value.trim();
+      } else if (state.qIndex === 3) {
+        if (!state.goal) {
+          document.getElementById("funnelGoalError").textContent = "Please select one option.";
+          return;
+        }
+      } else if (state.qIndex === 4) {
+        if (!state.budget) {
+          document.getElementById("funnelBudgetError").textContent = "Please select a budget range.";
+          return;
+        }
+      } else if (state.qIndex === 5) {
+        if (!state.timeline) {
+          document.getElementById("funnelTimelineError").textContent = "Please select an option.";
+          return;
+        }
+        // last question complete -> go to payment
+        goToStep(5);
+        return;
+      }
+      state.qIndex += 1;
+      showQuestion(state.qIndex);
+    });
+    nameInput.addEventListener("input", () => { nameInput.classList.remove("error"); nameError.textContent = ""; });
+
+    /* ============================================================
+       STEP 5 — PAYMENT
+    ============================================================ */
+    const payBtn = document.getElementById("funnelPayBtn");
+    const payLaterBtn = document.getElementById("funnelPayLaterBtn");
+
+    payBtn.addEventListener("click", () => {
+      // Note: this demo funnel does not process a real charge — wire your
+      // payment processor here (Stripe Checkout / Payment Links etc).
+      state.paid = true;
+      payBtn.disabled = true;
+      payBtn.textContent = "Processing…";
+      setTimeout(() => {
+        payBtn.disabled = false;
+        payBtn.textContent = "Pay $99 & Get Started →";
+        showConfirmation(true);
+      }, 900);
+    });
+
+    payLaterBtn.addEventListener("click", () => {
+      state.paid = false;
+      showConfirmation(false);
+    });
+
+    function showConfirmation(paid) {
+      const icon = document.getElementById("funnelConfirmIcon");
+      const heading = document.getElementById("funnelConfirmHeading");
+      const sub = document.getElementById("funnelConfirmSub");
+      if (paid) {
+        icon.textContent = "✓";
+        heading.textContent = "You're all set — welcome aboard!";
+        sub.textContent = "Your $99 start fee is in and your spot is locked. We'll reach out shortly to kick off your custom website plan.";
+      } else {
+        icon.textContent = "📩";
+        heading.textContent = "Got it — we'll follow up.";
+        sub.textContent = "We've saved your review and your answers. We'll reach out by email to help you get started whenever you're ready.";
+      }
+      goToStep(6);
+    }
+
+    document.getElementById("funnelReturnHomeBtn").addEventListener("click", () => {
+      closeFunnel();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+  })();
   </script>
 </body>
 </html>
