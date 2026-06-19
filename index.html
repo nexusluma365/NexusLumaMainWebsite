@@ -137,7 +137,7 @@
     .reveal-copy p { margin-top: 1rem; font-size: clamp(1.05rem, 1.9vw, 1.3rem); line-height: 1.65; opacity: .76; }
 
     /* PRODUCT INTRO */
-    .product-intro { max-width: 920px; margin: -480px auto 0; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
+    .product-intro { max-width: 920px; margin: 0 auto; padding: 0 24px 36px; text-align: center; position: relative; z-index: 2; }
     .intro-to-astro { position: relative; background: linear-gradient(180deg, #020308 0%, #020308 58%, #08090d 72%, #020308 100%); overflow: visible; }
     .product-intro .product-overline { font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,.58); margin-bottom: 18px; }
     .product-intro h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1.4rem; line-height: 1.2; letter-spacing: -0.03em; color: #fff; }
@@ -968,14 +968,6 @@
     }
     @media (max-width: 560px) {
       .nav-cta-funnel { font-size: 12px; padding: 10px 16px; }
-    }
-
-    /* Fix product-intro overlap with hero on mobile.
-       The desktop -480px pull-up looks correct because GSAP pins the hero,
-       but on mobile the hero is not pinned so the intro slides up over
-       the still-visible "Design" text. Reset to 0 on mobile. */
-    @media (max-width: 900px) {
-      .product-intro { margin-top: 0; }
     }
 
     /* Footer responsive stacking */
