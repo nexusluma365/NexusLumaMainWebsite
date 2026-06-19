@@ -1157,7 +1157,7 @@
           <li class="proof-item"><span class="proof-dot"></span>CTA flow that leads from confidence to quote request.</li>
         </ul>
         <div class="contractor-ctaRow">
-          <a href="#analyzer" class="btn btn-primary">Get Free Website Review</a>
+          <button type="button" class="btn btn-primary" data-open-funnel>Get Free Website Review</button>
           <a href="tel:+13365177347" class="btn btn-ghost">Call (336) 517-7347</a>
         </div>
       </div>
@@ -1241,18 +1241,7 @@
         Powered by Claude AI (Anthropic)
       </div>
       <div class="analyzer-form">
-        <div class="analyzer-field">
-          <label for="analyzerEmail">Your Email Address <span style="color:#f87272">*</span></label>
-          <input type="email" id="analyzerEmail" placeholder="you@yourbusiness.com" autocomplete="email" />
-          <div class="analyzer-error-msg" id="emailError"></div>
-        </div>
-        <div class="analyzer-field">
-          <label for="analyzerUrl">Your Website URL <span style="color:#f87272">*</span></label>
-          <input type="url" id="analyzerUrl" placeholder="https://yourbusiness.com" autocomplete="url" />
-          <div class="analyzer-error-msg" id="urlError"></div>
-        </div>
-        <button class="analyzer-submit" id="analyzerSubmit" type="button">Get My Free Website Review →</button>
-        <p class="analyzer-note">No pressure. We use your email only to follow up with your review and next-step recommendations.</p>
+        <button class="analyzer-submit" id="analyzerSubmit" type="button" data-open-funnel>Get My Free Website Review →</button>
       </div>
     </div>
   </section>
@@ -1790,17 +1779,19 @@
     }
 
     /* ============================================================
-       WEBSITE ANALYZER
+       WEBSITE ANALYZER — standalone modal (kept for direct API use)
     ============================================================ */
     (() => {
-      const emailInput  = document.getElementById("analyzerEmail");
-      const urlInput    = document.getElementById("analyzerUrl");
-      const emailError  = document.getElementById("emailError");
-      const urlError    = document.getElementById("urlError");
       const submitBtn   = document.getElementById("analyzerSubmit");
       const backdrop    = document.getElementById("analyzerModalBackdrop");
       const modalBody   = document.getElementById("analyzerModalBody");
       const modalClose  = document.getElementById("analyzerModalClose");
+      // Inputs removed — analyzer now runs inside the funnel (step 3).
+      // This block only keeps the modal open/close logic alive.
+      const emailInput  = { value: "", classList: { remove(){}, add(){} } };
+      const urlInput    = { value: "", classList: { remove(){}, add(){} } };
+      const emailError  = { textContent: "" };
+      const urlError    = { textContent: "" };
 
       const LOAD_STEPS = [
         "Fetching your website…",
@@ -2035,107 +2026,7 @@
         };
       }
 
-      submitBtn.addEventListener("click", async () => {
-        clearErrors();
-        let valid = true;
-        const email = emailInput.value;
-        const url   = urlInput.value;
-
-        if (!isValidEmail(email)) {
-          emailInput.classList.add("error");
-          emailError.textContent = "Please enter a valid email address.";
-          valid = false;
-        }
-        if (!url.trim()) {
-          urlInput.classList.add("error");
-          urlError.textContent = "Please enter your website URL.";
-          valid = false;
-        } else if (!isValidUrl(url)) {
-          urlInput.classList.add("error");
-          urlError.textContent = "Please enter a valid URL (e.g. https://yourbusiness.com).";
-          valid = false;
-        }
-        if (!valid) return;
-
-        const normUrl = normaliseUrl(url);
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Analysing…";
-
-        openModal();
-        startLoadingCycle();
-
-        const prompt = `You are a professional web design and conversion rate optimization expert.
-
-Analyse the website at: ${normUrl}
-
-Use web search to visit or look up information about this website and its online presence. Provide a thorough, honest analysis.
-
-Respond ONLY with a JSON object — no markdown, no backticks, no preamble. The object must have exactly this shape:
-{
-  "overall_score": <integer 0-100>,
-  "summary": "<2-3 sentence honest summary of the site's current state and biggest opportunity>",
-  "categories": [
-    { "name": "Visual Design",     "score": <0-100>, "note": "<1 sentence specific observation>" },
-    { "name": "Page Speed",        "score": <0-100>, "note": "<1 sentence specific observation>" },
-    { "name": "SEO Foundations",   "score": <0-100>, "note": "<1 sentence specific observation>" },
-    { "name": "Conversion & CTAs", "score": <0-100>, "note": "<1 sentence specific observation>" },
-    { "name": "Mobile Experience", "score": <0-100>, "note": "<1 sentence specific observation>" },
-    { "name": "Trust Signals",     "score": <0-100>, "note": "<1 sentence specific observation>" }
-  ],
-  "recommendations": [
-    "<recommendation 1 — use <strong> tags around the key action phrase>",
-    "<recommendation 2>",
-    "<recommendation 3>",
-    "<recommendation 4>",
-    "<recommendation 5>"
-  ]
-}`;
-
-        let resultData = null;
-        try {
-          const resp = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              model: "claude-sonnet-4-6",
-              max_tokens: 1000,
-              tools: [{ type: "web_search_20250305", name: "web_search" }],
-              messages: [{ role: "user", content: prompt }]
-            })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            // Extract text blocks from response (ignores tool_use blocks)
-            const textBlocks = (data.content || [])
-              .filter(b => b.type === "text")
-              .map(b => b.text)
-              .join("");
-            const match = textBlocks.match(/\{[\s\S]*\}/);
-            if (match) {
-              try { resultData = JSON.parse(match[0]); } catch(e) { resultData = null; }
-            }
-          }
-        } catch(e) { resultData = null; }
-
-        stopLoadingCycle();
-
-        if (!resultData || typeof resultData.overall_score !== "number") {
-          resultData = getFallbackData(normUrl);
-        }
-
-        modalBody.innerHTML = renderResults(resultData, normUrl);
-        requestAnimationFrame(() => {
-          animateWheel(resultData.overall_score);
-          animateBars();
-        });
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Analyze My Website →";
-      });
-
-      // Clear error on input
-      emailInput.addEventListener("input", () => { emailInput.classList.remove("error"); emailError.textContent = ""; });
-      urlInput.addEventListener("input",   () => { urlInput.classList.remove("error");   urlError.textContent   = ""; });
+      // Submit button now opens the funnel via [data-open-funnel] — no separate handler needed.
     })();
   </script>
 
