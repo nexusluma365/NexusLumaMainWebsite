@@ -1,4 +1,6 @@
-const SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+// Env var takes priority; GScript URL is public by design so the fallback is safe
+const SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL ||
+  "https://script.google.com/macros/s/AKfycby5aDm2UxjtWBOYZTRPEqtgYaFWxOtBd1aMjYY-tLZTmNAsYVewmd5pjc29-iV-UgA/exec";
 
 exports.handler = async (event) => {
   const headers = {
@@ -12,11 +14,6 @@ exports.handler = async (event) => {
   }
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
-  }
-
-  if (!SCRIPT_URL) {
-    // Silently succeed if not configured — never block the user flow
-    return { statusCode: 200, headers, body: JSON.stringify({ ok: true, note: "GOOGLE_SCRIPT_URL not set" }) };
   }
 
   try {

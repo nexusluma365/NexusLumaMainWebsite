@@ -2260,6 +2260,73 @@
       /* Reduce excessive section spacing between contractor blocks */
       .contractor-about, .contractor-projects { margin-top: 56px; }
     }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FUNNEL & PAYMENT — MOBILE POLISH
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* 900 px — overlay chrome & payment stacked tweak */
+    @media (max-width: 900px) {
+      /* Minimum 44 × 44 tap target on close button */
+      .funnel-close { width: 44px; height: 44px; font-size: 20px; }
+      /* Give the stacked payment summary a bit more breathing room */
+      .payment-summary { gap: 18px; }
+    }
+
+    /* 560 px — comprehensive phone polish */
+    @media (max-width: 560px) {
+      /* Prevent iOS input-zoom on focus (16 px threshold) */
+      .funnel-field input,
+      .flight-card .funnel-field input,
+      .payment-field input { font-size: 16px !important; }
+
+      /* Tighten the funnel topbar on small screens */
+      .funnel-topbar { padding-top: 14px; }
+      .funnel-brand span { font-size: 10px; letter-spacing: .06em; }
+      .funnel-stage { padding-top: 16px; padding-bottom: 36px; }
+
+      /* ── Back ← / Next → button row alignment ── */
+      .flight-card .funnel-row { gap: 10px; }
+      .flight-card .funnel-row .funnel-btn-back {
+        flex: 0 0 48px; width: 48px; height: 48px;
+        min-width: 48px; border-radius: 13px; padding: 0;
+      }
+      .flight-card .funnel-row .funnel-btn {
+        flex: 1; min-width: 0;
+        padding: 14px 12px; font-size: .88rem; border-radius: 14px;
+      }
+
+      /* ── Payment step ── */
+      /* Hide decorative booking-calendar widget to cut ~140 px of scroll */
+      .pm-card { display: none; }
+
+      .payment-summary { padding: 22px 20px; gap: 14px; }
+      .payment-summary h3 { font-size: 1rem; margin-bottom: 0; }
+      .payment-summary-total { font-size: 1.15rem; padding-top: 12px; }
+      .payment-summary-box { font-size: .82rem; padding: 12px 14px; border-radius: 18px; }
+
+      /* Book Now — full-width, prominent tap target */
+      .payment-summary-cta {
+        padding: 17px 20px; font-size: 1rem;
+        border-radius: 18px; letter-spacing: .02em;
+      }
+
+      /* "I need more time" — subtle but easily tappable */
+      .payment-summary-pay-later {
+        display: flex; align-items: center; justify-content: center;
+        min-height: 44px; padding: 10px 6px;
+        font-size: .84rem; color: rgba(255,255,255,.48);
+      }
+
+      /* Stripe card box breathing room */
+      .stripe-card-box { padding: 14px; }
+
+      /* Analyzer results CTA button — full-width on phone */
+      .analyzer-result-cta a {
+        width: 100%; justify-content: center;
+        padding: 15px 20px; box-sizing: border-box;
+      }
+    }
   </style>
 </head>
 
@@ -3047,22 +3114,41 @@
       ];
 
       if (mobileMotion) {
-        // Mobile: light parallax on hero only, everything else visible immediately
+        // Mobile hero: gentle scale the whole way through
         gsap.to(".hero-bg-parallax", {
           scale: 1.02, ease: "none",
           scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
         });
+        // Overlay fades out in the first third of scroll
         gsap.to(".hero-parallax-overlay", {
-          opacity: 0.15, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
+          opacity: 0.1, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "35% top", scrub: 0.6 }
         });
+        // Headline drifts up and fades out before the blackout
         gsap.to(".mask-text", {
-          y: -140, ease: "none", force3D: false,
-          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
+          y: -160, opacity: 0, ease: "none", force3D: false,
+          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "52% top", scrub: 0.6 }
         });
+        // Photo fades to black — mirrors the desktop cinematic beat
+        gsap.to(".hero-bg-parallax", {
+          opacity: 0, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "38% top", end: "64% top", scrub: 0.8 }
+        });
+        gsap.to(".hero-sticky", {
+          backgroundColor: "#020308", ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "38% top", end: "64% top", scrub: 0.8 }
+        });
+        // Reveal copy fades in after the blackout
+        gsap.fromTo(".reveal-copy",
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, ease: "none",
+            scrollTrigger: { trigger: ".hero-parallax", start: "62% top", end: "78% top", scrub: 0.8 }
+          }
+        );
+        // Reveal copy exits near the bottom of the hero
         gsap.to(".reveal-copy", {
-          opacity: 1, y: 0, duration: baseDuration, ease: baseEase, force3D: false,
-          scrollTrigger: { trigger: ".reveal-copy", start: "top 75%", toggleActions: nonHeroToggleActions, once: true }
+          opacity: 0, y: -50, ease: "none",
+          scrollTrigger: { trigger: ".hero-parallax", start: "88% top", end: "bottom top", scrub: 0.8 }
         });
         gsap.set(allRevealEls, { opacity: 1, x: 0, y: 0 });
         return;
