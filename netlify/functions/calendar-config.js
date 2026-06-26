@@ -9,8 +9,9 @@ function json(statusCode, body) {
   };
 }
 
+const BOOKING_URL = process.env.GOOGLE_CALENDAR_BOOKING_URL ||
+  "https://calendar.app.google/nrmfrLcW2mooUNUz6";
+
 exports.handler = async () => {
-  return json(200, {
-    bookingUrl: process.env.GOOGLE_CALENDAR_BOOKING_URL || ""
-  });
+  return json(200, { bookingUrl: BOOKING_URL });
 };

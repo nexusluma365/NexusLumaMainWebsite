@@ -1880,27 +1880,43 @@
       padding: clamp(32px, 4vw, 58px);
       background: #f7f9fd;
     }
-    .booking-frame-wrap {
-      min-height: 620px;
-      background: #fff;
+    /* Booking step 6 — link-out panel (calendar.app.google can't be iframed) */
+    .booking-cal-panel {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 20px;
+      padding: clamp(32px, 4vw, 56px);
+      background: linear-gradient(148deg, #eef2ff 0%, #f5f7ff 60%, #e8edf8 100%);
+      text-align: center;
       border-left: 1px solid rgba(15,43,87,.08);
     }
-    .booking-frame-wrap iframe {
-      width: 100%;
-      height: 100%;
-      min-height: 620px;
-      border: 0;
-      display: block;
+    .booking-cal-icon {
+      width: 68px; height: 68px;
+      background: linear-gradient(163deg, rgba(0,255,117,.13) 0%, rgba(55,0,255,.11) 100%);
+      border: 1.5px solid rgba(55,0,255,.14);
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      color: #2a3cff;
     }
-    .booking-fallback {
-      min-height: 620px;
-      padding: 36px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      color: rgba(7,21,54,.6);
-      line-height: 1.55;
+    .booking-cal-heading {
+      font-size: 1.35rem; font-weight: 800;
+      color: #07152e; margin: 0; letter-spacing: -.03em;
     }
+    .booking-cal-sub {
+      font-size: .88rem; color: rgba(7,21,54,.52);
+      line-height: 1.65; max-width: 240px; margin: 0;
+    }
+    .booking-cal-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; box-sizing: border-box;
+      padding: 15px 24px; border-radius: 999px;
+      background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+      color: #fff; font-size: 1rem; font-weight: 900;
+      text-decoration: none; letter-spacing: .015em;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .booking-cal-btn:hover { opacity: .86; transform: translateY(-1px); }
+    .booking-cal-note { font-size: .75rem; color: rgba(7,21,54,.32); margin: 0; }
 
     .funnel-confirm { text-align: center; padding: 14px 4px; }
     .funnel-confirm-icon {
@@ -1969,7 +1985,7 @@
       .payment-summary::before {
         display: none;
       }
-      .booking-frame-wrap {
+      .booking-cal-panel {
         border-left: 0;
         border-top: 1px solid rgba(15,43,87,.08);
       }
@@ -2092,11 +2108,7 @@
         margin-left: 0;
         margin-right: 0;
       }
-      .booking-frame-wrap,
-      .booking-frame-wrap iframe,
-      .booking-fallback {
-        min-height: 540px;
-      }
+      .booking-cal-panel { padding: 28px 22px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .funnel-overlay, .funnel-panel { transition: none !important; }
@@ -2869,8 +2881,18 @@
               <button class="funnel-btn" id="funnelBookingDoneBtn" type="button">I booked my call →</button>
               <button class="funnel-link-muted" id="funnelBookingHomeBtn" type="button">Return home</button>
             </div>
-            <div class="booking-frame-wrap" id="bookingFrameWrap">
-              <div class="booking-fallback">Loading calendar availability…</div>
+            <div class="booking-cal-panel">
+              <div class="booking-cal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                </svg>
+              </div>
+              <h3 class="booking-cal-heading">Pick Your Time</h3>
+              <p class="booking-cal-sub">Opens Google Calendar in a new tab — choose any open slot and you'll get a confirmation email instantly.</p>
+              <a class="booking-cal-btn" href="https://calendar.app.google/nrmfrLcW2mooUNUz6" target="_blank" rel="noopener noreferrer">
+                Open Booking Calendar →
+              </a>
+              <p class="booking-cal-note">After booking, tap "I booked my call →" on the left.</p>
             </div>
           </div>
         </div>
@@ -3691,7 +3713,6 @@
 	      const stage = overlay.querySelector(".funnel-stage");
 	      if (stage) stage.scrollTop = 0;
 	      if (step === 5) { initMeetingCard(); initStripePayment(); submitLead("reached_checkout"); }
-	      if (step === 6) loadBookingCalendar();
 	    }
 
     /* ---------- validation helpers ---------- */
@@ -4308,42 +4329,9 @@
 	    /* ============================================================
 	       STEP 6 — GOOGLE CALENDAR BOOKING
 	    ============================================================ */
-	    const bookingFrameWrap = document.getElementById("bookingFrameWrap");
 	    const bookingDoneBtn = document.getElementById("funnelBookingDoneBtn");
 	    const bookingHomeBtn = document.getElementById("funnelBookingHomeBtn");
-	    let bookingLoaded = false;
 	    let confirmationRedirectTimer = null;
-
-	    async function loadBookingCalendar() {
-	      if (bookingLoaded) return;
-	      try {
-	        const response = await fetch("/api/calendar-config");
-	        const payload = await response.json().catch(() => null);
-	        const bookingUrl = payload?.bookingUrl || "";
-	        if (!response.ok || !bookingUrl) {
-	          bookingFrameWrap.innerHTML = `
-	            <div class="booking-fallback">
-	              <div>
-	                <strong>Calendar link needed.</strong><br>
-	                Add <code>GOOGLE_CALENDAR_BOOKING_URL</code> to your Netlify environment to embed live Google Calendar availability here.
-	              </div>
-	            </div>`;
-	          bookingLoaded = true;
-	          return;
-	        }
-	        const iframe = document.createElement("iframe");
-	        iframe.src = bookingUrl;
-	        iframe.title = "Google Calendar booking availability";
-	        iframe.loading = "lazy";
-	        iframe.referrerPolicy = "strict-origin-when-cross-origin";
-	        bookingFrameWrap.innerHTML = "";
-	        bookingFrameWrap.appendChild(iframe);
-	        bookingLoaded = true;
-	      } catch {
-	        bookingFrameWrap.innerHTML = `<div class="booking-fallback">Calendar availability could not load. Please refresh or contact us to schedule your call.</div>`;
-	        bookingLoaded = true;
-	      }
-	    }
 
 	    bookingDoneBtn.addEventListener("click", () => showConfirmation(true));
 	    bookingHomeBtn.addEventListener("click", () => {
