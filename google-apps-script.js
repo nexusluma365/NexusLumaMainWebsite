@@ -2,15 +2,23 @@
  * NEXUS LUMA — Lead Tracker Google Apps Script
  *
  * SETUP INSTRUCTIONS (one-time):
- *  1. Go to https://script.google.com  → New project
- *  2. Paste this entire file, replacing the default content
- *  3. Click "Deploy" → "New deployment" → Type: Web App
+ *  ⚠️  IMPORTANT: Create this script FROM INSIDE the "Business Launch Data" spreadsheet —
+ *       NOT from script.google.com as a standalone project.
+ *
+ *  1. Open "Business Launch Data" in Google Sheets
+ *  2. Click Extensions → Apps Script
+ *  3. Paste this entire file, replacing any default content
+ *  4. Click "Deploy" → "New deployment" → Type: Web App
  *     - Execute as: Me
  *     - Who has access: Anyone
- *  4. Copy the Web App URL shown after deploying
- *  5. In Netlify → Site settings → Environment variables, add:
+ *  5. Authorize when prompted
+ *  6. Copy the Web App URL shown after deploying
+ *  7. In Netlify → Site settings → Environment variables, add:
  *       GOOGLE_SCRIPT_URL = <the Web App URL you just copied>
- *  6. Redeploy your Netlify site
+ *  8. Redeploy your Netlify site
+ *
+ *  This will auto-create a "Leads" tab inside "Business Launch Data"
+ *  on the first lead submission — your existing "1 st Quater" tab is untouched.
  *
  * SHEET COLUMNS (auto-created on first run):
  *  A: Timestamp  B: Name  C: Email  D: Business  E: URL

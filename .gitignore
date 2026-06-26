@@ -6,6 +6,11 @@ node_modules
 # Unused raw source media; optimized web files are used by the site.
 Naphtali.mp4
 George.mov
+Spiderman AD.mov
+Spiderman-AD.mp4
+deno.lock
+SETUP.md
+analyze-website.js
 
 # Local secrets
 .env
