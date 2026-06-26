@@ -1929,6 +1929,10 @@
       /* In column flex layout, align-self:end = right-aligned. Override to full-width. */
       .flight-card > .funnel-row,
       .flight-card > .funnel-link-muted { align-self: stretch; }
+      /* Center questionnaire text on mobile */
+      .flight-card .funnel-q h2,
+      .flight-card .funnel-q .funnel-sub,
+      .flight-card .funnel-q-counter { text-align: center; }
       .flight-card .funnel-q h2,
       .flight-card > h2 { font-size: clamp(2.25rem, 8vw, 3.35rem); }
       .flight-scene {
@@ -2369,7 +2373,7 @@
   <div class="intro-to-astro">
     <section class="product-intro">
       <div class="product-overline">Websites That Bring Leads / Local SEO / Lead Capture</div>
-      <h2>Need More Customers Online? Start With A Website Built To Bring Calls, Leads &amp; Bookings.</h2>
+      <h2>Web Designs Built To Look Good And Bring You More Online Customers!</h2>
       <p>Your website should not just look good. It should quickly show customers why they can trust you, explain what you offer, and make it easy to call, book, or request a quote. We build clean, professional websites with strong messaging, local SEO foundations, and lead-focused calls-to-action so your online presence can become a real customer-generating asset.</p>
       <div class="what-we-do-cta"><a class="btn btn-primary" href="#analyzer">Get My Free Website Review</a></div>
     </section>
@@ -2651,7 +2655,6 @@
               <div class="funnel-error-msg" id="funnelEmailError"></div>
             </div>
             <button class="funnel-btn" id="funnelStep1Next" type="button">Continue →</button>
-            <p class="funnel-note">No spam. Just your review and next-step recommendations.</p>
           </div>
         </div>
 
