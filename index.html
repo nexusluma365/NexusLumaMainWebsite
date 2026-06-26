@@ -1868,55 +1868,25 @@
       border-top: 1.5px dashed rgba(255,255,255,.10);
       z-index: 1;
     }
+    /* Booking step 6 — single centered card */
     .booking-card {
-      display: grid;
-      grid-template-columns: minmax(0, .8fr) minmax(360px, 1.2fr);
-      gap: 0;
-      padding: 0;
-      overflow: hidden;
-      border-radius: 30px;
-    }
-    .booking-copy {
-      padding: clamp(32px, 4vw, 58px);
-      background: #f7f9fd;
-    }
-    /* Booking step 6 — link-out panel (calendar.app.google can't be iframed) */
-    .booking-cal-panel {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 20px;
-      padding: clamp(32px, 4vw, 56px);
-      background: linear-gradient(148deg, #eef2ff 0%, #f5f7ff 60%, #e8edf8 100%);
       text-align: center;
-      border-left: 1px solid rgba(15,43,87,.08);
+      padding: clamp(40px, 6vw, 68px) clamp(28px, 5vw, 60px);
     }
+    .booking-card h2 { text-align: center; }
     .booking-cal-icon {
-      width: 68px; height: 68px;
-      background: linear-gradient(163deg, rgba(0,255,117,.13) 0%, rgba(55,0,255,.11) 100%);
-      border: 1.5px solid rgba(55,0,255,.14);
+      width: 72px; height: 72px; margin: 0 auto 22px;
+      background: rgba(37,99,235,.08);
+      border: 1.5px solid rgba(37,99,235,.18);
       border-radius: 22px;
       display: flex; align-items: center; justify-content: center;
-      color: #2a3cff;
+      color: #2563eb;
     }
-    .booking-cal-heading {
-      font-size: 1.35rem; font-weight: 800;
-      color: #07152e; margin: 0; letter-spacing: -.03em;
+    .booking-card .funnel-sub { max-width: 360px; margin: 0 auto 28px; }
+    .booking-open-link {
+      display: flex; text-decoration: none;
+      max-width: 420px; margin: 0 auto;
     }
-    .booking-cal-sub {
-      font-size: .88rem; color: rgba(7,21,54,.52);
-      line-height: 1.65; max-width: 240px; margin: 0;
-    }
-    .booking-cal-btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; box-sizing: border-box;
-      padding: 15px 24px; border-radius: 999px;
-      background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-      color: #fff; font-size: 1rem; font-weight: 900;
-      text-decoration: none; letter-spacing: .015em;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .booking-cal-btn:hover { opacity: .86; transform: translateY(-1px); }
-    .booking-cal-note { font-size: .75rem; color: rgba(7,21,54,.32); margin: 0; }
 
     .funnel-confirm { text-align: center; padding: 14px 4px; }
     .funnel-confirm-icon {
@@ -1971,8 +1941,7 @@
         margin-right: 34px;
         align-self: center;
       }
-      #funnelPaymentCard.payment-checkout-card,
-      .booking-card {
+      #funnelPaymentCard.payment-checkout-card {
         grid-template-columns: 1fr;
       }
       .payment-summary {
@@ -1984,10 +1953,6 @@
       }
       .payment-summary::before {
         display: none;
-      }
-      .booking-cal-panel {
-        border-left: 0;
-        border-top: 1px solid rgba(15,43,87,.08);
       }
       .pm-card {
         margin-top: 0;
@@ -2092,8 +2057,7 @@
         color: rgba(5,7,12,.46);
       }
       .payment-checkout-main,
-      .payment-summary,
-      .booking-copy {
+      .payment-summary {
         padding: 28px 22px;
       }
       .payment-input-grid {
@@ -2108,7 +2072,6 @@
         margin-left: 0;
         margin-right: 0;
       }
-      .booking-cal-panel { padding: 28px 22px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .funnel-overlay, .funnel-panel { transition: none !important; }
@@ -2874,26 +2837,17 @@
         <!-- STEP 6: BOOKING -->
         <div class="funnel-panel launch-panel" data-panel="6" hidden>
           <div class="funnel-card booking-card">
-            <div class="booking-copy">
-              <div class="funnel-eyebrow">Schedule</div>
-              <h2>Choose your live availability.</h2>
-              <p class="funnel-sub">Select a time on my Google Calendar. Google Calendar will send the event confirmation after you book.</p>
-              <button class="funnel-btn" id="funnelBookingDoneBtn" type="button">I booked my call →</button>
-              <button class="funnel-link-muted" id="funnelBookingHomeBtn" type="button">Return home</button>
+            <div class="booking-cal-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+              </svg>
             </div>
-            <div class="booking-cal-panel">
-              <div class="booking-cal-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                </svg>
-              </div>
-              <h3 class="booking-cal-heading">Pick Your Time</h3>
-              <p class="booking-cal-sub">Opens Google Calendar in a new tab — choose any open slot and you'll get a confirmation email instantly.</p>
-              <a class="booking-cal-btn" href="https://calendar.app.google/nrmfrLcW2mooUNUz6" target="_blank" rel="noopener noreferrer">
-                Open Booking Calendar →
-              </a>
-              <p class="booking-cal-note">After booking, tap "I booked my call →" on the left.</p>
-            </div>
+            <div class="funnel-eyebrow">Schedule</div>
+            <h2>Choose your live availability.</h2>
+            <p class="funnel-sub">Opens Google Calendar — pick any available slot and you'll get an instant confirmation email.</p>
+            <a class="funnel-btn booking-open-link" id="funnelBookingOpenBtn" href="https://calendar.app.google/nrmfrLcW2mooUNUz6" target="_blank" rel="noopener noreferrer">
+              Open Booking Calendar →
+            </a>
           </div>
         </div>
 
@@ -4329,14 +4283,14 @@
 	    /* ============================================================
 	       STEP 6 — GOOGLE CALENDAR BOOKING
 	    ============================================================ */
-	    const bookingDoneBtn = document.getElementById("funnelBookingDoneBtn");
-	    const bookingHomeBtn = document.getElementById("funnelBookingHomeBtn");
 	    let confirmationRedirectTimer = null;
 
-	    bookingDoneBtn.addEventListener("click", () => showConfirmation(true));
-	    bookingHomeBtn.addEventListener("click", () => {
-	      closeFunnel();
-	      window.scrollTo({ top: 0, behavior: "smooth" });
+	    // Open calendar in new tab, then return user to homepage
+	    document.getElementById("funnelBookingOpenBtn").addEventListener("click", () => {
+	      setTimeout(() => {
+	        closeFunnel();
+	        window.scrollTo({ top: 0, behavior: "smooth" });
+	      }, 400);
 	    });
 
 	    function showConfirmation(paid) {
