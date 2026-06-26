@@ -1926,6 +1926,9 @@
       .flight-card > .funnel-row { margin-bottom: 34px; }
       .flight-card > .funnel-btn { width: calc(100% - 68px); margin: 28px 34px 34px; }
       .flight-card .funnel-row .funnel-btn { min-width: 0; flex: 1; }
+      /* In column flex layout, align-self:end = right-aligned. Override to full-width. */
+      .flight-card > .funnel-row,
+      .flight-card > .funnel-link-muted { align-self: stretch; }
       .flight-card .funnel-q h2,
       .flight-card > h2 { font-size: clamp(2.25rem, 8vw, 3.35rem); }
       .flight-scene {
@@ -1987,16 +1990,15 @@
       .flight-card > .funnel-btn { width: calc(100% - 44px); margin: 26px 22px; }
       .flight-card .funnel-row .funnel-btn { min-width: 0; flex: 1; }
       .flight-card .funnel-q h2,
-      .flight-card > h2 { font-size: clamp(2rem, 12vw, 3.25rem); letter-spacing: -0.04em; }
-      .flight-scene { min-height: 240px; margin: 0 0 24px; border-radius: 24px 24px 0 0; }
+      .flight-card > h2 { font-size: clamp(1.75rem, 8vw, 2.6rem); letter-spacing: -0.04em; }
+      .flight-scene { min-height: 200px; margin: 0 0 20px; border-radius: 24px 24px 0 0; }
       .flight-scene::before { inset: -24%; }
       .flight-nav-dots { left: 24px; top: 24px; gap: 12px; font-size: .82rem; }
       .flight-assist { right: 14px; top: 14px; padding: 8px 12px; font-size: .62rem; }
       .flight-trip-globe-wrap { top: 44%; }
-      .flight-trip-globe { transform: translateZ(0) scale(2.15); }
-      .flight-copy { left: 50%; right: auto; bottom: 22px; width: min(84%, 320px); transform: translateX(-50%); }
-      .flight-copy strong { font-size: 2rem; }
-      .flight-copy span { font-size: .78rem; line-height: 1.35; }
+      .flight-trip-globe { transform: translateZ(0) scale(1.4); }
+      /* In-scene copy is already in the form section below — hide to avoid globe overlap */
+      .flight-copy { display: none; }
       .flight-ticket { grid-template-columns: 1fr; gap: 10px; padding: 14px; text-align: center; }
       .flight-route { width: 100%; max-width: 180px; justify-self: center; }
       #funnelPaymentCard {
@@ -2326,6 +2328,15 @@
         width: 100%; justify-content: center;
         padding: 15px 20px; box-sizing: border-box;
       }
+
+      /* ── Scene decoration clean-up (reduces visual clutter in 200px scene) ── */
+      .flight-nav-dots { display: none; }
+      .flight-globe-welcome { display: none; }
+      /* Shrink animated icon so it doesn't fill the whole scene */
+      .flight-scene-icon { width: 76px; border-radius: 26%; }
+      .uiverse-weather { transform: scale(.58); }
+      .uiverse-wave { width: 110px; height: 60px; gap: 6px; }
+      .uiverse-wave-bar { width: 12px; }
     }
   </style>
 </head>
