@@ -16,3 +16,23 @@
   from = "/api/create-upgrade-payment"
   to = "/.netlify/functions/create-upgrade-payment"
   status = 200
+
+[[redirects]]
+  from = "/api/create-payment-intent"
+  to = "/.netlify/functions/create-payment-intent"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe-config"
+  to = "/.netlify/functions/stripe-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/calendar-config"
+  to = "/.netlify/functions/calendar-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/submit-lead"
+  to = "/.netlify/functions/submit-lead"
+  status = 200

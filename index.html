@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="keywords" content="Best Web designer In North Carolina" />
-  <title>Immersive Web Designs</title>
-  <link rel="icon" href="Asset/premium-logo-240.webp" type="image/webp">
+  <title>Websites That Brings Leads</title>
+  <link rel="icon" href="2.png" type="image/png">
+  <link rel="apple-touch-icon" href="2.png">
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="dns-prefetch" href="//unpkg.com">
   <link rel="preload" as="image" href="Asset/astro%20man%20in%20space.webp" fetchpriority="high">
@@ -69,7 +70,9 @@
       max-width: var(--content-max); margin: 0 auto; padding: 0 24px;
       display: grid; grid-template-columns: 1fr auto; align-items: center;
     }
-    .nav-brand { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+    .nav-brand { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+    .brand-logo { width: 74px; height: 74px; object-fit: contain; display: block; flex: 0 0 auto; }
+    .brand-name { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.76); }
     .nav-cta {
       justify-self: end; text-decoration: none;
       font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
@@ -207,6 +210,7 @@
     .video-fallback { position: absolute; inset: 0; z-index: 1; }
     .video-fallback::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,3,8,.08), rgba(2,3,8,.78)); }
     .video-caption { position: absolute; left: 22px; right: 22px; bottom: 22px; z-index: 3; color: #fff; text-shadow: 0 12px 28px rgba(0,0,0,.45); pointer-events: none; }
+    .testimonial-video.is-front .video-caption { bottom: 64px; }
     .video-caption strong { display: block; font-size: 1.05rem; line-height: 1.18; margin-bottom: 7px; }
     .video-caption span { display: block; color: rgba(255,255,255,.76); font-size: .88rem; line-height: 1.45; }
     .video-hint { margin: 18px auto 0; color: rgba(255,255,255,.62); font-size: .88rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-align: center; }
@@ -611,9 +615,8 @@
     .funnel-overlay {
       position: fixed; inset: 0; z-index: 4000;
       background:
-        radial-gradient(ellipse 60% 50% at 85% 8%, rgba(56,130,246,.22) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 45% at 8% 92%, rgba(34,110,145,.24) 0%, transparent 60%),
-        linear-gradient(160deg, #08152c 0%, #0d2349 48%, #0f2b57 100%);
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.74), transparent 36%),
+        linear-gradient(145deg, #dfe5ed 0%, #c7d0dc 58%, #b6c1d0 100%);
       opacity: 0; pointer-events: none;
       transition: opacity .35s ease;
       overflow-y: auto;
@@ -626,57 +629,66 @@
     .funnel-topbar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 22px clamp(20px,4vw,48px) 0;
-      max-width: 1080px; width: 100%; margin: 0 auto;
+      max-width: 1180px; width: 100%; margin: 0 auto;
     }
-    .funnel-brand { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,.7); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-    .funnel-brand img { height: 26px; width: auto; }
+    .funnel-brand { display: flex; align-items: center; gap: 10px; color: rgba(5,7,12,.58); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .funnel-brand img { width: 42px; height: 42px; object-fit: contain; }
     .funnel-close {
       width: 38px; height: 38px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08);
-      color: #fff; font-size: 18px; cursor: pointer;
+      border: 1px solid rgba(5,7,12,.12); background: rgba(255,255,255,.48);
+      color: #05070c; font-size: 18px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background .2s ease, transform .2s ease;
     }
-    .funnel-close:hover { background: rgba(255,255,255,.18); transform: scale(1.06); }
+    .funnel-close:hover { background: rgba(255,255,255,.82); transform: scale(1.06); }
 
     /* step tabs, echoes the pill-tab dashboard nav in the reference */
     .funnel-tabs {
-      display: flex; justify-content: center; gap: 6px;
-      max-width: 1080px; width: 100%; margin: 26px auto 0;
-      padding: 0 clamp(20px,4vw,48px);
+      order: 3;
+      display: flex; justify-content: flex-start; gap: 12px;
+      max-width: 1180px; width: 100%; margin: -126px auto 58px;
+      padding: 0 clamp(68px,8vw,94px);
+      position: relative;
+      z-index: 4;
+      pointer-events: none;
     }
     .funnel-tab {
-      flex: 1; max-width: 150px;
+      flex: 0 0 28px; max-width: 28px;
       display: flex; flex-direction: column; gap: 8px; align-items: center;
       font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-      color: rgba(255,255,255,.4); position: relative;
+      color: rgba(5,7,12,.34); position: relative;
     }
     .funnel-tab-dot {
-      width: 100%; height: 3px; border-radius: 3px; background: rgba(255,255,255,.16);
+      width: 28px; height: 3px; border-radius: 3px; background: rgba(5,7,12,.12);
       position: relative; overflow: hidden;
     }
     .funnel-tab-dot::after {
       content: ""; position: absolute; inset: 0; border-radius: 3px;
-      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      background: #D4A017;
       transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.4,0,.2,1);
     }
     .funnel-tab.is-done .funnel-tab-dot::after { transform: scaleX(1); }
-    .funnel-tab.is-active .funnel-tab-dot::after { transform: scaleX(1); background: linear-gradient(90deg, #93c5fd, #60a5fa); }
-    .funnel-tab.is-active, .funnel-tab.is-done { color: rgba(255,255,255,.92); }
+    .funnel-tab.is-active .funnel-tab-dot::after { transform: scaleX(1); background: #D4A017; }
+    .funnel-tab.is-active, .funnel-tab.is-done { color: rgba(5,7,12,.72); }
     .funnel-tab span.funnel-tab-label { display: none; }
-    @media (min-width: 720px) { .funnel-tab span.funnel-tab-label { display: block; } }
+    @media (min-width: 720px) { .funnel-tab span.funnel-tab-label { display: none; } }
 
     .funnel-stage {
+      order: 2;
       flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 36px clamp(20px,4vw,48px) 64px;
+      padding: 34px clamp(20px,4vw,48px) 64px;
     }
     .funnel-panel {
       width: 100%; max-width: 560px;
       opacity: 0; transform: translateY(18px);
-      transition: opacity .45s cubic-bezier(.2,.8,.2,1), transform .45s cubic-bezier(.2,.8,.2,1);
+      transition: opacity .38s cubic-bezier(.2,.8,.2,1), transform .38s cubic-bezier(.2,.8,.2,1);
+      will-change: opacity, transform;
+      contain: layout style;
+      backface-visibility: hidden;
     }
+    .funnel-panel.launch-panel { max-width: 1180px; }
     .funnel-panel.is-visible { opacity: 1; transform: translateY(0); }
-    .funnel-panel[hidden] { display: none; }
+    .funnel-panel[hidden] { display: none; contain: strict; }
 
     .funnel-card {
       background: #ffffff;
@@ -687,15 +699,22 @@
     }
     .funnel-eyebrow {
       font-size: 11px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase;
-      color: #2563eb; margin-bottom: 14px;
+      color: #2563eb; margin-bottom: 14px; text-align: center;
     }
     .funnel-card h2 {
       color: #0b1530; font-size: clamp(1.5rem, 3.4vw, 2.05rem); font-weight: 900;
-      letter-spacing: -0.01em; line-height: 1.18; margin-bottom: 12px;
+      letter-spacing: -0.01em; line-height: 1.18; margin-bottom: 12px; text-align: center;
     }
     .funnel-card > p.funnel-sub {
       color: rgba(11,21,48,.62); font-size: .98rem; line-height: 1.65; margin-bottom: 28px;
+      text-align: center;
     }
+    /* flight-cards and payment use their own left/layout alignment — restore */
+    .flight-card > h2,
+    .flight-card .funnel-q h2 { text-align: left; }
+    .flight-card .funnel-eyebrow { text-align: left; }
+    .payment-checkout-main h2 { text-align: left; }
+    .payment-checkout-main .funnel-eyebrow { text-align: left; }
 
     .funnel-field { margin-bottom: 16px; }
     .funnel-field label {
@@ -759,6 +778,23 @@
     .funnel-ring-number { font-size: 2.6rem; font-weight: 900; fill: #0b1530; text-anchor: middle; dominant-baseline: central; }
     .funnel-ring-label { font-size: .72rem; fill: rgba(11,21,48,.42); text-anchor: middle; dominant-baseline: central; letter-spacing: .1em; text-transform: uppercase; }
     .funnel-grade { font-size: 1.05rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+    .funnel-pulse-anim {
+      display: flex; justify-content: center; margin: 6px 0 14px;
+    }
+    .funnel-pulse-anim svg polyline {
+      fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .funnel-pulse-back  { stroke: rgba(34,197,94,.22); }
+    .funnel-pulse-front {
+      stroke: #22c55e;
+      stroke-dasharray: 48, 144;
+      stroke-dashoffset: 192;
+      animation: funnelPulseDash 1.4s linear infinite;
+    }
+    @keyframes funnelPulseDash {
+      72.5% { opacity: 0; }
+      to    { stroke-dashoffset: 0; }
+    }
     .funnel-summary { color: rgba(11,21,48,.66); font-size: .95rem; line-height: 1.62; text-align: center; max-width: 480px; margin: 0 auto 28px; }
 
     .funnel-subrings { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
@@ -792,6 +828,39 @@
     }
     .funnel-upgrade-cta p { color: rgba(11,21,48,.7); font-size: .96rem; line-height: 1.6; margin-bottom: 16px; }
 
+    /* results 2-column layout */
+    .funnel-results-cols {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 36px;
+      align-items: start;
+      margin-top: 20px;
+    }
+    .funnel-results-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .funnel-results-left .funnel-subrings { width: 100%; }
+    .funnel-results-right {
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(15,43,87,.08);
+      padding-left: 36px;
+    }
+    @media (max-width: 760px) {
+      .funnel-results-cols {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .funnel-results-right {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid rgba(15,43,87,.08);
+        padding-top: 24px;
+      }
+    }
+
     /* questionnaire */
     .funnel-q-progress { display: flex; gap: 6px; margin-bottom: 24px; }
     .funnel-q-progress-seg { flex: 1; height: 4px; border-radius: 3px; background: rgba(15,43,87,.1); overflow: hidden; }
@@ -816,11 +885,646 @@
     .funnel-choice.is-selected .funnel-choice-radio::after {
       content: ""; position: absolute; inset: 3px; border-radius: 50%; background: #2563eb;
     }
+    .flight-card {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(360px, .48fr) minmax(420px, .52fr);
+      gap: 0;
+      padding: 0;
+      min-height: 640px;
+      background: rgba(250,252,255,.96);
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 30px;
+      box-shadow: 0 34px 90px rgba(44,58,82,.22);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      isolation: isolate;
+    }
+    .flight-card::before {
+      content: "";
+      position: absolute;
+      left: clamp(48px, 6vw, 74px);
+      top: 56px;
+      width: 54px;
+      height: 54px;
+      background: url("2.png") center / contain no-repeat;
+      opacity: .78;
+      z-index: 3;
+    }
+    .flight-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 46%;
+      height: 96px;
+      background: rgba(255,255,255,.58);
+      border-top: 1px solid rgba(5,7,12,.04);
+      z-index: 0;
+    }
+    .funnel-panel.is-visible .flight-card {
+      animation: launchCardIn .66s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes launchCardIn {
+      from { opacity: 0; transform: translate3d(0,24px,0) scale(.985); filter: blur(8px); }
+      to { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); }
+    }
+    .flight-card > :not(.flight-scene) {
+      grid-column: 1;
+      align-self: start;
+      margin-left: clamp(42px, 5vw, 66px);
+      margin-right: clamp(40px, 5vw, 62px);
+      position: relative;
+      z-index: 2;
+    }
+    .flight-card > .funnel-eyebrow,
+    .flight-card > .funnel-q-progress { margin-top: clamp(146px, 13vw, 180px); }
+    .flight-card > .funnel-row,
+    .flight-card > .funnel-btn,
+    .flight-card > .funnel-link-muted { align-self: end; }
+    .flight-card > .funnel-row { margin-bottom: clamp(68px, 8vw, 94px); }
+    .flight-card > .funnel-btn { margin-top: 32px; margin-bottom: clamp(68px, 8vw, 94px); }
+    .flight-card > .funnel-link-muted { margin-bottom: clamp(40px, 5vw, 58px); }
+    .flight-card .funnel-q h2,
+    .flight-card > h2 {
+      font-size: clamp(2.45rem, 4.8vw, 3.35rem);
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+    .flight-card .funnel-sub {
+      color: rgba(5,7,12,.42);
+      font-size: .98rem;
+      line-height: 1.68;
+      margin-bottom: 26px;
+    }
+    .flight-card .funnel-field label,
+    .flight-card .funnel-eyebrow,
+    .flight-card .funnel-q-counter {
+      color: rgba(5,7,12,.56);
+      font-size: .78rem;
+      letter-spacing: .035em;
+      text-transform: none;
+    }
+    .flight-card .funnel-field input {
+      padding: 8px 0 12px;
+      border: 0;
+      border-bottom: 2px solid rgba(5,7,12,.16);
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      font-size: 1.05rem;
+    }
+    .flight-card .funnel-field input:focus {
+      border-bottom-color: #05070c;
+      box-shadow: 0 12px 20px -20px rgba(5,7,12,.55);
+    }
+    .flight-card .funnel-choice {
+      border-radius: 16px;
+      background: rgba(255,255,255,.72);
+      border-color: rgba(7,21,54,.12);
+      box-shadow: 0 14px 30px rgba(7,21,54,.045);
+    }
+    .flight-card .funnel-choice:hover { background: #fff; }
+    .flight-card .funnel-choice.is-selected {
+      background: #fff;
+      border-color: #05070c;
+      box-shadow: 0 18px 36px rgba(7,21,54,.10);
+    }
+    .flight-card .funnel-choice.is-selected .funnel-choice-radio { border-color: #05070c; }
+    .flight-card .funnel-choice.is-selected .funnel-choice-radio::after { background: #05070c; }
+    .flight-card .funnel-btn {
+      background: #05070c;
+      border-radius: 16px;
+      width: min(190px, 100%);
+      padding: 14px 24px;
+      font-size: .92rem;
+      box-shadow: 0 14px 30px rgba(5,7,12,.18);
+    }
+    .flight-card .funnel-btn:hover:not(:disabled) {
+      background: #151923;
+      box-shadow: 0 22px 44px rgba(5,7,12,.24);
+    }
+    .flight-card .funnel-btn-back {
+      background: #fff;
+      border-color: rgba(7,21,54,.16);
+      color: #05070c;
+      border-radius: 16px;
+      box-shadow: 0 14px 30px rgba(7,21,54,.07);
+    }
+    .flight-card .funnel-row {
+      align-items: center;
+      gap: 18px;
+    }
+    .flight-card .funnel-row .funnel-btn {
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 220px;
+    }
+    .flight-card .funnel-row .funnel-btn-back {
+      width: 54px;
+      height: 50px;
+      padding: 0;
+    }
+    .flight-card .funnel-note {
+      margin-top: 18px;
+      max-width: 360px;
+      color: rgba(5,7,12,.34);
+      text-align: left;
+    }
+    .flight-scene {
+      grid-column: 2;
+      grid-row: 1 / span 30;
+      position: relative;
+      min-height: 100%;
+      margin: 0;
+      border-radius: 0 30px 30px 0;
+      overflow: hidden;
+      border: none;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255,255,255,.78), transparent 30%),
+        radial-gradient(ellipse at 70% 28%, rgba(194,219,249,.42), transparent 25%),
+        linear-gradient(145deg, #f6f9ff 0%, #e7eef8 44%, #c8d6e8 100%);
+      box-shadow: inset 1px 0 0 rgba(15,43,87,.06);
+    }
+    .flight-scene::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        repeating-radial-gradient(ellipse at 28% 34%, rgba(37,55,84,.12) 0 2px, transparent 2px 13px),
+        repeating-radial-gradient(ellipse at 76% 74%, rgba(37,55,84,.11) 0 2px, transparent 2px 15px),
+        repeating-radial-gradient(ellipse at 66% 18%, rgba(255,255,255,.52) 0 2px, transparent 2px 12px);
+      filter: blur(.1px);
+      opacity: .42;
+      transform: rotate(-6deg);
+    }
+    .flight-scene::after {
+      content: "";
+      position: absolute;
+      left: 9%;
+      right: 7%;
+      bottom: 17%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(7,21,54,.11), transparent);
+      box-shadow: 0 34px 58px rgba(7,21,54,.10);
+    }
+    .flight-nav-dots {
+      position: absolute;
+      left: 30px;
+      top: 30px;
+      display: grid;
+      grid-auto-flow: column;
+      gap: 13px;
+      color: rgba(7,21,54,.34);
+      font-size: .9rem;
+      z-index: 2;
+    }
+    .flight-assist {
+      position: absolute;
+      right: 28px;
+      top: 28px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.74);
+      color: rgba(5,7,12,.64);
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      box-shadow: 0 12px 28px rgba(5,7,12,.18);
+    }
+    .flight-assist::before { content: "✦"; font-size: .9rem; }
+    .flight-globe-stage,
+    .flight-globe-stage * {
+      box-sizing: border-box;
+    }
+    .flight-globe-stage {
+      --rr-globe-earth-texture: url("reusable-globe-animation/assets/earth-map.png");
+      --rr-globe-cloud-texture: url("reusable-globe-animation/assets/earth-clouds.png");
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+    .flight-globe-welcome {
+      position: absolute;
+      left: 50%;
+      top: calc(43% + 96px);
+      transform: translateX(-50%);
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(5,7,12,.38);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .flight-trip-globe-wrap {
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      width: 132px;
+      height: 132px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      animation: flightGlobeFloat 5.5s ease-in-out infinite;
+      will-change: transform;
+    }
+    .flight-trip-globe {
+      width: 116px;
+      height: 116px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
+      isolation: isolate;
+      background-image: var(--rr-globe-earth-texture);
+      background-size: auto 100%;
+      background-repeat: repeat-x;
+      background-position: 0 center;
+      animation: flightEarthRotate 60s linear infinite;
+      transform: translateZ(0) scale(3.65);
+      filter: brightness(1.16) saturate(1.08);
+      will-change: background-position;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow:
+        0 0 18px rgba(195,244,255,.34),
+        0 0 52px rgba(70,190,255,.22),
+        -4px 0 8px rgba(220,250,255,.95) inset,
+        8px 1px 14px rgba(0,0,0,.66) inset,
+        -12px -1px 22px rgba(195,244,255,.58) inset,
+        96px 0 20px rgba(0,0,0,.22) inset,
+        48px 0 16px rgba(0,0,0,.38) inset;
+    }
+    .flight-trip-globe::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-radius: 50%;
+      pointer-events: none;
+      background-image: var(--rr-globe-cloud-texture);
+      background-size: auto 100%;
+      background-repeat: repeat-x;
+      background-position: 0 center;
+      opacity: .3;
+      mix-blend-mode: screen;
+      filter: brightness(1.16) contrast(1.18);
+      animation: flightCloudRotate 90s linear infinite;
+      will-change: background-position;
+      transform: translateZ(0);
+    }
+    .flight-trip-globe::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      border-radius: 50%;
+      pointer-events: none;
+      background:
+        /* sharp sun specular — top-right */
+        radial-gradient(circle at 76% 22%, rgba(255,255,230,.92) 0%, rgba(255,252,200,.55) 6%, rgba(230,248,255,.22) 18%, transparent 38%),
+        /* atmospheric corona around specular */
+        radial-gradient(circle at 72% 30%, rgba(210,248,255,.38), rgba(210,248,255,.10) 28%, transparent 52%),
+        /* terminator / shadow side */
+        radial-gradient(circle at 18% 50%, rgba(0,0,0,.08), rgba(0,0,0,.32) 58%, rgba(0,0,0,.30) 100%);
+      box-shadow:
+        inset -6px 0 10px rgba(255,255,255,.10),
+        inset 10px 0 18px rgba(0,0,0,.18),
+        inset 0 -10px 18px rgba(0,0,0,.22);
+    }
+    /* outer lens-flare corona that sits outside the globe sphere */
+    .flight-globe-flare {
+      position: absolute;
+      /* upper-right of where the globe visual center is (left:50%, top:43%) */
+      left: 66%;
+      top: 14%;
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(
+        circle,
+        rgba(255,252,220,.78) 0%,
+        rgba(255,248,180,.40) 22%,
+        rgba(255,240,140,.12) 50%,
+        transparent 72%
+      );
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      mix-blend-mode: screen;
+      filter: blur(6px);
+      animation: flightGlobeFloat 5.5s ease-in-out infinite;
+    }
+    @keyframes flightEarthRotate {
+      0% { background-position: 0 center; }
+      100% { background-position: -2048px center; }
+    }
+    @keyframes flightCloudRotate {
+      0% { background-position: 0 center; }
+      100% { background-position: -1024px center; }
+    }
+    @keyframes flightGlobeFloat {
+      0%, 100% { transform: translate3d(-50%, -50%, 0); }
+      50% { transform: translate3d(-50%, calc(-50% - 9px), 0); }
+    }
+    .flight-scene-icon {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      z-index: 1;
+      width: clamp(112px, 18vw, 168px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 34%;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.92), rgba(232,240,251,.64));
+      border: 1px solid rgba(255,255,255,.76);
+      box-shadow:
+        0 34px 72px rgba(44,68,104,.18),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      display: grid;
+      place-items: center;
+      animation: sceneIconFloat 5.2s ease-in-out infinite;
+      contain: layout paint;
+      will-change: transform;
+    }
+    .flight-scene-icon::before,
+    .flight-scene-icon::after {
+      content: "";
+      position: absolute;
+      display: block;
+    }
+    .uiverse-weather {
+      width: 170px;
+      height: 170px;
+      padding: 10px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(.76);
+    }
+    .uiverse-cloud {
+      width: 170px;
+      position: absolute;
+    }
+    .uiverse-cloud-front {
+      padding-top: 30px;
+      margin-left: 14px;
+      z-index: 11;
+      animation: uiverseClouds 8s ease-in-out infinite;
+      will-change: transform;
+    }
+    .uiverse-cloud-back {
+      margin-top: -20px;
+      margin-left: 92px;
+      z-index: 12;
+      animation: uiverseClouds 12s ease-in-out infinite;
+      will-change: transform;
+    }
+    .uiverse-left-front,
+    .uiverse-right-front,
+    .uiverse-left-back,
+    .uiverse-right-back {
+      display: inline-block;
+      background-color: #4c9beb;
+      box-shadow: inset -8px -8px 16px rgba(7,21,54,.08), 0 14px 24px rgba(37,99,235,.12);
+    }
+    .uiverse-left-front {
+      width: 46px;
+      height: 46px;
+      border-radius: 50% 50% 0% 50%;
+    }
+    .uiverse-right-front {
+      width: 32px;
+      height: 32px;
+      border-radius: 50% 50% 50% 0%;
+      margin-left: -18px;
+    }
+    .uiverse-left-back {
+      width: 22px;
+      height: 22px;
+      border-radius: 50% 50% 0% 50%;
+    }
+    .uiverse-right-back {
+      width: 36px;
+      height: 36px;
+      border-radius: 50% 50% 50% 0%;
+      margin-left: -14px;
+    }
+    .uiverse-sun {
+      width: 86px;
+      height: 86px;
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(to right, #fcbb04, #fffc00);
+      box-shadow: 0 18px 38px rgba(252,187,4,.26);
+    }
+    .uiverse-sunshine {
+      animation: uiverseSunshines 2s infinite;
+      will-change: transform, opacity;
+    }
+    .uiverse-wave {
+      width: 170px;
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .uiverse-wave-bar {
+      width: 18px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #4c9beb, #2563eb);
+      box-shadow: 0 12px 24px rgba(37,99,235,.18);
+      animation: uiverseWave 1s ease-in-out infinite;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
+    .uiverse-wave-bar:nth-child(2) { animation-delay: .1s; }
+    .uiverse-wave-bar:nth-child(3) { animation-delay: .2s; }
+    .uiverse-wave-bar:nth-child(4) { animation-delay: .3s; }
+    @keyframes uiverseSunshines {
+      0% { transform: scale(1); opacity: .6; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    @keyframes uiverseClouds {
+      0%, 100% { transform: translateX(15px); }
+      50% { transform: translateX(0); }
+    }
+    @keyframes uiverseWave {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(4.8); }
+    }
+    .payment-calendar-icon {
+      width: min(72%, 230px);
+      aspect-ratio: 1;
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      border-radius: 34%;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(231,239,250,.72));
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow:
+        0 34px 72px rgba(44,68,104,.18),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      animation: sceneIconFloat 5.2s ease-in-out infinite;
+      contain: layout paint;
+      will-change: transform;
+    }
+    .payment-calendar-icon::before {
+      content: "";
+      width: 56%;
+      height: 56%;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, #071536 0 24%, #ffffff 24% 100%);
+      border: 6px solid #071536;
+      box-shadow: 0 22px 38px rgba(7,21,54,.16);
+    }
+    .payment-calendar-icon::after {
+      content: "";
+      position: absolute;
+      width: 31%;
+      height: 8px;
+      top: 53%;
+      border-radius: 999px;
+      background: #ef4d7a;
+      box-shadow:
+        0 18px 0 rgba(37,99,235,.78),
+        0 0 0 10px rgba(239,77,122,.10);
+    }
+    @keyframes sceneIconFloat {
+      0%, 100% { transform: translate3d(-50%, -50%, 0); }
+      50% { transform: translate3d(-50%, calc(-50% - 8px), 0); }
+    }
+    .flight-copy {
+      position: absolute;
+      left: 50%;
+      right: auto;
+      bottom: 46px;
+      top: auto;
+      width: min(82%, 420px);
+      transform: translateX(-50%);
+      z-index: 2;
+      color: rgba(5,7,12,.54);
+      text-align: center;
+    }
+    .flight-copy strong {
+      display: block;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      line-height: .92;
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+    }
+    .flight-copy span {
+      display: block;
+      color: rgba(5,7,12,.34);
+      font-size: .82rem;
+      line-height: 1.45;
+    }
+    .flight-ticket {
+      margin: 0 0 24px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,43,87,.10);
+      box-shadow: 0 16px 40px rgba(15,43,87,.08);
+    }
+    .flight-ticket-city {
+      color: #071536;
+      font-size: 1.2rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .flight-ticket-city span {
+      display: block;
+      margin-bottom: 5px;
+      color: rgba(7,21,54,.48);
+      font-size: .68rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .flight-route {
+      position: relative;
+      width: 118px;
+      height: 26px;
+    }
+    .flight-route::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 12px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ef4d7a 0 62%, rgba(15,43,87,.14) 62% 100%);
+    }
+    .flight-route::after {
+      content: "";
+      position: absolute;
+      left: 58%;
+      top: 7px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4d7a;
+      box-shadow: 0 0 0 6px rgba(239,77,122,.12);
+      transform: translateX(-50%);
+    }
+    .payment-plan-points {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 20px;
+    }
+    .payment-plan-point {
+      min-height: 72px;
+      padding: 14px 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(15,43,87,.10);
+      box-shadow: 0 12px 28px rgba(15,43,87,.06);
+      color: rgba(5,7,12,.72);
+      font-size: .86rem;
+      font-weight: 800;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+    }
+    .payment-plan-point strong {
+      display: block;
+      color: #071536;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
 
     /* payment */
     .funnel-price-card {
-      text-align: center; padding: 30px 20px; border-radius: 18px;
-      background: #f3f6fc; border: 1px solid rgba(15,43,87,.1);
+      text-align: center; padding: 30px 20px; border-radius: 22px;
+      background: rgba(243,246,252,.82); border: 1px solid rgba(15,43,87,.1);
       margin-bottom: 22px;
     }
     .funnel-price-amount { font-size: 3rem; font-weight: 900; color: #0b1530; line-height: 1; }
@@ -830,6 +1534,374 @@
     .funnel-price-list li { color: rgba(11,21,48,.72); font-size: .88rem; display: flex; gap: 9px; align-items: flex-start; }
     .funnel-price-list li::before { content: "✓"; color: #2563eb; font-weight: 900; flex: 0 0 auto; }
 
+    #funnelPaymentCard .funnel-btn {
+      width: min(100%, 360px);
+      min-height: 56px;
+      margin-top: 20px;
+      margin-bottom: 0;
+      justify-self: start;
+      align-self: start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      padding: 16px 24px;
+      line-height: 1.18;
+    }
+    #funnelPaymentCard .funnel-link-muted {
+      width: min(100%, 360px);
+      margin-top: 16px;
+      margin-bottom: 0;
+      padding: 10px;
+      text-align: center;
+      justify-self: start;
+      align-self: start;
+    }
+
+    #funnelPaymentCard.payment-checkout-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
+      gap: 0;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 30px;
+      background: #fff;
+    }
+    #funnelPaymentCard.payment-checkout-card::before,
+    #funnelPaymentCard.payment-checkout-card::after {
+      display: none;
+    }
+    .payment-checkout-main {
+      padding: clamp(32px, 4vw, 58px);
+      background: #f7f9fd;
+    }
+    .payment-checkout-main .funnel-eyebrow {
+      margin-top: 0;
+    }
+    .payment-checkout-main h2 {
+      font-size: clamp(2.05rem, 4vw, 3.25rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+    }
+    .payment-form-shell {
+      margin-top: 28px;
+      display: grid;
+      gap: 18px;
+    }
+    .payment-summary-cta {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 25px;
+      border: none;
+      background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: .01em;
+      cursor: pointer;
+      font-family: inherit;
+      will-change: transform, opacity;
+      transition: opacity .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .payment-summary-cta:hover:not(:disabled) {
+      opacity: .88;
+      transform: scale(0.98);
+      box-shadow: 0 0 30px 1px rgba(0,255,117,.30);
+    }
+    .payment-summary-cta:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .payment-summary-pay-later {
+      width: 100%;
+      padding: 6px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.32);
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: color .2s ease;
+    }
+    .payment-summary-pay-later:hover {
+      color: rgba(255,255,255,.58);
+    }
+    .payment-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .payment-field label,
+    .stripe-card-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(7,21,54,.62);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .02em;
+      margin-bottom: 8px;
+    }
+    .payment-field input,
+    .stripe-card-box {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 50px;
+      border: 1px solid rgba(15,43,87,.12);
+      border-radius: 14px;
+      background: #fff;
+      color: #071536;
+      padding: 15px 16px;
+      font-family: inherit;
+      font-size: .96rem;
+      box-shadow: 0 12px 28px rgba(15,43,87,.045);
+      transition: border-color .18s ease, box-shadow .18s ease;
+      will-change: box-shadow;
+    }
+    .payment-field input:focus,
+    .stripe-card-box.is-focused {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10), 0 14px 30px rgba(15,43,87,.06);
+    }
+    .payment-helper {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: rgba(7,21,54,.48);
+      font-size: .8rem;
+      line-height: 1.45;
+    }
+    .payment-helper::before {
+      content: "i";
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(37,99,235,.12);
+      color: #2563eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 900;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+    .payment-error {
+      min-height: 1.2em;
+      color: #dc2626;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .payment-summary {
+      padding: clamp(32px, 4vw, 58px);
+      background: #171717;
+      border-left: none;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+      transition: 0.4s ease-in-out;
+    }
+    .payment-summary::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+      pointer-events: none;
+    }
+    .payment-summary h3 {
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .payment-summary-row,
+    .payment-summary-total {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(255,255,255,.50);
+      font-size: .92rem;
+      font-weight: 700;
+    }
+    .payment-summary-total {
+      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top: 18px;
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+    .payment-summary-box {
+      border-radius: 25px;
+      background: #252525;
+      box-shadow: inset 2px 5px 10px rgb(5,5,5);
+      padding: 15px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(255,255,255,.72);
+      font-size: .88rem;
+      font-weight: 800;
+    }
+    /* ── Payment meeting card (replaces static calendar icon) ── */
+    .pm-card {
+      background: #1e1e1e;
+      border-radius: 20px;
+      padding: 14px;
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.07);
+      box-shadow: inset 1px 3px 14px rgba(0,0,0,.45);
+      margin-top: auto;
+    }
+    .pm-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .pm-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #fff;
+      letter-spacing: -0.025em;
+    }
+    .pm-month-badge {
+      background: #2a2a2a;
+      border-radius: 999px;
+      padding: 5px 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.6);
+      font-size: .72rem;
+      font-weight: 700;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .pm-calls-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,.38);
+      font-size: .75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .pm-date-nav {
+      background: #2a2a2a;
+      border-radius: 12px;
+      padding: 8px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .pm-day-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+    .pm-day-num,
+    .pm-day-name {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      font-family: inherit;
+    }
+    .pm-day-num {
+      font-size: .92rem;
+      font-weight: 700;
+      height: 24px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding-top: 3px;
+      color: rgba(255,255,255,.65);
+    }
+    .pm-day-name {
+      font-size: .58rem;
+      font-weight: 600;
+      height: 16px;
+      color: rgba(255,255,255,.28);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+    .pm-day-item.pm-active .pm-day-num,
+    .pm-day-item.pm-active .pm-day-name {
+      background: #f0ff7a;
+      color: #111;
+    }
+    .pm-indicators {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      position: relative;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+    .pm-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.14);
+      position: relative;
+      z-index: 2;
+    }
+    .pm-dot.pm-active { background: #f0ff7a; }
+    .pm-indicator-line {
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      right: 24px;
+      border-top: 1.5px dashed rgba(255,255,255,.10);
+      z-index: 1;
+    }
+    .booking-card {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(360px, 1.2fr);
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 30px;
+    }
+    .booking-copy {
+      padding: clamp(32px, 4vw, 58px);
+      background: #f7f9fd;
+    }
+    .booking-frame-wrap {
+      min-height: 620px;
+      background: #fff;
+      border-left: 1px solid rgba(15,43,87,.08);
+    }
+    .booking-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 620px;
+      border: 0;
+      display: block;
+    }
+    .booking-fallback {
+      min-height: 620px;
+      padding: 36px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: rgba(7,21,54,.6);
+      line-height: 1.55;
+    }
+
     .funnel-confirm { text-align: center; padding: 14px 4px; }
     .funnel-confirm-icon {
       width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 22px;
@@ -837,13 +1909,200 @@
       display: flex; align-items: center; justify-content: center; font-size: 28px; color: #2563eb;
     }
 
+    @media (max-width: 920px) {
+      .funnel-stage { align-items: flex-start; padding-top: 28px; }
+      .funnel-panel.launch-panel { max-width: 720px; }
+      .flight-card {
+        display: flex;
+        flex-direction: column;
+        min-height: auto;
+        border-radius: 28px;
+      }
+      .flight-card::before { left: 30px; top: 30px; width: 46px; height: 46px; }
+      .flight-card::after { display: none; }
+      .flight-card > :not(.flight-scene) { margin-left: 34px; margin-right: 34px; }
+      .flight-card > .funnel-eyebrow,
+      .flight-card > .funnel-q-progress { margin-top: 34px; }
+      .flight-card > .funnel-row { margin-bottom: 34px; }
+      .flight-card > .funnel-btn { width: calc(100% - 68px); margin: 28px 34px 34px; }
+      .flight-card .funnel-row .funnel-btn { min-width: 0; flex: 1; }
+      .flight-card .funnel-q h2,
+      .flight-card > h2 { font-size: clamp(2.25rem, 8vw, 3.35rem); }
+      .flight-scene {
+        order: -1;
+        min-height: 330px;
+        border-radius: 28px 28px 0 0;
+      }
+      .flight-trip-globe-wrap { top: 45%; }
+      .flight-trip-globe { transform: translateZ(0) scale(2.95); }
+      .flight-copy { left: 50%; right: auto; bottom: 30px; transform: translateX(-50%); }
+      .funnel-tabs {
+        margin: 18px auto 30px;
+        justify-content: center;
+        padding: 0 34px;
+      }
+      #funnelPaymentCard .funnel-btn,
+      #funnelPaymentCard .funnel-link-muted {
+        width: min(100% - 68px, 420px);
+        margin-left: 34px;
+        margin-right: 34px;
+        align-self: center;
+      }
+      #funnelPaymentCard.payment-checkout-card,
+      .booking-card {
+        grid-template-columns: 1fr;
+      }
+      .payment-summary {
+        border-left: 0;
+        border-top: 2px solid transparent;
+        background-image: linear-gradient(#171717, #171717), linear-gradient(90deg, #00ff75 0%, #3700ff 100%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+      }
+      .payment-summary::before {
+        display: none;
+      }
+      .booking-frame-wrap {
+        border-left: 0;
+        border-top: 1px solid rgba(15,43,87,.08);
+      }
+      .pm-card {
+        margin-top: 0;
+        max-width: min(340px, 100%);
+        align-self: center;
+      }
+    }
     @media (max-width: 560px) {
       .funnel-card { padding: 26px 22px; border-radius: 18px; }
       .funnel-subrings { gap: 8px; }
-      .funnel-tabs { gap: 4px; }
+      .funnel-tabs { gap: 8px; margin: 0 auto 28px; padding: 0 22px; }
+      .funnel-panel.launch-panel { max-width: 560px; }
+      .flight-card { padding: 0; border-radius: 24px; }
+      .flight-card::before { left: 22px; top: 22px; width: 44px; height: 44px; }
+      .flight-card::after { display: none; }
+      .flight-card > :not(.flight-scene) { margin-left: 22px; margin-right: 22px; }
+      .flight-card > .funnel-eyebrow,
+      .flight-card > .funnel-q-progress { margin-top: 26px; }
+      .flight-card > .funnel-row { margin-bottom: 26px; }
+      .flight-card > .funnel-btn { width: calc(100% - 44px); margin: 26px 22px; }
+      .flight-card .funnel-row .funnel-btn { min-width: 0; flex: 1; }
+      .flight-card .funnel-q h2,
+      .flight-card > h2 { font-size: clamp(2rem, 12vw, 3.25rem); letter-spacing: -0.04em; }
+      .flight-scene { min-height: 240px; margin: 0 0 24px; border-radius: 24px 24px 0 0; }
+      .flight-scene::before { inset: -24%; }
+      .flight-nav-dots { left: 24px; top: 24px; gap: 12px; font-size: .82rem; }
+      .flight-assist { right: 14px; top: 14px; padding: 8px 12px; font-size: .62rem; }
+      .flight-trip-globe-wrap { top: 44%; }
+      .flight-trip-globe { transform: translateZ(0) scale(2.15); }
+      .flight-copy { left: 50%; right: auto; bottom: 22px; width: min(84%, 320px); transform: translateX(-50%); }
+      .flight-copy strong { font-size: 2rem; }
+      .flight-copy span { font-size: .78rem; line-height: 1.35; }
+      .flight-ticket { grid-template-columns: 1fr; gap: 10px; padding: 14px; text-align: center; }
+      .flight-route { width: 100%; max-width: 180px; justify-self: center; }
+      #funnelPaymentCard {
+        border-radius: 28px;
+        padding: 0;
+        box-shadow: 0 24px 70px rgba(44,58,82,.16);
+      }
+      #funnelPaymentCard::before,
+      #funnelPaymentCard::after,
+      #funnelPaymentCard .flight-scene {
+        display: none;
+      }
+      #funnelPaymentCard > :not(.flight-scene) {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      #funnelPaymentCard > .funnel-eyebrow {
+        margin-top: 0;
+        margin-bottom: 18px;
+      }
+      #funnelPaymentCard > h2 {
+        font-size: clamp(3.05rem, 13vw, 4.15rem);
+        line-height: .98;
+        margin-bottom: 24px;
+      }
+      #funnelPaymentCard > .funnel-sub {
+        font-size: 1.08rem;
+        line-height: 1.62;
+        margin-bottom: 28px;
+      }
+      #funnelPaymentCard .flight-ticket {
+        margin-bottom: 20px;
+        padding: 18px 20px;
+        grid-template-columns: 1fr auto 1fr;
+        text-align: left;
+      }
+      #funnelPaymentCard .flight-route {
+        width: clamp(86px, 24vw, 128px);
+      }
+      #funnelPaymentCard .payment-plan-points {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      #funnelPaymentCard .payment-plan-point {
+        min-height: 0;
+        padding: 14px 16px;
+      }
+      #funnelPaymentCard .funnel-price-card {
+        margin-bottom: 0;
+        padding: 28px 20px 26px;
+      }
+      #funnelPaymentCard .funnel-price-list {
+        gap: 12px;
+      }
+      #funnelPaymentCard .funnel-price-list li {
+        font-size: .98rem;
+        line-height: 1.35;
+      }
+      #funnelPaymentCard .funnel-btn {
+        width: 100%;
+        margin: 24px 0 0;
+        border-radius: 22px;
+        padding: 18px 22px;
+        font-size: 1rem;
+        line-height: 1.18;
+      }
+      #funnelPaymentCard .funnel-link-muted {
+        position: static;
+        margin: 14px 0 0;
+        color: rgba(5,7,12,.46);
+      }
+      .payment-checkout-main,
+      .payment-summary,
+      .booking-copy {
+        padding: 28px 22px;
+      }
+      .payment-input-grid {
+        grid-template-columns: 1fr;
+      }
+      .payment-method-pill {
+        flex: 1 1 72px;
+      }
+      #funnelPaymentCard .payment-checkout-actions .funnel-btn,
+      #funnelPaymentCard .payment-checkout-actions .funnel-link-muted {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .booking-frame-wrap,
+      .booking-frame-wrap iframe,
+      .booking-fallback {
+        min-height: 540px;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .funnel-overlay, .funnel-panel { transition: none !important; }
+      .flight-scene-icon,
+      .uiverse-cloud-front,
+      .uiverse-cloud-back,
+      .uiverse-sunshine,
+      .uiverse-wave-bar,
+      .payment-calendar-icon {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+      }
     }
     .analyzer-result-cta p { color: rgba(255,255,255,.7); font-size: .95rem; line-height: 1.6; margin-bottom: 16px; }
     .analyzer-result-cta a { display: inline-flex; align-items: center; gap: 8px; background: #226e91; color: #fff; border: none; border-radius: 999px; padding: 14px 28px; font-size: .95rem; font-weight: 900; text-decoration: none; cursor: pointer; transition: transform .2s ease, background .2s ease; }
@@ -859,7 +2118,8 @@
     .footer-nav, .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
     .footer-nav a, .footer-legal a { text-decoration: none; font-size: 14px; font-weight: 700; color: rgba(255,255,255,.74); letter-spacing: -0.01em; transition: color 0.25s ease; }
     .footer-nav a:hover, .footer-legal a:hover { color: rgba(255,255,255,.98); }
-    .footer-brand { font-size: 14px; font-weight: 800; color: rgba(255,255,255,.55); letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 800; color: rgba(255,255,255,.62); letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer-brand .brand-logo { width: 88px; height: 88px; }
     .footer-copy { max-width: var(--content-max); margin: 16px auto 0; color: rgba(255,255,255,.68); font-size: 0.95rem; line-height: 1.7; text-align: center; }
     .footer-anchor { display: block; width: 1px; height: 1px; overflow: hidden; }
     .footer-year { margin-top: 14px; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,.5); letter-spacing: 0.04em; }
@@ -896,6 +2156,7 @@
       .mask-text { font-size: clamp(4.5rem, 22vw, 18rem); }
       .reveal-copy { top: 66%; width: min(720px, 90vw); }
       .nav-brand { justify-self: start; }
+      .brand-logo { width: 60px; height: 60px; }
       .nav-cta { justify-self: end; }
       .nav-inner > div[style*="justify-self:end"] { gap: 8px; }
       .nav-cta-funnel, .nav-inner .nav-cta { font-size: 11px; padding: 10px 12px; }
@@ -935,6 +2196,7 @@
     }
     @media (max-width: 560px) {
       .nav-brand span { display: none; }
+      .brand-logo { width: 54px; height: 54px; }
       .nav-cta-funnel, .nav-inner .nav-cta { font-size: 10px; padding: 9px 10px; letter-spacing: 0; }
       .collage-grid, .contractor-icons { grid-template-columns: 1fr; }
       .bendo-title { margin-bottom: 30px; }
@@ -981,6 +2243,7 @@
         gap: 14px;
       }
       .footer-nav, .footer-legal { gap: 14px; }
+      .footer-brand .brand-logo { width: 72px; height: 72px; }
     }
 
     /* 560px extras */
@@ -1005,9 +2268,9 @@
 
   <nav id="mainNav">
     <div class="nav-inner">
-      <div class="nav-brand" style="display:flex;align-items:center;gap:12px;">
-        <img src="Asset/premium-logo-240.webp" alt="Nexus Luma Logo" width="78" height="44" decoding="async" fetchpriority="high" style="height:44px;width:auto;display:inline-block;vertical-align:middle;">
-        <span style="font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.7);">Nexus Luma</span>
+      <div class="nav-brand">
+        <img class="brand-logo" src="2.png" alt="Nexus Luma Logo" width="3250" height="3250" decoding="async" fetchpriority="high">
+        <span class="brand-name">Nexus Luma</span>
       </div>
       <div style="display:flex;align-items:center;justify-self:end;">
         <button class="nav-cta nav-cta-funnel" id="navFunnelBtn" type="button">Analyze My Website</button>
@@ -1039,20 +2302,20 @@
         <div class="collage-rect">
           <div class="testimonial-stack">
             <div class="video-rail" aria-label="Customer testimonial videos">
-              <article class="testimonial-video is-front" tabindex="0" role="button" aria-label="Bring customer story 01 to the front">
+              <article class="testimonial-video is-front" tabindex="0" role="button" aria-label="Bring Meeting Spiderman story to the front">
+                <div class="video-fallback"><img src="Spiderman-AD-poster.jpg" alt="Spiderman ad video preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="metadata" poster="Spiderman-AD-poster.jpg" playsinline aria-label="Meeting Spiderman video"><source src="Spiderman-AD-web.mp4" type="video/mp4"></video>
+                <div class="video-caption"><strong>Meeting Spiderman</strong><span>Watch how a strong visual hook can make an offer feel memorable from the first second.</span></div>
+              </article>
+              <article class="testimonial-video is-middle" tabindex="0" role="button" aria-label="Bring Naphtali customer story to the front">
                 <div class="video-fallback"><img src="Naphtali-poster.jpg" alt="Naphtali customer testimonial preview" loading="lazy" decoding="async" /></div>
                 <video controls preload="metadata" poster="Naphtali-poster.jpg" playsinline aria-label="Naphtali customer testimonial video"><source src="Naphtali-web.mp4" type="video/mp4"></video>
                 <div class="video-caption"><strong>Naphtali</strong><span>See how professional presentation helps customers feel confident before the first call.</span></div>
               </article>
-              <article class="testimonial-video is-middle" tabindex="0" role="button" aria-label="Bring customer story 02 to the front">
+              <article class="testimonial-video is-back" tabindex="0" role="button" aria-label="Bring George customer story to the front">
                 <div class="video-fallback"><img src="George-poster.jpg" alt="George customer testimonial preview" loading="lazy" decoding="async" /></div>
                 <video controls preload="metadata" poster="George-poster.jpg" playsinline aria-label="George customer testimonial video"><source src="George-web.mp4" type="video/mp4"></video>
                 <div class="video-caption"><strong>George</strong><span>See how clear messaging and trust-focused design can move visitors closer to action.</span></div>
-              </article>
-              <article class="testimonial-video is-back" tabindex="0" role="button" aria-label="Bring customer story 03 to the front">
-                <div class="video-fallback"><img src="Asset/astro fashion.webp" alt="Customer testimonial preview" loading="lazy" decoding="async" /></div>
-                <video controls preload="metadata" poster="Asset/astro fashion.webp" aria-label="Customer testimonial video three"></video>
-                <div class="video-caption"><strong>Customer Story 03</strong><span>Customer stories help visitors see the quality behind the work.</span></div>
               </article>
             </div>
             <p class="video-hint">Tap a video to hear the story</p>
@@ -1185,7 +2448,7 @@
     <div class="contractor-about">
       <div class="contractor-aboutText">
         <h3>Your website should make your business look as good as the work you deliver.</h3>
-        <p>We build pages that feel premium, clear, and easy to scan. Visitors can understand your services, inspect the proof, and move toward contacting you without friction.</p>
+        <p>We build pages that feel premium, clear, and easy to scan. Visitors can understand your services, see the proof, and know how to contact you.</p>
         <p>That is what turns a good-looking website into a real business growth asset.</p>
       </div>
       <div class="contractor-aboutMedia"><img src="Asset/computer mockup.webp" alt="Computer mockup" loading="lazy" decoding="async" /></div>
@@ -1219,11 +2482,11 @@
           <div class="project-body"><span class="tag">Product</span><h4>Make Your Offer Impossible To Ignore</h4><p>Premium presentation helps visitors understand the value and feel confident taking action.</p></div>
         </article>
         <article class="project-card">
-          <div class="project-thumb"><img src="Asset/realestate home pj.webp" alt="Interior real estate showcase" loading="lazy" decoding="async" /></div>
+          <div class="project-thumb"><img src="Asset/luxury home.webp" alt="Luxury home exterior" loading="lazy" decoding="async" /></div>
           <div class="project-body"><span class="tag">Interiors</span><h4>Make Premium Work Look Premium</h4><p>Elegant layouts help clients see the quality, detail, and professionalism behind your work.</p></div>
         </article>
         <article class="project-card">
-          <div class="project-thumb"><img src="Asset/luxury home.webp" alt="Luxury home exterior" loading="lazy" decoding="async" /></div>
+          <div class="project-thumb"><img src="Asset/realestate home pj.webp" alt="Interior real estate showcase" loading="lazy" decoding="async" /></div>
           <div class="project-body"><span class="tag">Real Estate</span><h4>Help Buyers Fall In Love Before They Visit</h4><p>Immersive visuals and clean structure help serious buyers connect before they inquire.</p></div>
         </article>
       </div>
@@ -1267,7 +2530,7 @@
     <div class="funnel-shell">
       <div class="funnel-topbar">
         <div class="funnel-brand">
-          <img src="Asset/premium-logo-240.webp" alt="" decoding="async">
+          <img src="2.png" alt="" decoding="async">
           <span>Nexus Luma — Website Review</span>
         </div>
         <button class="funnel-close" id="funnelCloseBtn" type="button" aria-label="Close website review">×</button>
@@ -1284,11 +2547,26 @@
       <div class="funnel-stage">
 
         <!-- STEP 1: EMAIL -->
-        <div class="funnel-panel" data-panel="1">
-          <div class="funnel-card">
+        <div class="funnel-panel launch-panel" data-panel="1">
+          <div class="funnel-card flight-card">
+            <div class="flight-scene" aria-hidden="true">
+              <div class="flight-nav-dots"><span>—</span><span>—</span><span>—</span></div>
+              <div class="flight-assist">Assist</div>
+              <div class="flight-globe-stage">
+                <div class="flight-trip-globe-wrap">
+                  <div class="flight-trip-globe"></div>
+                </div>
+                <div class="flight-globe-welcome">Welcome</div>
+                <div class="flight-globe-flare" aria-hidden="true"></div>
+              </div>
+              <div class="flight-copy">
+                <strong>More Visits,<br>More Customers</strong>
+                <span>Sign up to see how.</span>
+              </div>
+            </div>
             <div class="funnel-eyebrow">Step 1 of 5</div>
-            <h2 id="funnelHeading">Let's see what your website is costing you.</h2>
-            <p class="funnel-sub">Enter your email and we'll send your free website review there too, in case you want to come back to it.</p>
+            <h2 id="funnelHeading">More Visits, More Customers</h2>
+            <p class="funnel-sub">Sign up to see how — we'll send your free website review right to your inbox.</p>
             <div class="funnel-field">
               <label for="funnelEmail">Your Email Address</label>
               <input type="email" id="funnelEmail" placeholder="you@yourbusiness.com" autocomplete="email">
@@ -1300,8 +2578,30 @@
         </div>
 
         <!-- STEP 2: WEBSITE URL -->
-        <div class="funnel-panel" data-panel="2" hidden>
-          <div class="funnel-card">
+        <div class="funnel-panel launch-panel" data-panel="2" hidden>
+          <div class="funnel-card flight-card">
+            <div class="flight-scene" aria-hidden="true">
+              <div class="flight-nav-dots"><span>—</span><span>—</span><span>—</span></div>
+              <div class="flight-assist">Assist</div>
+              <div class="flight-scene-icon" aria-hidden="true">
+                <div class="uiverse-weather">
+                  <div class="uiverse-cloud uiverse-cloud-front">
+                    <span class="uiverse-left-front"></span>
+                    <span class="uiverse-right-front"></span>
+                  </div>
+                  <span class="uiverse-sun uiverse-sunshine"></span>
+                  <span class="uiverse-sun"></span>
+                  <div class="uiverse-cloud uiverse-cloud-back">
+                    <span class="uiverse-left-back"></span>
+                    <span class="uiverse-right-back"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flight-copy">
+                <strong>Next Step</strong>
+                <span>We will check what is helping and what needs work.</span>
+              </div>
+            </div>
             <div class="funnel-eyebrow">Step 2 of 5</div>
             <h2>What's your website address?</h2>
             <p class="funnel-sub">We'll scan it for design, speed, SEO, and conversion issues — the things quietly costing you calls and leads.</p>
@@ -1310,6 +2610,7 @@
               <input type="url" id="funnelUrl" placeholder="https://yourbusiness.com" autocomplete="url">
               <div class="funnel-error-msg" id="funnelUrlError"></div>
             </div>
+            <button class="funnel-link-muted" id="funnelNoWebsiteBtn" type="button">I do not have a website yet</button>
             <div class="funnel-row">
               <button class="funnel-btn-back" id="funnelStep2Back" type="button" aria-label="Back">←</button>
               <button class="funnel-btn" id="funnelStep2Next" type="button">Analyze My Website →</button>
@@ -1318,22 +2619,38 @@
         </div>
 
         <!-- STEP 3: RESULTS -->
-        <div class="funnel-panel" data-panel="3" hidden>
+        <div class="funnel-panel launch-panel" data-panel="3" hidden>
           <div class="funnel-card" id="funnelResultsCard">
             <!-- Populated by JS (loading state, then results) -->
           </div>
         </div>
 
         <!-- STEP 4: QUESTIONNAIRE (5 questions, one shown at a time) -->
-        <div class="funnel-panel" data-panel="4" hidden>
-          <div class="funnel-card">
+        <div class="funnel-panel launch-panel" data-panel="4" hidden>
+          <div class="funnel-card flight-card">
+            <div class="flight-scene" aria-hidden="true">
+              <div class="flight-nav-dots"><span>✦</span><span>◐</span><span>▲</span><span>●</span></div>
+              <div class="flight-assist">Guide</div>
+              <div class="flight-scene-icon" aria-hidden="true">
+                <div class="uiverse-wave">
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                </div>
+              </div>
+              <div class="flight-copy">
+                <strong>Your site plan is ready</strong>
+                <span>Small fixes can help your website lift off and bring in more clients.</span>
+              </div>
+            </div>
             <div class="funnel-q-progress" id="funnelQProgress"></div>
             <div class="funnel-q-counter" id="funnelQCounter">Question 1 of 5</div>
 
             <!-- Q1: Name -->
             <div class="funnel-q" data-q="1">
-              <h2>What's your name?</h2>
-              <p class="funnel-sub">So we know who we're talking to.</p>
+              <h2>What should we call you?</h2>
+              <p class="funnel-sub">Tell us your name so we know who we are helping.</p>
               <div class="funnel-field">
                 <label for="funnelName">Your Name</label>
                 <input type="text" id="funnelName" placeholder="Jane Smith" autocomplete="name">
@@ -1343,30 +2660,30 @@
 
             <!-- Q2: Business name (optional) -->
             <div class="funnel-q" data-q="2" hidden>
-              <h2>What's your business name?</h2>
-              <p class="funnel-sub">Optional — skip if you'd rather not say yet.</p>
+              <h2>What business are we helping launch?</h2>
+              <p class="funnel-sub">You can skip this if you are not ready to share it yet.</p>
               <div class="funnel-field">
-                <label for="funnelBusiness">Business Name <span style="color:rgba(255,255,255,.35);text-transform:none;letter-spacing:0;">(optional)</span></label>
+                <label for="funnelBusiness">Business Name <span style="color:rgba(7,21,54,.45);text-transform:none;letter-spacing:0;">(optional)</span></label>
                 <input type="text" id="funnelBusiness" placeholder="Smith Plumbing Co." autocomplete="organization">
               </div>
             </div>
 
             <!-- Q3: Goal -->
             <div class="funnel-q" data-q="3" hidden>
-              <h2>What are you hoping to accomplish?</h2>
-              <p class="funnel-sub">Pick the one that fits best.</p>
+              <h2>What sounds most like you?</h2>
+              <p class="funnel-sub">Pick the line that feels closest.</p>
               <div class="funnel-choice-grid" id="funnelGoalChoices">
-                <button class="funnel-choice" type="button" data-value="More Online Customers"><span class="funnel-choice-radio"></span>Get more customers online</button>
-                <button class="funnel-choice" type="button" data-value="Redesign Existing Website"><span class="funnel-choice-radio"></span>Redesign my existing website</button>
-                <button class="funnel-choice" type="button" data-value="Create New Website"><span class="funnel-choice-radio"></span>Create a brand new website</button>
+                <button class="funnel-choice" type="button" data-value="More Online Customers"><span class="funnel-choice-radio"></span>I launched my website, but I need more traffic</button>
+                <button class="funnel-choice" type="button" data-value="Redesign Existing Website"><span class="funnel-choice-radio"></span>I need help making my website work better</button>
+                <button class="funnel-choice" type="button" data-value="Create New Website"><span class="funnel-choice-radio"></span>I need a website to launch</button>
               </div>
               <div class="funnel-error-msg" id="funnelGoalError"></div>
             </div>
 
             <!-- Q4: Budget -->
             <div class="funnel-q" data-q="4" hidden>
-              <h2>What's your budget range?</h2>
-              <p class="funnel-sub">This helps us recommend the right plan — no judgment either way.</p>
+              <h2>What budget feels comfortable?</h2>
+              <p class="funnel-sub">This helps us map the right site plan. No pressure.</p>
               <div class="funnel-choice-grid" id="funnelBudgetChoices">
                 <button class="funnel-choice" type="button" data-value="$500 - $1,000"><span class="funnel-choice-radio"></span>$500 – $1,000</button>
                 <button class="funnel-choice" type="button" data-value="$1,000 - $2,000"><span class="funnel-choice-radio"></span>$1,000 – $2,000</button>
@@ -1378,12 +2695,12 @@
 
             <!-- Q5: Timeline -->
             <div class="funnel-q" data-q="5" hidden>
-              <h2>How soon are you looking to get started?</h2>
-              <p class="funnel-sub">Last question — then we'll show you your next step.</p>
+              <h2>When would you like to launch?</h2>
+              <p class="funnel-sub">Last step. Then we show you how to book your strategy call.</p>
               <div class="funnel-choice-grid" id="funnelTimelineChoices">
                 <button class="funnel-choice" type="button" data-value="Right Away"><span class="funnel-choice-radio"></span>Right away</button>
-                <button class="funnel-choice" type="button" data-value="Within A Month"><span class="funnel-choice-radio"></span>Within a month</button>
-                <button class="funnel-choice" type="button" data-value="Just Exploring"><span class="funnel-choice-radio"></span>Just exploring for now</button>
+                <button class="funnel-choice" type="button" data-value="Within A Month"><span class="funnel-choice-radio"></span>In the next month</button>
+                <button class="funnel-choice" type="button" data-value="Just Exploring"><span class="funnel-choice-radio"></span>I am just looking for now</button>
               </div>
               <div class="funnel-error-msg" id="funnelTimelineError"></div>
             </div>
@@ -1396,31 +2713,106 @@
         </div>
 
         <!-- STEP 5: PAYMENT -->
-        <div class="funnel-panel" data-panel="5" hidden>
-          <div class="funnel-card" id="funnelPaymentCard">
-            <div class="funnel-eyebrow">Step 5 of 5</div>
-            <h2>Let's get your website upgrade started.</h2>
-            <p class="funnel-sub">A one-time $99 start fee locks in your spot and kicks off your custom plan — fully credited toward your project.</p>
+        <div class="funnel-panel launch-panel" data-panel="5" hidden>
+          <div class="funnel-card payment-checkout-card" id="funnelPaymentCard">
+            <div class="payment-checkout-main">
+              <div class="funnel-eyebrow">Secure Checkout</div>
+              <h2>Reserve your website strategy call.</h2>
+              <p class="funnel-sub">Pay securely with Stripe. After payment, you will choose a live time on my Google Calendar.</p>
 
-            <div class="funnel-price-card">
-              <div class="funnel-price-amount">$99<sup>.00</sup></div>
-              <div class="funnel-price-sub">One-Time Start Fee</div>
-              <ul class="funnel-price-list">
-                <li>Locks in your project slot</li>
-                <li>Credited fully toward your final project cost</li>
-                <li>90-day money-back guarantee on every project</li>
-                <li>Flexible payment plans available after kickoff</li>
-              </ul>
+              <form class="payment-form-shell" id="funnelPaymentForm">
+                <div class="payment-input-grid">
+                  <div class="payment-field">
+                    <label for="paymentName">Cardholder name</label>
+                    <input id="paymentName" type="text" autocomplete="cc-name" placeholder="Jane Smith">
+                  </div>
+                  <div class="payment-field">
+                    <label for="paymentEmail">Email receipt</label>
+                    <input id="paymentEmail" type="email" autocomplete="email" placeholder="you@yourbusiness.com">
+                  </div>
+                </div>
+
+                <div>
+                  <div class="stripe-card-label">
+                    <span>Card details</span>
+                    <span>Powered by Stripe</span>
+                  </div>
+                  <div class="stripe-card-box" id="stripeCardElement"></div>
+                </div>
+
+                <p class="payment-helper">Your payment details are encrypted and handled by Stripe. Nexus Luma never stores your card number.</p>
+                <div class="payment-error" id="paymentError" role="alert"></div>
+              </form>
             </div>
 
-            <button class="funnel-btn" id="funnelPayBtn" type="button">Pay $99 &amp; Get Started →</button>
-            <button class="funnel-link-muted" id="funnelPayLaterBtn" type="button">I'll pay later</button>
+            <aside class="payment-summary" aria-label="Order summary">
+              <h3>Order Summary</h3>
+              <div class="payment-summary-row"><span>Strategy call</span><strong>$99.00</strong></div>
+              <div class="payment-summary-row"><span>Site plan credit</span><strong>Included</strong></div>
+              <div class="payment-summary-total"><span>Total</span><strong>$99.00</strong></div>
+              <div class="payment-summary-box"><span>Website strategy call + site plan</span><strong>$99.00</strong></div>
+              <div class="pm-card" id="pmMeetingCard" aria-hidden="true">
+                <div class="pm-header">
+                  <div class="pm-title">Book<br>Now</div>
+                  <div class="pm-month-badge">
+                    <span id="pmMonthName">June</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="pm-calls-info">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                  </svg>
+                  <span id="pmCallsInfo">Strategy call • Today</span>
+                </div>
+                <div class="pm-date-nav" id="pmDateNav"></div>
+                <div class="pm-indicators" id="pmIndicators">
+                  <div class="pm-indicator-line"></div>
+                </div>
+              </div>
+              <button id="funnelPayBtn" form="funnelPaymentForm" type="submit" class="payment-summary-cta">Book Now →</button>
+              <button id="funnelPayLaterBtn" type="button" class="payment-summary-pay-later">I need more time</button>
+            </aside>
           </div>
         </div>
 
-        <!-- STEP 6: CONFIRMATION -->
-        <div class="funnel-panel" data-panel="6" hidden>
-          <div class="funnel-card">
+        <!-- STEP 6: BOOKING -->
+        <div class="funnel-panel launch-panel" data-panel="6" hidden>
+          <div class="funnel-card booking-card">
+            <div class="booking-copy">
+              <div class="funnel-eyebrow">Schedule</div>
+              <h2>Choose your live availability.</h2>
+              <p class="funnel-sub">Select a time on my Google Calendar. Google Calendar will send the event confirmation after you book.</p>
+              <button class="funnel-btn" id="funnelBookingDoneBtn" type="button">I booked my call →</button>
+              <button class="funnel-link-muted" id="funnelBookingHomeBtn" type="button">Return home</button>
+            </div>
+            <div class="booking-frame-wrap" id="bookingFrameWrap">
+              <div class="booking-fallback">Loading calendar availability…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 7: CONFIRMATION -->
+        <div class="funnel-panel launch-panel" data-panel="7" hidden>
+          <div class="funnel-card flight-card">
+            <div class="flight-scene" aria-hidden="true">
+              <div class="flight-nav-dots"><span>—</span><span>—</span><span>—</span></div>
+              <div class="flight-assist">Assist</div>
+              <div class="flight-scene-icon" aria-hidden="true">
+                <div class="uiverse-wave">
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                  <div class="uiverse-wave-bar"></div>
+                </div>
+              </div>
+              <div class="flight-copy">
+                <strong>Plan saved</strong>
+                <span>We will help you move toward more clients.</span>
+              </div>
+            </div>
             <div class="funnel-confirm">
               <div class="funnel-confirm-icon" id="funnelConfirmIcon">✓</div>
               <h2 id="funnelConfirmHeading">You're all set.</h2>
@@ -1444,7 +2836,10 @@
     <span class="footer-anchor" id="privacy" aria-hidden="true"></span>
     <span class="footer-anchor" id="terms" aria-hidden="true"></span>
     <div class="footer-inner">
-      <div class="footer-brand">Nexus Luma</div>
+      <div class="footer-brand">
+        <img class="brand-logo" src="2.png" alt="Nexus Luma Logo" width="3250" height="3250" loading="lazy" decoding="async">
+        <span>Nexus Luma</span>
+      </div>
       <div class="footer-legal">
         <a href="#" data-modal-trigger="privacy" aria-label="Privacy Policy">Privacy</a>
         <a href="#" data-modal-trigger="terms" aria-label="Terms of Service">Terms</a>
@@ -1801,7 +3196,7 @@
         "Scanning design and layout…",
         "Evaluating SEO signals…",
         "Checking mobile experience…",
-        "Analysing conversion flow…",
+        "Checking buttons and next steps…",
         "Building your report…"
       ];
 
@@ -1850,17 +3245,29 @@
 
       function analyzerSalesCopy(score, categories) {
         const weakest = categories.reduce((low, item) => !low || item.score < low.score ? item : low, null);
-        const painPoint = weakest ? weakest.name.toLowerCase() : "the biggest friction point";
+        const painPoint = weakest ? plainCategoryName(weakest.name) : "the next step";
         if (score >= 91) {
-          return `You are in outstanding shape. The site is strong, but a slight tweak around ${painPoint} could push this closer to 99.`;
+          return `You are in great shape. We can still help improve ${painPoint} so even more people say yes.`;
         }
         if (score >= 81) {
-          return `This is good, but ${painPoint} is still holding back calls, bookings, or quote requests.`;
+          return `This is a good start. A few fixes to ${painPoint} can help more people call, book, or ask for a quote.`;
         }
         if (score >= 70) {
-          return `This is fair, but ${painPoint} is likely costing you leads and confidence.`;
+          return `This can get better fast. We can make ${painPoint} clearer so more visitors trust you and take action.`;
         }
-        return `This is critical, and ${painPoint} is probably blocking calls, bookings, and quote requests.`;
+        return `There is still a real chance to win more customers. We can fix ${painPoint} first and make the page easier to trust.`;
+      }
+
+      function plainCategoryName(name) {
+        const key = String(name || "").toLowerCase();
+        return {
+          "visual design": "how the site looks",
+          "page speed": "page speed",
+          "seo foundations": "Google basics",
+          "conversion & ctas": "buttons and next steps",
+          "mobile experience": "the phone view",
+          "trust signals": "trust and proof"
+        }[key] || "the next step";
       }
 
       // Build animated SVG arc wheel
@@ -1937,7 +3344,7 @@
 
       // Render results HTML
       function renderResults(data, websiteUrl) {
-        const { overall_score, summary, categories, recommendations } = data;
+        const { overall_score, categories, recommendations } = data;
         const { label, color } = scoreGradeLabel(overall_score);
         const salesCopy = analyzerSalesCopy(overall_score, categories);
 
@@ -1970,7 +3377,7 @@
   ${buildWheelSVG(overall_score)}
   <div class="score-grade" style="color:${color}">${label}</div>
 </div>
-<p class="score-summary">${summary}</p>
+<p class="score-summary">${salesCopy}</p>
 <div class="categories-title">Category Breakdown</div>
 <div class="category-bars">
   <div class="cat-row">${categories.slice(0,2).map(c => `
@@ -1992,11 +3399,11 @@
       <div class="cat-note">${c.note}</div>
     </div>`).join("")}</div>
 </div>
-<div class="rec-title">Top Recommendations</div>
+<div class="rec-title">First Things We Will Work On</div>
 <ul class="rec-list">${recsHTML}</ul>
 <div class="analyzer-result-cta">
-  <p>${salesCopy}</p>
-  <a href="tel:+13365177347">📞 Call (336) 517-7347 — Free Website Review</a>
+  <p>Yes, we can help. We will work on the parts that build trust, make the next step clear, and help you get more customers.</p>
+  <a href="tel:+13365177347">Call (336) 517-7347 - Help Me Get More Customers</a>
 </div>`;
       }
 
@@ -2026,7 +3433,7 @@
       function getFallbackData(url) {
         return {
           overall_score: 54,
-          summary: "We couldn't fully reach your site in real time, but based on common patterns for businesses in your industry, there are likely significant opportunities in mobile experience, conversion flow, and trust signals. We'll send a detailed email report within 24 hours.",
+          summary: "Good news. Your website can get better fast. We can help make it clear, trusted, and easy to use.",
           categories: [
             { name: "Visual Design",      score: 60, note: "First impressions matter — professional design builds instant credibility." },
             { name: "Page Speed",         score: 48, note: "Slow sites lose visitors before they ever read your offer." },
@@ -2036,11 +3443,11 @@
             { name: "Trust Signals",      score: 58, note: "Reviews, guarantees, and credentials increase contact confidence." }
           ],
           recommendations: [
-            "<strong>Strengthen your headline</strong> — visitors should know exactly what you do and who you serve within 3 seconds.",
-            "<strong>Add a clear primary CTA</strong> above the fold: one button, one action, one destination.",
-            "<strong>Display social proof visibly</strong> — reviews, client logos, or project photos reduce hesitation.",
-            "<strong>Improve page speed</strong> — compress images and remove unnecessary scripts to pass Core Web Vitals.",
-            "<strong>Fix mobile layout</strong> — test your contact form and navigation on a phone to ensure friction-free access."
+            "<strong>Make the headline clear</strong> - People should know what you do right away.",
+            "<strong>Show one clear next step</strong> - Make it easy to call, book, or ask for a quote.",
+            "<strong>Add proof</strong> - Reviews and photos help people trust you.",
+            "<strong>Improve page speed</strong> - Make images smaller so the page loads faster.",
+            "<strong>Fix the phone view</strong> - Make the page easy to use on a phone."
           ]
         };
       }
@@ -2072,11 +3479,58 @@
       name: "",
       business: "",
       goal: "",
-      budget: "",
-      timeline: "",
-      qIndex: 1, // 1..5 within step 4
-      paid: false
-    };
+	      budget: "",
+	      timeline: "",
+	      qIndex: 1, // 1..5 within step 4
+	      paid: false,
+	      skippedAnalysis: false,
+	      paymentIntentId: ""
+	    };
+
+    /* ---------- meeting card (always shows live date) ---------- */
+    const PM_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const PM_DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+    function initMeetingCard() {
+      const now = new Date();
+      const monthEl  = document.getElementById("pmMonthName");
+      const callsEl  = document.getElementById("pmCallsInfo");
+      const navEl    = document.getElementById("pmDateNav");
+      const indEl    = document.getElementById("pmIndicators");
+      if (!navEl || !indEl) return;
+
+      if (monthEl) monthEl.textContent = PM_MONTHS[now.getMonth()];
+      if (callsEl) callsEl.textContent = "Strategy call • " + PM_DAYS[now.getDay()] + ", " + now.getDate();
+
+      navEl.innerHTML = "";
+      // Rebuild dots (keep the indicator line already in HTML)
+      const existingLine = indEl.querySelector(".pm-indicator-line");
+      indEl.innerHTML = "";
+      if (existingLine) indEl.appendChild(existingLine);
+
+      // Show 6 days: today-2 … today+3
+      for (let offset = -2; offset <= 3; offset++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + offset);
+        const isToday = offset === 0;
+
+        const item = document.createElement("div");
+        item.className = "pm-day-item" + (isToday ? " pm-active" : "");
+        const numDiv  = document.createElement("div");
+        numDiv.className  = "pm-day-num";
+        numDiv.textContent = d.getDate();
+        const nameDiv = document.createElement("div");
+        nameDiv.className  = "pm-day-name";
+        nameDiv.textContent = PM_DAYS[d.getDay()];
+        item.appendChild(numDiv);
+        item.appendChild(nameDiv);
+        navEl.appendChild(item);
+
+        const dot = document.createElement("div");
+        dot.className = "pm-dot" + (isToday ? " pm-active" : "");
+        indEl.appendChild(dot);
+      }
+    }
 
     /* ---------- open / close ---------- */
     function openFunnel() {
@@ -2084,17 +3538,17 @@
       overlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
       // If the user already reached confirmation, reopening starts a fresh flow
-      if (state.step === 6) {
-        resetFunnelState();
-      }
+	      if (state.step === 7) {
+	        resetFunnelState();
+	      }
       goToStep(state.step || 1, true);
     }
     function resetFunnelState() {
-      state.step = 1; state.email = ""; state.url = ""; state.resultData = null;
-      state.name = ""; state.business = ""; state.goal = ""; state.budget = "";
-      state.timeline = ""; state.qIndex = 1; state.paid = false;
-      emailInput.value = ""; urlInput.value = "";
-      nameInput.value = ""; businessInput.value = "";
+	      state.step = 1; state.email = ""; state.url = ""; state.resultData = null;
+	      state.name = ""; state.business = ""; state.goal = ""; state.budget = "";
+	      state.timeline = ""; state.qIndex = 1; state.paid = false; state.skippedAnalysis = false; state.paymentIntentId = "";
+	      emailInput.value = ""; urlInput.value = "";
+	      nameInput.value = ""; businessInput.value = "";
       overlay.querySelectorAll(".funnel-choice.is-selected").forEach(b => b.classList.remove("is-selected"));
     }
     function closeFunnel() {
@@ -2133,10 +3587,12 @@
           p.classList.remove("is-visible");
         }
       });
-      updateTabs(step);
-      const stage = overlay.querySelector(".funnel-stage");
-      if (stage) stage.scrollTop = 0;
-    }
+	      updateTabs(step);
+	      const stage = overlay.querySelector(".funnel-stage");
+	      if (stage) stage.scrollTop = 0;
+	      if (step === 5) { initMeetingCard(); initStripePayment(); submitLead("reached_checkout"); }
+	      if (step === 6) loadBookingCalendar();
+	    }
 
     /* ---------- validation helpers ---------- */
     function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
@@ -2170,9 +3626,10 @@
     /* ============================================================
        STEP 2 — WEBSITE URL
     ============================================================ */
-    const urlInput = document.getElementById("funnelUrl");
-    const urlError = document.getElementById("funnelUrlError");
-    document.getElementById("funnelStep2Back").addEventListener("click", () => goToStep(1));
+	    const urlInput = document.getElementById("funnelUrl");
+	    const urlError = document.getElementById("funnelUrlError");
+	    const noWebsiteBtn = document.getElementById("funnelNoWebsiteBtn");
+	    document.getElementById("funnelStep2Back").addEventListener("click", () => goToStep(1));
     document.getElementById("funnelStep2Next").addEventListener("click", () => {
       urlInput.classList.remove("error"); urlError.textContent = "";
       if (!urlInput.value.trim()) {
@@ -2187,8 +3644,16 @@
       }
       state.url = normaliseUrl(urlInput.value);
       goToStep(3);
-      runAnalysis();
-    });
+	      runAnalysis();
+	    });
+	    noWebsiteBtn.addEventListener("click", () => {
+	      state.url = "";
+	      state.resultData = null;
+	      state.skippedAnalysis = true;
+	      state.qIndex = 1;
+	      showQuestion(1);
+	      goToStep(4);
+	    });
     urlInput.addEventListener("input", () => { urlInput.classList.remove("error"); urlError.textContent = ""; });
     urlInput.addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("funnelStep2Next").click(); });
 
@@ -2202,7 +3667,7 @@
       "Scanning design and layout…",
       "Evaluating SEO signals…",
       "Checking mobile experience…",
-      "Analysing conversion flow…",
+      "Checking buttons and next steps…",
       "Building your report…"
     ];
     let stepInterval = null;
@@ -2235,17 +3700,29 @@
 
     function analyzerSalesCopy(score, categories) {
       const weakest = categories.reduce((low, item) => !low || item.score < low.score ? item : low, null);
-      const painPoint = weakest ? weakest.name.toLowerCase() : "the biggest friction point";
+      const painPoint = weakest ? plainCategoryName(weakest.name) : "the next step";
       if (score >= 91) {
-        return `You are in outstanding shape. The site is strong, but a slight tweak around ${painPoint} could push this closer to 99.`;
+        return `You are in great shape. We can still help improve ${painPoint} so even more people say yes.`;
       }
       if (score >= 81) {
-        return `This is good, but ${painPoint} is still holding back calls, bookings, or quote requests.`;
+        return `This is a good start. A few fixes to ${painPoint} can help more people call, book, or ask for a quote.`;
       }
       if (score >= 70) {
-        return `This is fair, but ${painPoint} is likely costing you leads and confidence.`;
+        return `This can get better fast. We can make ${painPoint} clearer so more visitors trust you and take action.`;
       }
-      return `This is critical, and ${painPoint} is probably blocking calls, bookings, and quote requests.`;
+      return `There is still a real chance to win more customers. We can fix ${painPoint} first and make the page easier to trust.`;
+    }
+
+    function plainCategoryName(name) {
+      const key = String(name || "").toLowerCase();
+      return {
+        "visual design": "how the site looks",
+        "page speed": "page speed",
+        "seo foundations": "Google basics",
+        "conversion & ctas": "buttons and next steps",
+        "mobile experience": "the phone view",
+        "trust signals": "trust and proof"
+      }[key] || "the next step";
     }
 
     function buildMainRing(score) {
@@ -2313,7 +3790,7 @@
     }
 
     function renderResults(data) {
-      const { overall_score, summary, categories, recommendations } = data;
+      const { overall_score, categories, recommendations } = data;
       const { label, color } = scoreGradeLabel(overall_score);
       const salesCopy = analyzerSalesCopy(overall_score, categories);
       const topThree = categories.slice(0, 3);
@@ -2343,19 +3820,31 @@
       resultsCard.innerHTML = `
         <div class="funnel-eyebrow">Step 3 of 5 — Your Results</div>
         <h2>Here's where your website stands.</h2>
-        <div class="funnel-ring-wrap">
-          ${buildMainRing(overall_score)}
-          <div class="funnel-grade" style="color:${color}">${label}</div>
-        </div>
-        <p class="funnel-summary">${summary} ${salesCopy}</p>
-        <div class="funnel-subrings">${subRingsHTML}</div>
-        <div class="funnel-cats-title">More To Improve</div>
-        <div class="funnel-cat-list">${restCatsHTML}</div>
-        <div class="funnel-recs-title">Top Recommendations</div>
-        <ul class="funnel-rec-list">${recsHTML}</ul>
-        <div class="funnel-upgrade-cta">
-          <p>Want us to fix what's costing you calls, leads, and bookings? Let's build your plan.</p>
-          <button class="funnel-btn" id="funnelUpgradeBtn" type="button">Upgrade My Website Now! →</button>
+        <div class="funnel-results-cols">
+          <div class="funnel-results-left">
+            <div class="funnel-ring-wrap">
+              ${buildMainRing(overall_score)}
+              <div class="funnel-grade" style="color:${color}">${label}</div>
+            </div>
+            <div class="funnel-pulse-anim" aria-hidden="true">
+              <svg width="128" height="96" viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg">
+                <polyline class="funnel-pulse-back"  points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+                <polyline class="funnel-pulse-front" points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"></polyline>
+              </svg>
+            </div>
+            <p class="funnel-summary">${salesCopy}</p>
+            <div class="funnel-subrings">${subRingsHTML}</div>
+          </div>
+          <div class="funnel-results-right">
+            <div class="funnel-cats-title">What We Can Improve</div>
+            <div class="funnel-cat-list">${restCatsHTML}</div>
+            <div class="funnel-recs-title">First Things We Will Work On</div>
+            <ul class="funnel-rec-list">${recsHTML}</ul>
+            <div class="funnel-upgrade-cta">
+              <p>Yes, we can help. We will work on the parts that build trust, make the next step clear, and help you get more customers.</p>
+              <button class="funnel-btn" id="funnelUpgradeBtn" type="button">Yes, Help Me Get More Customers →</button>
+            </div>
+          </div>
         </div>
       `;
 
@@ -2377,7 +3866,7 @@
     function getFallbackData() {
       return {
         overall_score: 54,
-        summary: "We couldn't fully reach your site in real time, but based on common patterns for businesses in your industry, there are likely real opportunities in mobile experience, conversion flow, and trust signals.",
+        summary: "Good news. Your website can get better fast. We can help make it clear, trusted, and easy to use.",
         categories: [
           { name: "Visual Design",      score: 60 },
           { name: "Mobile Experience",  score: 52 },
@@ -2387,10 +3876,10 @@
           { name: "Trust Signals",      score: 58 }
         ],
         recommendations: [
-          "<strong>Strengthen your headline</strong> — visitors should know exactly what you do within 3 seconds.",
-          "<strong>Add one clear primary CTA</strong> above the fold so the next step is obvious.",
-          "<strong>Display social proof visibly</strong> — reviews or project photos reduce hesitation.",
-          "<strong>Fix mobile layout</strong> — test your contact form and navigation on a phone."
+          "<strong>Make the headline clear</strong> - People should know what you do right away.",
+          "<strong>Show one clear next step</strong> - Make it easy to call, book, or ask for a quote.",
+          "<strong>Add proof</strong> - Reviews and photos help people trust you.",
+          "<strong>Fix the phone view</strong> - Make the page easy to use on a phone."
         ]
       };
     }
@@ -2455,12 +3944,12 @@
       qProgressEl.querySelectorAll(".funnel-q-progress-seg").forEach(seg => {
         seg.classList.toggle("is-filled", parseInt(seg.dataset.seg, 10) <= state.qIndex);
       });
-      qCounterEl.textContent = `Question ${state.qIndex} of ${TOTAL_Q}`;
+      qCounterEl.textContent = `Launch step ${state.qIndex} of ${TOTAL_Q}`;
     }
     function showQuestion(n) {
       qPanels.forEach(p => { p.hidden = parseInt(p.dataset.q, 10) !== n; });
       qBackBtn.style.visibility = n === 1 ? "hidden" : "visible";
-      qNextBtn.textContent = n === TOTAL_Q ? "Continue →" : "Continue →";
+      qNextBtn.textContent = n === TOTAL_Q ? "Show My Site Plan →" : "Next Step →";
       updateQProgress();
     }
 
@@ -2485,11 +3974,11 @@
     const nameError = document.getElementById("funnelNameError");
     const businessInput = document.getElementById("funnelBusiness");
 
-    qBackBtn.addEventListener("click", () => {
-      if (state.qIndex === 1) { goToStep(3); return; }
-      state.qIndex -= 1;
-      showQuestion(state.qIndex);
-    });
+	    qBackBtn.addEventListener("click", () => {
+	      if (state.qIndex === 1) { goToStep(state.skippedAnalysis ? 2 : 3); return; }
+	      state.qIndex -= 1;
+	      showQuestion(state.qIndex);
+	    });
 
     qNextBtn.addEventListener("click", () => {
       // validate current question
@@ -2498,7 +3987,7 @@
         nameInput.classList.remove("error");
         if (!nameInput.value.trim()) {
           nameInput.classList.add("error");
-          nameError.textContent = "Please enter your name.";
+          nameError.textContent = "Please add your name before we build your site plan.";
           return;
         }
         state.name = nameInput.value.trim();
@@ -2506,17 +3995,17 @@
         state.business = businessInput.value.trim();
       } else if (state.qIndex === 3) {
         if (!state.goal) {
-          document.getElementById("funnelGoalError").textContent = "Please select one option.";
+          document.getElementById("funnelGoalError").textContent = "Please pick one option.";
           return;
         }
       } else if (state.qIndex === 4) {
         if (!state.budget) {
-          document.getElementById("funnelBudgetError").textContent = "Please select a budget range.";
+          document.getElementById("funnelBudgetError").textContent = "Please pick a budget range.";
           return;
         }
       } else if (state.qIndex === 5) {
         if (!state.timeline) {
-          document.getElementById("funnelTimelineError").textContent = "Please select an option.";
+          document.getElementById("funnelTimelineError").textContent = "Please pick a launch time.";
           return;
         }
         // last question complete -> go to payment
@@ -2531,74 +4020,274 @@
     /* ============================================================
        STEP 5 — PAYMENT (powered by Stripe)
     ============================================================ */
-    const payBtn = document.getElementById("funnelPayBtn");
-    const payLaterBtn = document.getElementById("funnelPayLaterBtn");
+	    const paymentForm = document.getElementById("funnelPaymentForm");
+	    const payBtn = document.getElementById("funnelPayBtn");
+	    const payLaterBtn = document.getElementById("funnelPayLaterBtn");
+	    const paymentNameInput = document.getElementById("paymentName");
+	    const paymentEmailInput = document.getElementById("paymentEmail");
+	    const paymentError = document.getElementById("paymentError");
+	    const stripeCardBox = document.getElementById("stripeCardElement");
+	    let stripe = null;
+	    let stripeCard = null;
+	    let stripeReadyPromise = null;
+	    let leadRowCreated = false;
 
-    function updatePaymentButton(isLoading, label) {
-      payBtn.disabled = isLoading;
-      payBtn.textContent = label || (isLoading ? "Preparing secure checkout…" : "Pay $99 & Get Started →");
-    }
+	    function leadPayload(status, extra) {
+	      return JSON.stringify(Object.assign({
+	        name: (paymentNameInput && paymentNameInput.value.trim()) || state.name || "",
+	        email: (paymentEmailInput && paymentEmailInput.value.trim()) || state.email || "",
+	        business: state.business || "",
+	        url: state.url || "",
+	        goal: state.goal || "",
+	        budget: state.budget || "",
+	        timeline: state.timeline || "",
+	        score: state.resultData?.overall_score || "",
+	        status
+	      }, extra || {}));
+	    }
 
-    payBtn.addEventListener("click", async () => {
-      const originalLabel = payBtn.textContent;
-      updatePaymentButton(true);
-      try {
-        const response = await fetch("/api/create-upgrade-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: state.email,
-            url: state.url,
-            firstName: state.name.split(/\s+/)[0] || "",
-            lastName: state.name.split(/\s+/).slice(1).join(" ") || "",
-            auditScore: state.resultData?.overall_score || "",
-            origin: window.location.origin
-          })
-        });
-        const payload = await response.json().catch(() => null);
-        if (!response.ok || !payload?.checkoutUrl) {
-          throw new Error(payload?.error || "Unable to start checkout.");
-        }
-        window.location.href = payload.checkoutUrl;
-      } catch (error) {
-        updatePaymentButton(false, originalLabel);
-        alert(error.message || "Unable to start payment.");
-      }
-    });
+	    async function submitLead(status, extra) {
+	      try {
+	        const payload = leadPayload(status, extra);
+	        if (leadRowCreated && status !== "reached_checkout") {
+	          await fetch("/api/submit-lead", {
+	            method: "POST",
+	            headers: { "Content-Type": "application/json" },
+	            body: JSON.stringify(Object.assign(JSON.parse(payload), { updateEmail: state.email || (paymentEmailInput && paymentEmailInput.value.trim()) || "" }))
+	          });
+	        } else {
+	          await fetch("/api/submit-lead", {
+	            method: "POST",
+	            headers: { "Content-Type": "application/json" },
+	            body: payload
+	          });
+	          if (status === "reached_checkout") leadRowCreated = true;
+	        }
+	      } catch (_) { /* non-blocking — never interrupt the user flow */ }
+	    }
 
-    payLaterBtn.addEventListener("click", () => {
-      state.paid = false;
-      showConfirmation(false);
-    });
+	    function beaconAbandon() {
+	      if (!leadRowCreated) return;
+	      const email = (paymentEmailInput && paymentEmailInput.value.trim()) || state.email || "";
+	      if (!email) return;
+	      navigator.sendBeacon("/api/submit-lead",
+	        new Blob([JSON.stringify({ updateEmail: email, status: "abandoned" })], { type: "application/json" })
+	      );
+	    }
 
-    function showConfirmation(paid) {
-      const icon = document.getElementById("funnelConfirmIcon");
-      const heading = document.getElementById("funnelConfirmHeading");
-      const sub = document.getElementById("funnelConfirmSub");
-      if (paid) {
-        icon.textContent = "✓";
-        heading.textContent = "You're all set — welcome aboard!";
-        sub.textContent = "Your $99 start fee is in and your spot is locked. We'll reach out shortly to kick off your custom website plan.";
-      } else {
-        icon.textContent = "📩";
-        heading.textContent = "Got it — we'll follow up.";
-        sub.textContent = "We've saved your review and your answers. We'll reach out by email to help you get started whenever you're ready.";
-      }
-      goToStep(6);
-    }
+	    function updatePaymentButton(isLoading, label) {
+	      payBtn.disabled = isLoading;
+	      payBtn.textContent = label || (isLoading ? "Processing…" : "Book Now →");
+	    }
+
+	    function setPaymentError(message) {
+	      if (paymentError) paymentError.textContent = message || "";
+	    }
+
+	    function loadStripeJs() {
+	      if (window.Stripe) return Promise.resolve();
+	      return new Promise((resolve, reject) => {
+	        const existing = document.querySelector('script[src="https://js.stripe.com/v3/"]');
+	        if (existing) {
+	          existing.addEventListener("load", resolve, { once: true });
+	          existing.addEventListener("error", () => reject(new Error("Stripe.js could not load.")), { once: true });
+	          return;
+	        }
+	        const script = document.createElement("script");
+	        script.src = "https://js.stripe.com/v3/";
+	        script.async = true;
+	        script.onload = resolve;
+	        script.onerror = () => reject(new Error("Stripe.js could not load."));
+	        document.head.appendChild(script);
+	      });
+	    }
+
+	    async function initStripePayment() {
+	      paymentNameInput.value = paymentNameInput.value || state.name || "";
+	      paymentEmailInput.value = paymentEmailInput.value || state.email || "";
+	      if (stripeReadyPromise) return stripeReadyPromise;
+	      stripeReadyPromise = (async () => {
+	        setPaymentError("");
+	        await loadStripeJs();
+	        const configResponse = await fetch("/api/stripe-config");
+	        const config = await configResponse.json().catch(() => null);
+	        if (!configResponse.ok || !config?.publishableKey) {
+	          throw new Error(config?.error || "Stripe publishable key is not configured.");
+	        }
+	        stripe = window.Stripe(config.publishableKey);
+	        const elements = stripe.elements({
+	          fonts: [{ cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,500,600,700" }]
+	        });
+	        stripeCard = elements.create("card", {
+	          hidePostalCode: true,
+	          style: {
+	            base: {
+	              color: "#071536",
+	              fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif",
+	              fontSize: "16px",
+	              "::placeholder": { color: "rgba(7,21,54,.34)" }
+	            },
+	            invalid: { color: "#dc2626" }
+	          }
+	        });
+	        stripeCard.mount("#stripeCardElement");
+	        stripeCard.on("focus", () => stripeCardBox.classList.add("is-focused"));
+	        stripeCard.on("blur", () => stripeCardBox.classList.remove("is-focused"));
+	        stripeCard.on("change", event => setPaymentError(event.error?.message || ""));
+	      })().catch(error => {
+	        stripeReadyPromise = null;
+	        setPaymentError(error.message || "Payment form could not load.");
+	        throw error;
+	      });
+	      return stripeReadyPromise;
+	    }
+
+	    paymentForm.addEventListener("submit", async (event) => {
+	      event.preventDefault();
+	      const originalLabel = payBtn.textContent;
+	      setPaymentError("");
+	      updatePaymentButton(true);
+	      try {
+	        await initStripePayment();
+	        const receiptEmail = paymentEmailInput.value.trim() || state.email;
+	        if (!isValidEmail(receiptEmail)) {
+	          throw new Error("Please enter a valid email for your receipt.");
+	        }
+	        const intentResponse = await fetch("/api/create-payment-intent", {
+	          method: "POST",
+	          headers: { "Content-Type": "application/json" },
+	          body: JSON.stringify({
+	            email: receiptEmail,
+	            name: paymentNameInput.value.trim() || state.name,
+	            business: state.business,
+	            url: state.url,
+	            goal: state.goal,
+	            budget: state.budget,
+	            timeline: state.timeline,
+	            auditScore: state.resultData?.overall_score || ""
+	          })
+	        });
+	        const intent = await intentResponse.json().catch(() => null);
+	        if (!intentResponse.ok || !intent?.clientSecret) {
+	          throw new Error(intent?.error || "Unable to prepare payment.");
+	        }
+	        const result = await stripe.confirmCardPayment(intent.clientSecret, {
+	          payment_method: {
+	            card: stripeCard,
+	            billing_details: {
+	              name: paymentNameInput.value.trim() || state.name,
+	              email: receiptEmail
+	            }
+	          },
+	          receipt_email: receiptEmail
+	        });
+	        if (result.error) throw new Error(result.error.message || "Payment was not completed.");
+	        state.paid = true;
+	        state.paymentIntentId = result.paymentIntent?.id || intent.paymentIntentId || "";
+	        submitLead("purchased", { paymentIntentId: state.paymentIntentId });
+	        goToStep(6);
+	      } catch (error) {
+	        setPaymentError(error.message || "Unable to complete payment.");
+	        updatePaymentButton(false, originalLabel);
+	      }
+	    });
+
+	    payLaterBtn.addEventListener("click", () => {
+	      state.paid = false;
+	      submitLead("pay_later");
+	      showConfirmation(false);
+	    });
+
+	    document.addEventListener("visibilitychange", () => {
+	      if (document.visibilityState === "hidden" && state.step === 5) beaconAbandon();
+	    });
+	    window.addEventListener("pagehide", () => {
+	      if (state.step === 5) beaconAbandon();
+	    });
+
+	    /* ============================================================
+	       STEP 6 — GOOGLE CALENDAR BOOKING
+	    ============================================================ */
+	    const bookingFrameWrap = document.getElementById("bookingFrameWrap");
+	    const bookingDoneBtn = document.getElementById("funnelBookingDoneBtn");
+	    const bookingHomeBtn = document.getElementById("funnelBookingHomeBtn");
+	    let bookingLoaded = false;
+	    let confirmationRedirectTimer = null;
+
+	    async function loadBookingCalendar() {
+	      if (bookingLoaded) return;
+	      try {
+	        const response = await fetch("/api/calendar-config");
+	        const payload = await response.json().catch(() => null);
+	        const bookingUrl = payload?.bookingUrl || "";
+	        if (!response.ok || !bookingUrl) {
+	          bookingFrameWrap.innerHTML = `
+	            <div class="booking-fallback">
+	              <div>
+	                <strong>Calendar link needed.</strong><br>
+	                Add <code>GOOGLE_CALENDAR_BOOKING_URL</code> to your Netlify environment to embed live Google Calendar availability here.
+	              </div>
+	            </div>`;
+	          bookingLoaded = true;
+	          return;
+	        }
+	        const iframe = document.createElement("iframe");
+	        iframe.src = bookingUrl;
+	        iframe.title = "Google Calendar booking availability";
+	        iframe.loading = "lazy";
+	        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+	        bookingFrameWrap.innerHTML = "";
+	        bookingFrameWrap.appendChild(iframe);
+	        bookingLoaded = true;
+	      } catch {
+	        bookingFrameWrap.innerHTML = `<div class="booking-fallback">Calendar availability could not load. Please refresh or contact us to schedule your call.</div>`;
+	        bookingLoaded = true;
+	      }
+	    }
+
+	    bookingDoneBtn.addEventListener("click", () => showConfirmation(true));
+	    bookingHomeBtn.addEventListener("click", () => {
+	      closeFunnel();
+	      window.scrollTo({ top: 0, behavior: "smooth" });
+	    });
+
+	    function showConfirmation(paid) {
+	      if (confirmationRedirectTimer) {
+	        clearTimeout(confirmationRedirectTimer);
+	        confirmationRedirectTimer = null;
+	      }
+	      const icon = document.getElementById("funnelConfirmIcon");
+	      const heading = document.getElementById("funnelConfirmHeading");
+	      const sub = document.getElementById("funnelConfirmSub");
+	      if (paid) {
+	        icon.textContent = "✓";
+	        heading.textContent = "Your strategy call is confirmed.";
+	        sub.textContent = "Your payment is complete. Google Calendar will send the event confirmation after you choose your time.";
+	      } else {
+	        icon.textContent = "✓";
+	        heading.textContent = "Got it. Your site plan is saved.";
+	        sub.textContent = "We saved your review and answers. We will follow up so you can launch when you are ready.";
+	      }
+	      goToStep(7);
+	      if (paid) {
+	        confirmationRedirectTimer = setTimeout(() => {
+	          closeFunnel();
+	          window.scrollTo({ top: 0, behavior: "smooth" });
+	        }, 3200);
+	      }
+	    }
 
     document.getElementById("funnelReturnHomeBtn").addEventListener("click", () => {
       closeFunnel();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    const checkoutStatus = new URLSearchParams(window.location.search).get("checkout");
-    if (checkoutStatus === "success") {
-      openFunnel();
-      goToStep(6, true);
-      showConfirmation(true);
-      history.replaceState({}, "", window.location.pathname + window.location.hash);
-    }
+	    const checkoutStatus = new URLSearchParams(window.location.search).get("checkout");
+	    if (checkoutStatus === "success") {
+	      openFunnel();
+	      goToStep(6, true);
+	      history.replaceState({}, "", window.location.pathname + window.location.hash);
+	    }
 
   })();
   </script>
