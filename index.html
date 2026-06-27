@@ -1593,21 +1593,21 @@
     .payment-summary-cta {
       width: 100%;
       padding: 16px 24px;
-      border-radius: 25px;
-      border: none;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: #fff;
-      font-size: 1rem;
-      font-weight: 900;
-      letter-spacing: .01em;
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
       cursor: pointer;
       font-family: inherit;
       will-change: transform, opacity;
-      box-shadow: 0 14px 36px rgba(37,99,235,.36);
-      transition: opacity .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow: 0 12px 30px rgba(37,99,235,.36);
+      transition: transform .2s ease, box-shadow .3s ease, opacity .2s ease;
     }
     .payment-summary-cta:hover:not(:disabled) {
-      opacity: .92;
       transform: translateY(-2px);
       box-shadow: 0 18px 44px rgba(37,99,235,.46);
     }
@@ -2376,8 +2376,8 @@
 
       /* Book Now — full-width, prominent tap target */
       .payment-summary-cta {
-        padding: 17px 20px; font-size: 1rem;
-        border-radius: 18px; letter-spacing: .02em;
+        padding: 17px 20px; font-size: .95rem;
+        border-radius: 999px;
       }
 
       /* "I need more time" — subtle but easily tappable */
