@@ -1868,26 +1868,111 @@
       border-top: 1.5px dashed rgba(255,255,255,.10);
       z-index: 1;
     }
-    /* Booking step 6 — single centered card */
+    /* ── Booking step 6 — custom calendar widget ── */
+    .funnel-panel.booking-panel { max-width: 780px; }
     .booking-card {
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center;
-      padding: clamp(40px, 6vw, 68px) clamp(28px, 5vw, 60px);
-      gap: 0;
+      padding: 0; overflow: hidden;
     }
-    .booking-card h2 { text-align: center; width: 100%; }
-    .booking-cal-icon {
-      width: 80px; height: 80px; margin-bottom: 24px; flex-shrink: 0;
-      background: rgba(37,99,235,.10);
-      border: 2px solid rgba(37,99,235,.22);
-      border-radius: 24px;
+    .cal-step-header {
+      padding: 28px 32px 20px; border-bottom: 1px solid #e2f0fb;
+    }
+    .cal-step-header h2 { text-align: left; margin-bottom: 6px; font-size: clamp(1.25rem, 2.6vw, 1.7rem); }
+    .cal-step-header .funnel-eyebrow { text-align: left; margin-bottom: 10px; }
+    .cal-step-header .funnel-sub { text-align: left; margin-bottom: 0; }
+    .cal-body {
+      display: grid; grid-template-columns: 1fr 1px 200px; min-height: 360px;
+    }
+    .cal-left { padding: 24px 28px 20px; }
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px;
+    }
+    .cal-nav-btn {
+      width: 34px; height: 34px; border: 1.5px solid #c5e0f5; border-radius: 10px;
+      background: #f0f8ff; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      color: #2563eb;
+      transition: background .18s, border-color .18s, color .18s;
+      color: #2d4a6e; font-size: 15px; font-weight: 600; font-family: inherit;
     }
-    .booking-card .funnel-eyebrow { margin-bottom: 14px; }
-    .booking-card .funnel-sub { max-width: 360px; margin: 0 0 28px; }
-    .booking-open-link {
-      display: flex; text-decoration: none; width: 100%; max-width: 420px;
+    .cal-nav-btn:hover { background: #90cdf4; border-color: #63b3ed; color: #fff; }
+    .cal-month-label { font-size: 17px; font-weight: 700; letter-spacing: -.4px; color: #0d1b2a; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 2px; }
+    .cal-dow {
+      font-size: 11px; font-weight: 600; letter-spacing: .4px;
+      color: #5a7fa8; text-align: center; padding: 0 0 10px; text-transform: uppercase;
+    }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; font-size: 14px; font-weight: 500; color: #0d1b2a;
+      cursor: pointer; position: relative; border: 1.5px solid transparent; user-select: none;
+      transition: background .18s, border-color .18s, transform .18s, box-shadow .18s;
+    }
+    .cal-day:hover:not(.cal-day--disabled):not(.cal-day--selected) { background: #dbeeff; border-color: #90cdf4; }
+    .cal-day--disabled { color: #c0d8ec; cursor: default; text-decoration: line-through; text-decoration-color: #b0cedf; }
+    .cal-day--today::after {
+      content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: #4299e1;
+    }
+    .cal-day--selected {
+      background: linear-gradient(135deg, #4299e1, #2b6cb0);
+      color: #fff !important; border-color: transparent;
+      box-shadow: 0 4px 16px rgba(49,130,206,.4); font-weight: 700; transform: scale(1.05);
+    }
+    .cal-day--selected::after { display: none; }
+    .cal-divider { background: linear-gradient(180deg, transparent, #d1e9f7 20%, #d1e9f7 80%, transparent); width: 1px; }
+    .cal-right { display: flex; flex-direction: column; overflow: hidden; }
+    .cal-times-label {
+      padding: 24px 16px 12px; font-size: 11px; font-weight: 700; letter-spacing: 1.4px;
+      text-transform: uppercase; color: #5a7fa8; border-bottom: 1px solid #e2f0fb; flex-shrink: 0;
+    }
+    .cal-times-scroll {
+      overflow-y: auto; flex: 1; padding: 10px 14px 14px;
+      display: flex; flex-direction: column; gap: 7px;
+      scrollbar-width: thin; scrollbar-color: #b2d8f0 transparent; max-height: 310px;
+    }
+    .cal-times-scroll::-webkit-scrollbar { width: 4px; }
+    .cal-times-scroll::-webkit-scrollbar-thumb { background: #b2d8f0; border-radius: 4px; }
+    .cal-placeholder {
+      padding: 20px 10px; text-align: center; font-size: 13px; color: #5a7fa8; line-height: 1.55;
+    }
+    .time-slot {
+      padding: 12px 10px; border-radius: 12px; border: 1.5px solid #d1e9f7; background: #f7fbff;
+      font-size: 14px; font-weight: 600; color: #0d1b2a;
+      text-align: center; cursor: pointer; font-family: inherit;
+      transition: background .18s, border-color .18s, transform .18s, box-shadow .18s; letter-spacing: -.2px;
+    }
+    .time-slot:hover:not(.time-slot--selected) { background: #dbeeff; border-color: #63b3ed; transform: translateX(-2px); }
+    .time-slot--selected {
+      background: linear-gradient(135deg, #4299e1, #2b6cb0);
+      color: #fff; border-color: transparent; box-shadow: 0 4px 16px rgba(49,130,206,.35);
+    }
+    .cal-footer {
+      border-top: 1px solid #d1e9f7; padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f0f8ff; gap: 16px; flex-wrap: wrap;
+    }
+    .cal-booking-msg {
+      font-size: 14px; font-weight: 500; color: #2d4a6e; line-height: 1.5; flex: 1; min-width: 180px;
+    }
+    .cal-booking-msg strong { color: #0d1b2a; font-weight: 700; }
+    .cal-booking-msg.cal-empty { color: #5a7fa8; font-style: italic; font-weight: 400; }
+    .cal-confirm-btn {
+      padding: 12px 24px; background: linear-gradient(135deg, #4299e1, #2b6cb0);
+      color: #fff; font-family: inherit; font-size: 14px; font-weight: 700;
+      border: none; border-radius: 12px; cursor: pointer;
+      transition: opacity .22s, transform .22s, box-shadow .22s;
+      box-shadow: 0 6px 20px rgba(49,130,206,.35); white-space: nowrap;
+      opacity: .4; pointer-events: none; letter-spacing: -.2px;
+    }
+    .cal-confirm-btn.cal-ready { opacity: 1; pointer-events: auto; }
+    .cal-confirm-btn.cal-ready:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(49,130,206,.45); }
+    @media (max-width: 640px) {
+      .cal-body { grid-template-columns: 1fr; }
+      .cal-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #d1e9f7, transparent); }
+      .cal-times-scroll { max-height: 140px; flex-direction: row; flex-wrap: wrap; }
+      .time-slot { min-width: 76px; flex: 1; }
+      .cal-left { padding: 18px 14px 14px; }
+      .cal-step-header { padding: 20px 18px 16px; }
+      .cal-footer { padding: 14px 18px; }
     }
 
     .funnel-confirm { text-align: center; padding: 14px 4px; }
@@ -2837,27 +2922,46 @@
         </div>
 
         <!-- STEP 6: BOOKING -->
-        <div class="funnel-panel launch-panel" data-panel="6" hidden>
+        <div class="funnel-panel launch-panel booking-panel" data-panel="6" hidden>
           <div class="funnel-card booking-card">
-            <div class="booking-cal-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-                <line x1="8" y1="14" x2="8.01" y2="14"/>
-                <line x1="12" y1="14" x2="12.01" y2="14"/>
-                <line x1="16" y1="14" x2="16.01" y2="14"/>
-                <line x1="8" y1="18" x2="8.01" y2="18"/>
-                <line x1="12" y1="18" x2="12.01" y2="18"/>
-              </svg>
+
+            <div class="cal-step-header">
+              <div class="funnel-eyebrow">Schedule</div>
+              <h2>Book Your Strategy Call</h2>
+              <p class="funnel-sub">30 minutes · No obligation · Pick a date and time that works for you. Google Calendar sends the confirmation.</p>
             </div>
-            <div class="funnel-eyebrow">Schedule</div>
-            <h2>Choose your live availability.</h2>
-            <p class="funnel-sub">Opens Google Calendar — pick any available slot and you'll get an instant confirmation email.</p>
-            <a class="funnel-btn booking-open-link" id="funnelBookingOpenBtn" href="https://calendar.app.google/nrmfrLcW2mooUNUz6" target="_blank" rel="noopener noreferrer">
-              Open Booking Calendar →
-            </a>
+
+            <div class="cal-body">
+              <div class="cal-left">
+                <div class="cal-nav">
+                  <button class="cal-nav-btn" id="calPrevBtn" type="button" aria-label="Previous month">‹</button>
+                  <span class="cal-month-label" id="calMonthLabel"></span>
+                  <button class="cal-nav-btn" id="calNextBtn" type="button" aria-label="Next month">›</button>
+                </div>
+                <div class="cal-grid" id="calGrid">
+                  <div class="cal-dow">Sun</div>
+                  <div class="cal-dow">Mon</div>
+                  <div class="cal-dow">Tue</div>
+                  <div class="cal-dow">Wed</div>
+                  <div class="cal-dow">Thu</div>
+                  <div class="cal-dow">Fri</div>
+                  <div class="cal-dow">Sat</div>
+                </div>
+              </div>
+              <div class="cal-divider"></div>
+              <div class="cal-right">
+                <div class="cal-times-label">Available Times</div>
+                <div class="cal-times-scroll" id="calTimes">
+                  <div class="cal-placeholder">← Select a date<br/>to see open times</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-footer">
+              <div class="cal-booking-msg cal-empty" id="calBookingMsg">Select a date and time to continue</div>
+              <button class="cal-confirm-btn" id="calConfirmBtn" type="button">Confirm Booking →</button>
+            </div>
+
           </div>
         </div>
 
@@ -3677,6 +3781,7 @@
 	      const stage = overlay.querySelector(".funnel-stage");
 	      if (stage) stage.scrollTop = 0;
 	      if (step === 5) { initMeetingCard(); initStripePayment(); submitLead("reached_checkout"); }
+	      if (step === 6) initCalendar();
 	    }
 
     /* ---------- validation helpers ---------- */
@@ -4295,13 +4400,205 @@
 	    ============================================================ */
 	    let confirmationRedirectTimer = null;
 
-	    // Open calendar in new tab, then return user to homepage
-	    document.getElementById("funnelBookingOpenBtn").addEventListener("click", () => {
-	      setTimeout(() => {
-	        closeFunnel();
-	        window.scrollTo({ top: 0, behavior: "smooth" });
-	      }, 400);
-	    });
+	    // ── Calendar state ──
+	    const calState = {
+	      year: 0, month: 0,
+	      selectedDate: null, selectedTime: null,
+	      selectedDateObj: null, selectedSlot: null,
+	      availableSlots: [], loadingAvailability: false
+	    };
+	    const CAL_BLOCKED_DOW = [0, 6];
+	    const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+	    const CAL_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+	    function calPad(n) { return String(n).padStart(2, '0'); }
+	    function calDateKey(d) { return d.getFullYear() + '-' + calPad(d.getMonth()+1) + '-' + calPad(d.getDate()); }
+
+	    function calResetTimes(msg) {
+	      const el = document.getElementById('calTimes');
+	      if (el) el.innerHTML = '<div class="cal-placeholder">' + msg + '</div>';
+	    }
+
+	    function initCalendar() {
+	      if (calState.year !== 0) { calRender(); return; }
+	      const t = new Date();
+	      calState.year = t.getFullYear();
+	      calState.month = t.getMonth();
+	      calRender();
+	    }
+
+	    function calRender() {
+	      const { year, month } = calState;
+	      const label = document.getElementById('calMonthLabel');
+	      if (label) label.textContent = CAL_MONTHS[month] + ' ' + year;
+	      const grid = document.getElementById('calGrid');
+	      if (!grid) return;
+	      grid.querySelectorAll('.cal-day,.cal-blank').forEach(c => c.remove());
+
+	      const today = new Date(); today.setHours(0,0,0,0);
+	      const firstDay = new Date(year, month, 1).getDay();
+	      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+	      for (let i = 0; i < firstDay; i++) {
+	        const b = document.createElement('div'); b.className = 'cal-blank'; grid.appendChild(b);
+	      }
+	      for (let d = 1; d <= daysInMonth; d++) {
+	        const date = new Date(year, month, d); date.setHours(0,0,0,0);
+	        const cell = document.createElement('div');
+	        cell.className = 'cal-day'; cell.textContent = d;
+	        const isPast = date < today;
+	        const isToday = date.getTime() === today.getTime();
+	        const isWeekend = CAL_BLOCKED_DOW.includes(date.getDay());
+	        const key = calDateKey(date);
+	        if (isPast || isWeekend) {
+	          cell.classList.add('cal-day--disabled');
+	        } else {
+	          if (isToday) cell.classList.add('cal-day--today');
+	          if (calState.selectedDate === key) cell.classList.add('cal-day--selected');
+	          cell.addEventListener('click', () => calSelectDate(date));
+	        }
+	        grid.appendChild(cell);
+	      }
+	    }
+
+	    async function calSelectDate(dateObj) {
+	      const key = calDateKey(dateObj);
+	      calState.selectedDate = key; calState.selectedTime = null;
+	      calState.selectedDateObj = dateObj; calState.selectedSlot = null;
+	      calState.availableSlots = [];
+	      calRender(); calUpdateMsg();
+	      await calLoadSlots(key);
+	    }
+
+	    async function calLoadSlots(key) {
+	      const btn = document.getElementById('calConfirmBtn');
+	      calState.loadingAvailability = true;
+	      if (btn) btn.classList.remove('cal-ready');
+	      calResetTimes('Checking availability…');
+	      try {
+	        const res = await fetch('/api/check-availability?date=' + encodeURIComponent(key));
+	        const data = await res.json().catch(() => ({}));
+	        if (!res.ok) throw new Error(data.error || 'Failed to load availability');
+	        calState.availableSlots = Array.isArray(data.availableSlots) ? data.availableSlots : [];
+	        if (!calState.availableSlots.length) {
+	          calResetTimes('No times available.<br/>Please choose another day.');
+	          calUpdateMsg(); return;
+	        }
+	        calRenderSlots();
+	      } catch (err) {
+	        calResetTimes('Could not load times.<br/>Please try another day.');
+	        calUpdateMsg(err.message);
+	      } finally {
+	        calState.loadingAvailability = false;
+	      }
+	    }
+
+	    function calRenderSlots() {
+	      const container = document.getElementById('calTimes');
+	      if (!container) return;
+	      container.innerHTML = '';
+	      calState.availableSlots.forEach(slot => {
+	        const btn = document.createElement('button');
+	        btn.className = 'time-slot'; btn.type = 'button';
+	        btn.textContent = slot.label || slot.startLabel || '';
+	        if (calState.selectedSlot && calState.selectedSlot.start === slot.start) btn.classList.add('time-slot--selected');
+	        btn.addEventListener('click', () => {
+	          calState.selectedSlot = slot; calState.selectedTime = slot.label || '';
+	          container.querySelectorAll('.time-slot').forEach(b => b.classList.remove('time-slot--selected'));
+	          btn.classList.add('time-slot--selected'); calUpdateMsg();
+	        });
+	        container.appendChild(btn);
+	      });
+	    }
+
+	    function calUpdateMsg(override) {
+	      const msg = document.getElementById('calBookingMsg');
+	      const btn = document.getElementById('calConfirmBtn');
+	      if (!msg || !btn) return;
+	      if (override) {
+	        msg.classList.remove('cal-empty'); msg.textContent = override; btn.classList.remove('cal-ready'); return;
+	      }
+	      if (calState.selectedDate && calState.selectedTime && calState.selectedDateObj) {
+	        const d = calState.selectedDateObj;
+	        msg.classList.remove('cal-empty');
+	        msg.innerHTML = 'Set for <strong>' + CAL_DAYS[d.getDay()] + ', ' + CAL_MONTHS[d.getMonth()] + ' ' + d.getDate() + '</strong> at <strong>' + calState.selectedTime + '</strong>.';
+	        btn.classList.add('cal-ready');
+	      } else if (calState.selectedDate) {
+	        msg.classList.add('cal-empty');
+	        msg.textContent = calState.loadingAvailability ? 'Checking open times…' : 'Now pick a time →';
+	        btn.classList.remove('cal-ready');
+	      } else {
+	        msg.classList.add('cal-empty');
+	        msg.textContent = 'Select a date and time to continue';
+	        btn.classList.remove('cal-ready');
+	      }
+	    }
+
+	    function calPrevMonth() {
+	      const today = new Date();
+	      if (calState.month === 0) { calState.month = 11; calState.year--; } else { calState.month--; }
+	      if (calState.year < today.getFullYear() || (calState.year === today.getFullYear() && calState.month < today.getMonth())) {
+	        calState.month = today.getMonth(); calState.year = today.getFullYear();
+	      }
+	      calState.selectedDate = null; calState.selectedTime = null;
+	      calState.selectedDateObj = null; calState.selectedSlot = null; calState.availableSlots = [];
+	      calRender(); calResetTimes('← Select a date<br/>to see open times'); calUpdateMsg();
+	    }
+
+	    function calNextMonth() {
+	      if (calState.month === 11) { calState.month = 0; calState.year++; } else { calState.month++; }
+	      calState.selectedDate = null; calState.selectedTime = null;
+	      calState.selectedDateObj = null; calState.selectedSlot = null; calState.availableSlots = [];
+	      calRender(); calResetTimes('← Select a date<br/>to see open times'); calUpdateMsg();
+	    }
+
+	    async function calConfirmBooking() {
+	      if (!calState.selectedDate || !calState.selectedTime || !calState.selectedSlot) return;
+	      const btn = document.getElementById('calConfirmBtn');
+	      const msg = document.getElementById('calBookingMsg');
+	      const origText = btn ? btn.textContent : '';
+	      if (btn) { btn.disabled = true; btn.textContent = 'Booking…'; }
+	      if (msg) { msg.classList.remove('cal-empty'); msg.textContent = 'Saving your appointment…'; }
+
+	      const fullName = document.getElementById('funnelName')?.value?.trim() || state.name || '';
+	      const nameParts = fullName.split(/\s+/);
+	      const payload = {
+	        email: document.getElementById('funnelEmail')?.value?.trim() || state.email || '',
+	        fname: nameParts[0] || '',
+	        lname: nameParts.slice(1).join(' ') || '',
+	        biz: document.getElementById('funnelBusiness')?.value?.trim() || state.business || '',
+	        selectedDate: calState.selectedDate,
+	        slotStart: calState.selectedSlot.start,
+	        slotEnd: calState.selectedSlot.end,
+	        answers: { goal: state.goal || '', budget: state.budget || '', timeline: state.timeline || '' }
+	      };
+
+	      try {
+	        const res = await fetch('/api/create-booking', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+	          body: JSON.stringify(payload)
+	        });
+	        const data = await res.json().catch(() => ({}));
+	        if (!res.ok) throw new Error(data.error || 'That time is no longer available.');
+
+	        if (btn) { btn.textContent = 'Confirmed ✓'; btn.style.background = 'linear-gradient(135deg,#38a169,#276749)'; }
+	        if (msg) {
+	          const d = calState.selectedDateObj;
+	          msg.innerHTML = 'Booked for <strong>' + CAL_DAYS[d.getDay()] + ', ' + CAL_MONTHS[d.getMonth()] + ' ' + d.getDate() + '</strong> at <strong>' + calState.selectedTime + '</strong>. ✅';
+	        }
+	        submitLead('booked');
+	        setTimeout(() => showConfirmation(true), 700);
+	      } catch (err) {
+	        if (btn) { btn.disabled = false; btn.textContent = origText; btn.style.background = ''; }
+	        calUpdateMsg(err.message || 'Booking failed. Please try again.');
+	        if (calState.selectedDate) await calLoadSlots(calState.selectedDate);
+	      }
+	    }
+
+	    document.getElementById('calPrevBtn')?.addEventListener('click', calPrevMonth);
+	    document.getElementById('calNextBtn')?.addEventListener('click', calNextMonth);
+	    document.getElementById('calConfirmBtn')?.addEventListener('click', calConfirmBooking);
 
 	    function showConfirmation(paid) {
 	      if (confirmationRedirectTimer) {
@@ -4313,8 +4610,11 @@
 	      const sub = document.getElementById("funnelConfirmSub");
 	      if (paid) {
 	        icon.textContent = "✓";
-	        heading.textContent = "Your strategy call is confirmed.";
-	        sub.textContent = "Your payment is complete. Google Calendar will send the event confirmation after you choose your time.";
+	        heading.textContent = "You're all booked!";
+	        const d = calState.selectedDateObj;
+	        sub.textContent = d
+	          ? "Your strategy call is confirmed for " + CAL_DAYS[d.getDay()] + ", " + CAL_MONTHS[d.getMonth()] + " " + d.getDate() + " at " + calState.selectedTime + ". Check your email for the calendar invite."
+	          : "Your strategy call is confirmed. Check your email for the calendar invite.";
 	      } else {
 	        icon.textContent = "✓";
 	        heading.textContent = "Got it. Your site plan is saved.";

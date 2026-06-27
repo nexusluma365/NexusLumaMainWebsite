@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "npx netlify-cli@latest dev --port 8888",
     "check": "node scripts/check.mjs"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
   }
 }
-

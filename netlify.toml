@@ -36,3 +36,18 @@
   from = "/api/submit-lead"
   to = "/.netlify/functions/submit-lead"
   status = 200
+
+[[redirects]]
+  from = "/api/check-availability"
+  to = "/.netlify/functions/check-availability"
+  status = 200
+
+[[redirects]]
+  from = "/api/create-booking"
+  to = "/.netlify/functions/create-booking"
+  status = 200
+
+[[redirects]]
+  from = "/api/google-auth-callback"
+  to = "/.netlify/functions/google-auth-callback"
+  status = 200
