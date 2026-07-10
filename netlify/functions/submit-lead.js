@@ -21,8 +21,22 @@ exports.handler = async (event) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: event.body,
-      redirect: "follow"
+      redirect: "manual"
     });
+
+    if (response.status >= 300 && response.status < 400) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          ok: true,
+          redirected: true,
+          status: response.status,
+          message: "Tracking request handed off to Google Apps Script."
+        })
+      };
+    }
+
     const text = await response.text();
     let result;
     try { result = JSON.parse(text); } catch { result = { raw: text }; }
