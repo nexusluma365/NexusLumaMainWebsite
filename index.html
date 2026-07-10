@@ -3677,8 +3677,36 @@
 	      qIndex: 1, // 1..5 within step 4
 	      paid: false,
 	      skippedAnalysis: false,
-	      paymentIntentId: ""
+	      paymentIntentId: "",
+	      sessionId: getOrCreateTrackingSessionId()
 	    };
+
+	    function createTrackingSessionId() {
+	      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+	        return window.crypto.randomUUID();
+	      }
+	      return "nl-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+	    }
+
+	    function getOrCreateTrackingSessionId() {
+	      try {
+	        const key = "nexusLumaAppointmentSessionId";
+	        const existing = window.sessionStorage.getItem(key);
+	        if (existing) return existing;
+	        const created = createTrackingSessionId();
+	        window.sessionStorage.setItem(key, created);
+	        return created;
+	      } catch (_) {
+	        return createTrackingSessionId();
+	      }
+	    }
+
+	    function resetTrackingSessionId() {
+	      state.sessionId = createTrackingSessionId();
+	      try {
+	        window.sessionStorage.setItem("nexusLumaAppointmentSessionId", state.sessionId);
+	      } catch (_) {}
+	    }
 
     /* ---------- meeting card (always shows live date) ---------- */
     const PM_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -3737,6 +3765,7 @@
       goToStep(state.step || 1, true);
     }
     function resetFunnelState() {
+	      resetTrackingSessionId();
 	      state.step = 1; state.email = ""; state.url = ""; state.resultData = null;
 	      state.name = ""; state.business = ""; state.goal = ""; state.budget = "";
 	      state.timeline = ""; state.qIndex = 1; state.paid = false; state.skippedAnalysis = false; state.paymentIntentId = "";
@@ -3783,8 +3812,10 @@
 	      updateTabs(step);
 	      const stage = overlay.querySelector(".funnel-stage");
 	      if (stage) stage.scrollTop = 0;
-	      if (step === 5) { initMeetingCard(); initStripePayment(); submitLead("reached_checkout"); }
-	      if (step === 6) initCalendar();
+	      trackVisitorStep("step_" + step + "_viewed", { status: "step_" + step + "_viewed" });
+	      if (step === 4) trackVisitorStep("questionnaire_started");
+	      if (step === 5) { initMeetingCard(); initStripePayment(); submitLead("reached_checkout", { event: "checkout_reached" }); }
+	      if (step === 6) { trackVisitorStep("booking_reached"); initCalendar(); }
 	    }
 
     /* ---------- validation helpers ---------- */
@@ -3797,6 +3828,45 @@
       const s = v.trim();
       return s.startsWith("http") ? s : "https://" + s;
     }
+
+	    function trackingPayload(eventName, extra) {
+	      const paymentName = document.getElementById("paymentName")?.value?.trim() || "";
+	      const paymentEmail = document.getElementById("paymentEmail")?.value?.trim() || "";
+
+	      return Object.assign({
+	        sessionId: state.sessionId,
+	        event: eventName,
+	        status: eventName,
+	        step: state.step,
+	        qIndex: state.qIndex,
+	        pageUrl: window.location.href,
+	        referrer: document.referrer || "",
+	        userAgent: navigator.userAgent || "",
+	        name: paymentName || state.name || "",
+	        email: paymentEmail || state.email || "",
+	        business: state.business || "",
+	        url: state.url || "",
+	        goal: state.goal || "",
+	        budget: state.budget || "",
+	        timeline: state.timeline || "",
+	        score: state.resultData?.overall_score || "",
+	        paymentIntentId: state.paymentIntentId || ""
+	      }, extra || {});
+	    }
+
+	    function trackVisitorStep(eventName, extra) {
+	      try {
+	        const payload = trackingPayload(eventName, extra);
+	        fetch("/api/submit-lead", {
+	          method: "POST",
+	          headers: { "Content-Type": "application/json" },
+	          body: JSON.stringify(payload),
+	          keepalive: true
+	        }).catch(() => {});
+	      } catch (_) {
+	        /* Non-blocking tracking must never interrupt the funnel. */
+	      }
+	    }
 
     /* ============================================================
        STEP 1 — EMAIL
@@ -3811,6 +3881,7 @@
         return;
       }
       state.email = emailInput.value.trim();
+      trackVisitorStep("email_submitted", { email: state.email });
       goToStep(2);
     });
     emailInput.addEventListener("input", () => { emailInput.classList.remove("error"); emailError.textContent = ""; });
@@ -3836,6 +3907,7 @@
         return;
       }
       state.url = normaliseUrl(urlInput.value);
+      trackVisitorStep("website_submitted", { url: state.url });
       goToStep(3);
 	      runAnalysis();
 	    });
@@ -3844,6 +3916,7 @@
 	      state.resultData = null;
 	      state.skippedAnalysis = true;
 	      state.qIndex = 1;
+	      trackVisitorStep("no_website");
 	      showQuestion(1);
 	      goToStep(4);
 	    });
@@ -4079,6 +4152,7 @@
 
     async function runAnalysis() {
       startLoadingCycle();
+      trackVisitorStep("analysis_started", { url: state.url });
       try {
         const resp = await fetch("/api/analyze-website", {
           method: "POST",
@@ -4098,9 +4172,11 @@
 
         stopLoadingCycle();
         state.resultData = resultData;
+        trackVisitorStep("analysis_completed", { score: resultData.overall_score || "" });
         renderResults(resultData);
       } catch (error) {
         stopLoadingCycle();
+        trackVisitorStep("analysis_error", { analysisError: error.message || "The analyzer could not complete the scan." });
         modalBody.innerHTML = `
 <div class="analyzer-loading">
   <div class="analyzer-loading-step">${error.message || "The analyzer could not complete the scan."}</div>
@@ -4184,23 +4260,28 @@
           return;
         }
         state.name = nameInput.value.trim();
+        trackVisitorStep("name_submitted", { name: state.name });
       } else if (state.qIndex === 2) {
         state.business = businessInput.value.trim();
+        trackVisitorStep("business_submitted", { business: state.business });
       } else if (state.qIndex === 3) {
         if (!state.goal) {
           document.getElementById("funnelGoalError").textContent = "Please pick one option.";
           return;
         }
+        trackVisitorStep("goal_selected", { goal: state.goal });
       } else if (state.qIndex === 4) {
         if (!state.budget) {
           document.getElementById("funnelBudgetError").textContent = "Please pick a budget range.";
           return;
         }
+        trackVisitorStep("budget_selected", { budget: state.budget });
       } else if (state.qIndex === 5) {
         if (!state.timeline) {
           document.getElementById("funnelTimelineError").textContent = "Please pick a launch time.";
           return;
         }
+        trackVisitorStep("timeline_selected", { timeline: state.timeline });
         // last question complete -> go to payment
         goToStep(5);
         return;
@@ -4226,36 +4307,22 @@
 	    let leadRowCreated = false;
 
 	    function leadPayload(status, extra) {
-	      return JSON.stringify(Object.assign({
-	        name: (paymentNameInput && paymentNameInput.value.trim()) || state.name || "",
-	        email: (paymentEmailInput && paymentEmailInput.value.trim()) || state.email || "",
-	        business: state.business || "",
-	        url: state.url || "",
-	        goal: state.goal || "",
-	        budget: state.budget || "",
-	        timeline: state.timeline || "",
-	        score: state.resultData?.overall_score || "",
-	        status
-	      }, extra || {}));
+	      return JSON.stringify(trackingPayload(status, Object.assign({
+	        status,
+	        updateEmail: state.email || (paymentEmailInput && paymentEmailInput.value.trim()) || ""
+	      }, extra || {})));
 	    }
 
 	    async function submitLead(status, extra) {
 	      try {
 	        const payload = leadPayload(status, extra);
-	        if (leadRowCreated && status !== "reached_checkout") {
-	          await fetch("/api/submit-lead", {
-	            method: "POST",
-	            headers: { "Content-Type": "application/json" },
-	            body: JSON.stringify(Object.assign(JSON.parse(payload), { updateEmail: state.email || (paymentEmailInput && paymentEmailInput.value.trim()) || "" }))
-	          });
-	        } else {
-	          await fetch("/api/submit-lead", {
-	            method: "POST",
-	            headers: { "Content-Type": "application/json" },
-	            body: payload
-	          });
-	          if (status === "reached_checkout") leadRowCreated = true;
-	        }
+	        await fetch("/api/submit-lead", {
+	          method: "POST",
+	          headers: { "Content-Type": "application/json" },
+	          body: payload,
+	          keepalive: true
+	        });
+	        if (status === "reached_checkout") leadRowCreated = true;
 	      } catch (_) { /* non-blocking — never interrupt the user flow */ }
 	    }
 
@@ -4264,7 +4331,7 @@
 	      const email = (paymentEmailInput && paymentEmailInput.value.trim()) || state.email || "";
 	      if (!email) return;
 	      navigator.sendBeacon("/api/submit-lead",
-	        new Blob([JSON.stringify({ updateEmail: email, status: "abandoned" })], { type: "application/json" })
+	        new Blob([JSON.stringify(trackingPayload("abandoned", { updateEmail: email, status: "abandoned" }))], { type: "application/json" })
 	      );
 	    }
 
@@ -4356,6 +4423,7 @@
 	        if (!isValidEmail(receiptEmail)) {
 	          throw new Error("Please enter a valid email for your receipt.");
 	        }
+	        trackVisitorStep("payment_started", { email: receiptEmail, status: "payment_started" });
 	        const intentResponse = await fetch("/api/create-payment-intent", {
 	          method: "POST",
 	          headers: { "Content-Type": "application/json" },
@@ -4496,6 +4564,7 @@
 	      calState.selectedDate = key; calState.selectedTime = null;
 	      calState.selectedDateObj = dateObj; calState.selectedSlot = null;
 	      calState.availableSlots = [];
+	      trackVisitorStep("booking_date_selected", { bookingDate: key });
 	      calRender(); calUpdateMsg();
 	      await calLoadSlots(key);
 	    }
@@ -4543,6 +4612,12 @@
 	        if (calState.selectedSlot && calState.selectedSlot.start === slot.start) btn.classList.add('time-slot--selected');
 	        btn.addEventListener('click', () => {
 	          calState.selectedSlot = slot; calState.selectedTime = slot.label || '';
+	          trackVisitorStep("booking_time_selected", {
+	            bookingDate: calState.selectedDate || "",
+	            bookingTime: calState.selectedTime || "",
+	            slotStart: slot.start || "",
+	            slotEnd: slot.end || ""
+	          });
 	          container.querySelectorAll('.time-slot').forEach(b => b.classList.remove('time-slot--selected'));
 	          btn.classList.add('time-slot--selected'); calUpdateMsg();
 	        });
@@ -4630,7 +4705,14 @@
 	          const d = calState.selectedDateObj;
 	          msg.innerHTML = 'Booked for <strong>' + CAL_DAYS[d.getDay()] + ', ' + CAL_MONTHS[d.getMonth()] + ' ' + d.getDate() + '</strong> at <strong>' + calState.selectedTime + '</strong>. ✅';
 	        }
-	        submitLead('booked');
+	        submitLead('booked', {
+	          bookingDate: calState.selectedDate,
+	          bookingTime: calState.selectedTime,
+	          slotStart: calState.selectedSlot.start,
+	          slotEnd: calState.selectedSlot.end,
+	          eventId: data.eventId || '',
+	          eventLink: data.htmlLink || ''
+	        });
 	        setTimeout(() => showConfirmation(true), 700);
 	      } catch (err) {
 	        if (btn) { btn.disabled = false; btn.textContent = origText; btn.style.background = ''; }
@@ -4668,6 +4750,7 @@
 	        sub.textContent = "We saved your review and answers. We will follow up so you can launch when you are ready.";
 	      }
 	      goToStep(7);
+	      trackVisitorStep("confirmation_shown", { status: paid ? "confirmation_shown" : "saved_for_later" });
 	      if (paid) {
 	        confirmationRedirectTimer = setTimeout(() => {
 	          closeFunnel();
