@@ -4277,6 +4277,16 @@
 	      if (paymentError) paymentError.textContent = message || "";
 	    }
 
+	    const PAYMENT_FAILURE_MESSAGE = "Payment was not successful but no worries happens to the best of us Please try another payment method";
+
+	    function getPaymentErrorMessage(message) {
+	      if (!message) return "Unable to complete payment.";
+	      if (/payment|stripe|intent|card|declin|mode|key|secret/i.test(String(message))) {
+	        return PAYMENT_FAILURE_MESSAGE;
+	      }
+	      return message;
+	    }
+
 	    function loadStripeJs() {
 	      if (window.Stripe) return Promise.resolve();
 	      return new Promise((resolve, reject) => {
@@ -4380,7 +4390,7 @@
 	        submitLead("purchased", { paymentIntentId: state.paymentIntentId });
 	        goToStep(6);
 	      } catch (error) {
-	        setPaymentError(error.message || "Unable to complete payment.");
+	        setPaymentError(getPaymentErrorMessage(error.message));
 	        updatePaymentButton(false, originalLabel);
 	      }
 	    });

@@ -9,6 +9,9 @@ function json(statusCode, body) {
   };
 }
 
+const PAYMENT_FAILURE_MESSAGE =
+  "Payment was not successful but no worries happens to the best of us Please try another payment method";
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Use POST to start payment." });
@@ -60,11 +63,13 @@ exports.handler = async (event) => {
 
     const payload = await stripeResponse.json();
     if (!stripeResponse.ok) {
-      return json(502, { error: payload.error?.message || "Stripe payment setup failed." });
+      console.error("Stripe payment intent setup failed:", payload.error?.message || payload);
+      return json(502, { error: PAYMENT_FAILURE_MESSAGE });
     }
 
     return json(200, { clientSecret: payload.client_secret, paymentIntentId: payload.id });
   } catch (error) {
-    return json(500, { error: "Unable to start payment.", details: error.message });
+    console.error("Unable to start payment:", error);
+    return json(500, { error: PAYMENT_FAILURE_MESSAGE });
   }
 };
