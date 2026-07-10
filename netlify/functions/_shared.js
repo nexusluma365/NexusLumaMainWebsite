@@ -1,9 +1,8 @@
-const { google } = require('googleapis');
-
 const BOOKING_TIMEZONE = process.env.BOOKING_TIMEZONE || 'America/New_York';
 const SLOT_START_HOUR = Number(process.env.BOOKING_START_HOUR || 9);
 const SLOT_END_HOUR = Number(process.env.BOOKING_END_HOUR || 17);
 const SLOT_MINUTES = Number(process.env.BOOKING_SLOT_MINUTES || 30);
+const DEFAULT_GOOGLE_CALENDAR_BOOKING_URL = 'https://calendar.app.google/nrmfrLcW2mooUNUz6';
 
 function hasGoogleCalendarConfig() {
   return Boolean(
@@ -17,6 +16,13 @@ function hasGoogleCalendarConfig() {
 function createCalendarClient() {
   if (!hasGoogleCalendarConfig()) {
     throw new Error('Google Calendar environment variables are not configured.');
+  }
+
+  let google;
+  try {
+    google = require('googleapis').google;
+  } catch (error) {
+    throw new Error('The googleapis package is not installed or was not bundled.');
   }
 
   const oauth2Client = new google.auth.OAuth2(
@@ -175,6 +181,22 @@ function makeJsonResponse(statusCode, payload) {
   };
 }
 
+function getGoogleCalendarBookingUrl() {
+  return process.env.GOOGLE_CALENDAR_BOOKING_URL || DEFAULT_GOOGLE_CALENDAR_BOOKING_URL;
+}
+
+function makeCalendarErrorResponse(error, fallbackMessage) {
+  const message =
+    fallbackMessage ||
+    'Live calendar availability is temporarily unavailable. Please use the booking link instead.';
+
+  return makeJsonResponse(503, {
+    error: message,
+    bookingUrl: getGoogleCalendarBookingUrl(),
+    retryable: true
+  });
+}
+
 function makeTextResponse(statusCode, body, contentType = 'text/plain; charset=utf-8') {
   return {
     statusCode,
@@ -194,9 +216,11 @@ module.exports = {
   buildSlots,
   createCalendarClient,
   formatSlotLabel,
+  getGoogleCalendarBookingUrl,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
   isWeekday,
+  makeCalendarErrorResponse,
   makeJsonResponse,
   makeTextResponse,
   parseDateKey,

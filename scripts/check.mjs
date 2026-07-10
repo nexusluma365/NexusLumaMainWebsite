@@ -15,6 +15,10 @@ writeFileSync(inlineScriptPath, scripts);
 const files = [
   inlineScriptPath,
   "netlify/functions/analyze-website.js",
+  "netlify/functions/_shared.js",
+  "netlify/functions/calendar-config.js",
+  "netlify/functions/check-availability.js",
+  "netlify/functions/create-booking.js",
   "netlify/functions/create-upgrade-payment.js",
   "netlify/functions/stripe-config.js"
 ];
@@ -25,4 +29,3 @@ for (const file of files) {
 }
 
 console.log("Syntax checks passed.");
-

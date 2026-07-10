@@ -4422,6 +4422,23 @@
 	      if (el) el.innerHTML = '<div class="cal-placeholder">' + msg + '</div>';
 	    }
 
+	    function calEscapeHtml(value) {
+	      return String(value || '')
+	        .replace(/&/g, '&amp;')
+	        .replace(/</g, '&lt;')
+	        .replace(/>/g, '&gt;')
+	        .replace(/"/g, '&quot;')
+	        .replace(/'/g, '&#39;');
+	    }
+
+	    function calShowBookingFallback(message, bookingUrl) {
+	      const safeUrl = calEscapeHtml(bookingUrl || 'https://calendar.app.google/nrmfrLcW2mooUNUz6');
+	      calResetTimes(
+	        calEscapeHtml(message || 'Live times are temporarily unavailable.') +
+	        '<br/><br/><a href="' + safeUrl + '" target="_blank" rel="noopener">Book on Google Calendar</a>'
+	      );
+	    }
+
 	    function initCalendar() {
 	      if (calState.year !== 0) { calRender(); return; }
 	      const t = new Date();
@@ -4481,7 +4498,16 @@
 	      try {
 	        const res = await fetch('/api/check-availability?date=' + encodeURIComponent(key));
 	        const data = await res.json().catch(() => ({}));
-	        if (!res.ok) throw new Error(data.error || 'Failed to load availability');
+	        if (!res.ok) {
+	          const error = new Error(data.error || 'Failed to load availability');
+	          error.bookingUrl = data.bookingUrl || '';
+	          throw error;
+	        }
+	        if (data.calendarUnavailable && data.bookingUrl) {
+	          calShowBookingFallback(data.error || 'Live times are temporarily unavailable.', data.bookingUrl);
+	          calUpdateMsg(data.error || 'Live times are temporarily unavailable.');
+	          return;
+	        }
 	        calState.availableSlots = Array.isArray(data.availableSlots) ? data.availableSlots : [];
 	        if (!calState.availableSlots.length) {
 	          calResetTimes('No times available.<br/>Please choose another day.');
@@ -4489,7 +4515,7 @@
 	        }
 	        calRenderSlots();
 	      } catch (err) {
-	        calResetTimes('Could not load times.<br/>Please try another day.');
+	        calShowBookingFallback(err.message, err.bookingUrl);
 	        calUpdateMsg(err.message);
 	      } finally {
 	        calState.loadingAvailability = false;
@@ -4583,7 +4609,11 @@
 	          body: JSON.stringify(payload)
 	        });
 	        const data = await res.json().catch(() => ({}));
-	        if (!res.ok) throw new Error(data.error || 'That time is no longer available.');
+	        if (!res.ok) {
+	          const error = new Error(data.error || 'That time is no longer available.');
+	          error.bookingUrl = data.bookingUrl || '';
+	          throw error;
+	        }
 
 	        if (btn) { btn.textContent = 'Confirmed ✓'; }
 	        if (msg) {
@@ -4595,7 +4625,11 @@
 	      } catch (err) {
 	        if (btn) { btn.disabled = false; btn.textContent = origText; btn.style.background = ''; }
 	        calUpdateMsg(err.message || 'Booking failed. Please try again.');
-	        if (calState.selectedDate) await calLoadSlots(calState.selectedDate);
+	        if (err.bookingUrl) {
+	          calShowBookingFallback(err.message || 'Booking failed. Please use the Google Calendar link.', err.bookingUrl);
+	        } else if (calState.selectedDate) {
+	          await calLoadSlots(calState.selectedDate);
+	        }
 	      }
 	    }
 

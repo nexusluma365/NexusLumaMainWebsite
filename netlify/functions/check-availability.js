@@ -2,6 +2,7 @@ const {
   BOOKING_TIMEZONE,
   buildSlots,
   createCalendarClient,
+  getGoogleCalendarBookingUrl,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
   isWeekday,
@@ -76,8 +77,14 @@ exports.handler = async (event) => {
     });
   } catch (error) {
     console.error('check-availability failed:', error);
-    return makeJsonResponse(500, {
-      error: error && error.message ? error.message : 'Unable to load availability.'
+    return makeJsonResponse(200, {
+      date: dateKey,
+      timeZone: BOOKING_TIMEZONE,
+      mode: 'fallback',
+      calendarUnavailable: true,
+      error: 'Live availability is temporarily unavailable.',
+      bookingUrl: getGoogleCalendarBookingUrl(),
+      availableSlots: []
     });
   }
 };

@@ -4,6 +4,7 @@ const {
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
   isWeekday,
+  makeCalendarErrorResponse,
   makeJsonResponse,
   parseDateKey
 } = require('./_shared');
@@ -134,8 +135,6 @@ exports.handler = async (event) => {
     });
   } catch (error) {
     console.error('create-booking failed:', error);
-    return makeJsonResponse(500, {
-      error: error && error.message ? error.message : 'Unable to create booking.'
-    });
+    return makeCalendarErrorResponse(error, 'Unable to create the calendar invite automatically.');
   }
 };
