@@ -1,6 +1,6 @@
 // Env var takes priority; GScript URL is public by design so the fallback is safe
 const SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL ||
-  "https://script.google.com/macros/s/AKfycby5aDm2UxjtWBOYZTRPEqtgYaFWxOtBd1aMjYY-tLZTmNAsYVewmd5pjc29-iV-UgA/exec";
+  "https://script.google.com/macros/s/AKfycbwFSCg833xZXupw09CkMRihS4hmyhFHzwBnkXQGeWDXCxMq9S0frgMUX5roA__fnNQ/exec";
 
 exports.handler = async (event) => {
   const headers = {
