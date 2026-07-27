@@ -9,10 +9,11 @@ function json(statusCode, body) {
   };
 }
 
-// Env var takes priority; publishable key is designed to be client-visible
-const PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY ||
-  "pk_live_51TeycBPJOp8s8XsSjWLZD8n3JweuczqhYYgoJKLkiNfogQUnveNxlB3YMOM8GPrBAd8YCWYNXxVv4vKdgcoftxoR00IsTaLRDD";
-
 exports.handler = async () => {
-  return json(200, { publishableKey: PUBLISHABLE_KEY });
+  const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+  if (!publishableKey) {
+    return json(500, { error: "STRIPE_PUBLISHABLE_KEY is not configured." });
+  }
+
+  return json(200, { publishableKey });
 };

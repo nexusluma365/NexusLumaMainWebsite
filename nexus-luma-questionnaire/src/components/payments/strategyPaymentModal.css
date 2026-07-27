@@ -1,0 +1,942 @@
+/* ============================================================================
+   Nexus Luma — Strategy Payment Modal — Styles
+   Design language: deep indigo/navy gradient backdrop, frosted glass card,
+   warm gold accent for the primary action, restrained motion.
+   ============================================================================ */
+
+:root {
+  --nl-bg-deep: #0b1130;
+  --nl-bg-mid: #1c2b63;
+  --nl-bg-light: #3f5bb8;
+  --nl-checkout-bg: #f7f9fd;
+  --nl-checkout-border: #dde3f0;
+  --nl-checkout-text: #222638;
+  --nl-checkout-muted: #7a8193;
+  --nl-summary-blue: #4e63d7;
+  --nl-summary-blue-dark: #4359ca;
+  --nl-glass-bg: rgba(255, 255, 255, 0.08);
+  --nl-glass-border: rgba(255, 255, 255, 0.16);
+  --nl-glass-bg-strong: rgba(255, 255, 255, 0.12);
+  --nl-text-primary: #f5f7ff;
+  --nl-text-secondary: rgba(245, 247, 255, 0.72);
+  --nl-text-tertiary: rgba(245, 247, 255, 0.52);
+  --nl-accent-gold: #e3b04b;
+  --nl-accent-gold-hover: #f0c163;
+  --nl-accent-gold-text: #241705;
+  --nl-success: #4ade80;
+  --nl-error: #f87171;
+  --nl-error-bg: rgba(248, 113, 113, 0.12);
+  --nl-error-border: rgba(248, 113, 113, 0.35);
+  --nl-radius-lg: 20px;
+  --nl-radius-md: 12px;
+  --nl-radius-sm: 8px;
+  --nl-shadow-modal: 0 30px 80px rgba(3, 6, 20, 0.55);
+  --nl-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.nl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(18px, 2.5vw, 40px);
+  background: rgba(13, 22, 58, 0.74);
+  opacity: 0;
+  transition: opacity 260ms ease;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nl-overlay[data-state="open"] {
+  opacity: 1;
+}
+
+.nl-overlay[data-state="closing"] {
+  opacity: 0;
+  transition-duration: 200ms;
+}
+
+.nl-modal {
+  position: relative;
+  width: 100%;
+  max-width: min(1680px, calc(100vw - 48px));
+  min-height: min-content;
+  max-height: none;
+  overflow: visible;
+  overflow-x: hidden;
+  border-radius: 8px;
+  background: var(--nl-checkout-bg);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 28px 90px rgba(8, 13, 38, 0.34);
+  color: var(--nl-checkout-text);
+  font-family: var(--nl-font-sans);
+  transform: scale(0.98);
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease;
+}
+
+.nl-overlay[data-state="open"] .nl-modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.nl-overlay[data-state="closing"] .nl-modal {
+  transform: scale(0.98);
+  opacity: 0;
+  transition-duration: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nl-overlay,
+  .nl-modal {
+    transition: none !important;
+  }
+}
+
+.nl-modal-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: auto;
+  padding: clamp(28px, 3.4vw, 56px) clamp(40px, 4.4vw, 76px) clamp(30px, 3.5vw, 58px);
+  overflow: visible;
+}
+
+.nl-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 47, 84, 0.16);
+  background: #ffffff;
+  color: #4a5168;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 150ms ease;
+  z-index: 2;
+}
+.nl-close-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.nl-close-btn:focus-visible,
+.nl-modal a:focus-visible,
+.nl-modal button:focus-visible,
+.nl-modal input:focus-visible {
+  outline: 2px solid var(--nl-accent-gold);
+  outline-offset: 2px;
+}
+
+.nl-brand-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(10px, 1.4vw, 18px);
+}
+
+.nl-brand-logo {
+  display: block;
+  width: 132px;
+  height: 54px;
+  object-fit: contain;
+  object-position: left center;
+  border-radius: 10px;
+}
+
+.nl-checkout-intro {
+  max-width: 820px;
+  margin-bottom: clamp(16px, 2vw, 28px);
+}
+
+.nl-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nl-summary-blue);
+  margin: 0 0 8px;
+}
+
+.nl-headline {
+  font-size: clamp(23px, 1.8vw, 32px);
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--nl-checkout-text);
+}
+
+.nl-description {
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.55;
+  color: var(--nl-checkout-muted);
+  margin: 0;
+}
+
+.nl-payment-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.nl-checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 440px);
+  gap: clamp(30px, 3.4vw, 56px);
+  align-items: start;
+  flex: 1;
+  min-height: 0;
+}
+
+.nl-payment-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.nl-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.nl-section-header h3,
+.nl-summary-top h3 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--nl-checkout-text);
+}
+
+.nl-secure-label {
+  color: #c6cbd6;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.nl-payment-method-card {
+  flex: initial;
+  border-radius: 6px;
+  border: 1px solid var(--nl-checkout-border);
+  background: #ffffff;
+  padding: clamp(22px, 2.3vw, 34px);
+  overflow: visible;
+}
+
+.nl-payment-method-card--empty {
+  min-height: 0;
+}
+
+.nl-payment-method-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+.nl-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--nl-checkout-text);
+}
+
+.nl-radio-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid var(--nl-summary-blue);
+  box-shadow: inset 0 0 0 4px #ffffff;
+  background: var(--nl-summary-blue);
+}
+
+.nl-card-brands {
+  border-radius: 4px;
+  background: #eef2ff;
+  color: var(--nl-summary-blue-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 6px 9px;
+  text-transform: uppercase;
+}
+
+.nl-payment-method-copy {
+  color: var(--nl-checkout-muted);
+  margin: 0 0 28px 28px;
+  max-width: 520px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.nl-unavailable-box {
+  margin-top: 24px;
+  border-radius: 6px;
+  border: 1px solid #ffd2d2;
+  background: #fff5f5;
+  color: #a93434;
+  padding: 18px 20px;
+}
+
+.nl-unavailable-title {
+  margin: 0 0 6px;
+  color: #8d2424;
+  font-weight: 800;
+}
+
+.nl-unavailable-box p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.nl-loading-box {
+  border-radius: 6px;
+  border: 1px solid var(--nl-checkout-border);
+  background: #ffffff;
+  color: var(--nl-checkout-muted);
+  padding: 22px 24px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nl-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nl-text-primary);
+  margin: 0 0 10px;
+}
+
+.nl-benefits {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nl-benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--nl-text-secondary);
+}
+.nl-benefits svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--nl-accent-gold);
+}
+
+.nl-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-radius: var(--nl-radius-md);
+  background: var(--nl-glass-bg);
+  border: 1px solid var(--nl-glass-border);
+  margin-bottom: 16px;
+}
+.nl-price-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--nl-text-primary);
+}
+.nl-price-label {
+  font-size: 12.5px;
+  color: var(--nl-text-tertiary);
+  text-align: right;
+}
+
+.nl-credit-callout {
+  border-radius: var(--nl-radius-md);
+  border: 1px solid rgba(227, 176, 75, 0.4);
+  background: linear-gradient(135deg, rgba(227, 176, 75, 0.16), rgba(227, 176, 75, 0.05));
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.nl-credit-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--nl-accent-gold);
+  margin: 0 0 6px;
+}
+.nl-credit-text {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--nl-text-secondary);
+  margin: 0;
+}
+
+.nl-risk-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--nl-text-tertiary);
+  margin: 0 0 20px;
+  font-style: italic;
+}
+
+.nl-value-box {
+  border-radius: var(--nl-radius-md);
+  background: var(--nl-glass-bg);
+  border: 1px solid var(--nl-glass-border);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.nl-value-heading {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--nl-text-primary);
+}
+.nl-value-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--nl-text-secondary);
+  margin: 0;
+}
+
+.nl-divider {
+  height: 1px;
+  background: var(--nl-glass-border);
+  margin: 20px 0;
+  border: none;
+}
+
+.nl-form-group {
+  margin-bottom: 14px;
+}
+.nl-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.nl-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #a1a7b5;
+  margin-bottom: 6px;
+}
+.nl-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--nl-checkout-border);
+  background: #ffffff;
+  color: var(--nl-checkout-text);
+  font-size: 14px;
+  font-family: var(--nl-font-sans);
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.nl-input::placeholder {
+  color: var(--nl-text-tertiary);
+}
+.nl-input:focus {
+  outline: none;
+  border-color: var(--nl-summary-blue);
+  background: #ffffff;
+}
+.nl-input[aria-invalid="true"] {
+  border-color: var(--nl-error);
+}
+.nl-field-error {
+  font-size: 12px;
+  color: var(--nl-error);
+  margin-top: 5px;
+}
+
+.nl-field-error--standalone {
+  margin: 0 0 16px;
+}
+
+.nl-payment-element-wrap {
+  padding: 15px 16px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid var(--nl-checkout-border);
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 44px;
+}
+
+.nl-card-element-shell {
+  box-shadow: 0 8px 20px rgba(31, 42, 79, 0.06);
+}
+
+.nl-card-element {
+  min-height: 24px;
+}
+
+.nl-summary-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: clamp(30px, 3vw, 48px) clamp(30px, 2.8vw, 44px) clamp(32px, 3vw, 50px);
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--nl-summary-blue), var(--nl-summary-blue-dark));
+  color: #ffffff;
+}
+
+.nl-summary-column::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 10px;
+  background: radial-gradient(circle at 10px -3px, transparent 12px, var(--nl-summary-blue-dark) 13px) 0 0 / 24px 12px repeat-x;
+}
+
+.nl-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.nl-summary-logo {
+  display: block;
+  width: 74px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 8px;
+  opacity: 0.95;
+}
+
+.nl-summary-top h3 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nl-summary-top span,
+.nl-summary-copy,
+.nl-summary-details dt,
+.nl-summary-totals dt {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.nl-summary-divider {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.62);
+  margin: clamp(16px, 2vh, 24px) 0;
+}
+
+.nl-summary-divider--dashed {
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.35) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.nl-summary-service {
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.nl-summary-copy {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 clamp(12px, 1.6vh, 18px);
+}
+
+.nl-summary-details,
+.nl-summary-totals {
+  display: grid;
+  gap: clamp(8px, 1.2vh, 12px);
+  margin: 0;
+}
+
+.nl-summary-details div,
+.nl-summary-totals div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.nl-summary-details dt,
+.nl-summary-totals dt,
+.nl-summary-details dd,
+.nl-summary-totals dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+.nl-summary-details dd,
+.nl-summary-totals dd {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: right;
+}
+
+.nl-summary-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: auto;
+  margin-bottom: clamp(18px, 3vh, 34px);
+}
+
+.nl-summary-total span {
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 700;
+}
+
+.nl-summary-total strong {
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.nl-submit-btn {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 5px;
+  border: none;
+  background: linear-gradient(135deg, var(--nl-accent-gold-hover), var(--nl-accent-gold));
+  color: var(--nl-accent-gold-text);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: filter 150ms ease, transform 150ms ease;
+}
+.nl-submit-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.nl-submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.nl-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nl-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(36, 23, 5, 0.35);
+  border-top-color: var(--nl-accent-gold-text);
+  animation: nl-spin 700ms linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nl-spinner {
+    animation-duration: 1400ms;
+  }
+}
+@keyframes nl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nl-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 12px;
+  text-align: center;
+}
+.nl-trust-row svg {
+  flex-shrink: 0;
+}
+
+.nl-policy-link {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.74);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-top: 10px;
+}
+.nl-policy-link:hover {
+  color: #ffffff;
+}
+
+.nl-next-steps {
+  font-size: 12.5px;
+  color: var(--nl-text-tertiary);
+  line-height: 1.5;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--nl-glass-border);
+}
+
+/* Error state */
+.nl-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: var(--nl-radius-md);
+  border: 1px solid var(--nl-error-border);
+  background: var(--nl-error-bg);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #fecaca;
+  line-height: 1.5;
+}
+.nl-error-box svg {
+  flex-shrink: 0;
+  color: var(--nl-error);
+  margin-top: 1px;
+}
+
+/* Pending state */
+.nl-pending-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: var(--nl-radius-md);
+  border: 1px solid rgba(227, 176, 75, 0.35);
+  background: rgba(227, 176, 75, 0.1);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--nl-text-secondary);
+  line-height: 1.5;
+}
+
+/* Success state */
+.nl-success-wrap {
+  text-align: center;
+  padding: 12px 4px 4px;
+}
+.nl-success-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  color: var(--nl-success);
+}
+.nl-success-headline {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--nl-text-primary);
+}
+.nl-success-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--nl-text-secondary);
+  margin: 0 0 22px;
+}
+.nl-success-meta {
+  font-size: 12.5px;
+  color: var(--nl-text-tertiary);
+  margin-top: 14px;
+}
+
+.nl-redirect-note {
+  font-size: 13px;
+  color: var(--nl-text-tertiary);
+  margin-top: 14px;
+}
+
+.nl-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 861px) and (max-height: 820px) {
+  .nl-overlay {
+    padding: 16px;
+  }
+
+  .nl-modal {
+    max-width: min(1640px, calc(100vw - 32px));
+  }
+
+  .nl-modal-inner {
+    padding: 26px 44px 30px;
+  }
+
+  .nl-brand-row {
+    margin-bottom: 8px;
+  }
+
+  .nl-brand-logo {
+    width: 116px;
+    height: 46px;
+  }
+
+  .nl-checkout-intro {
+    margin-bottom: 14px;
+  }
+
+  .nl-eyebrow {
+    margin-bottom: 5px;
+  }
+
+  .nl-headline {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .nl-description {
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .nl-section-header {
+    margin-bottom: 10px;
+  }
+
+  .nl-payment-method-card {
+    padding: 22px;
+  }
+
+  .nl-summary-column {
+    padding: 28px 32px 30px;
+  }
+
+  .nl-summary-divider {
+    margin: 14px 0;
+  }
+
+  .nl-summary-copy {
+    line-height: 1.4;
+  }
+
+  .nl-summary-total strong {
+    font-size: 24px;
+  }
+
+  .nl-submit-btn {
+    padding: 12px 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .nl-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .nl-modal {
+    max-width: 100%;
+    max-height: none;
+    overflow: visible;
+    border-radius: var(--nl-radius-lg) var(--nl-radius-lg) 0 0;
+  }
+  .nl-modal-inner {
+    padding: 24px 18px 28px;
+    overflow: visible;
+  }
+  .nl-checkout-intro {
+    margin-bottom: 18px;
+  }
+  .nl-checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    flex: initial;
+    min-height: auto;
+  }
+  .nl-payment-column {
+    min-height: auto;
+  }
+  .nl-payment-method-card {
+    flex: initial;
+  }
+  .nl-payment-method-card,
+  .nl-summary-column {
+    padding: 18px;
+  }
+
+  .nl-brand-logo {
+    width: 112px;
+    height: 46px;
+  }
+
+  .nl-summary-logo {
+    width: 62px;
+    height: 38px;
+  }
+  .nl-summary-column {
+    min-height: auto;
+    border-radius: 8px 8px 0 0;
+  }
+  .nl-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .nl-headline {
+    font-size: 20px;
+  }
+  .nl-payment-method-copy {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 860px) {
+  .nl-overlay {
+    padding: 22px;
+  }
+  .nl-modal {
+    max-width: calc(100vw - 44px);
+    max-height: none;
+    overflow: visible;
+  }
+  .nl-modal-inner {
+    padding: 34px 28px 38px;
+    overflow: visible;
+  }
+  .nl-checkout-grid {
+    grid-template-columns: 1fr;
+    flex: initial;
+    min-height: auto;
+  }
+  .nl-payment-column {
+    min-height: auto;
+  }
+  .nl-payment-method-card {
+    flex: initial;
+  }
+  .nl-summary-column {
+    min-height: auto;
+  }
+}
