@@ -86,7 +86,7 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
   const containerRef = useModalFocusTrap(isOpen);
 
   useEffect(() => {
-    if (!isOpen || resolvedKey || remotePublishableKey || stripeConfigStatus !== "idle") return;
+    if (!isOpen || resolvedKey || remotePublishableKey) return;
 
     let cancelled = false;
     setStripeConfigStatus("loading");
@@ -109,7 +109,7 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, remotePublishableKey, resolvedKey, stripeConfigStatus]);
+  }, [isOpen, remotePublishableKey, resolvedKey]);
 
   // Fire "opened" once per open, and track abandonment if closed without
   // reaching a terminal (success) outcome.
