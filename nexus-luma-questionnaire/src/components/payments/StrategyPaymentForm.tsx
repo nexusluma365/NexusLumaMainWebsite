@@ -131,6 +131,27 @@ export function StrategyPaymentForm({
                 }}
               />
             </div>
+
+            <div className="nl-payment-speed-art" aria-hidden="true">
+              <div className="loader">
+                <span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+                <div className="base">
+                  <span></span>
+                  <div className="face"></div>
+                </div>
+              </div>
+              <div className="longfazers">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
           </div>
         </section>
 
