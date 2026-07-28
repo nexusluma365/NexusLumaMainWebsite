@@ -10,15 +10,19 @@ function json(statusCode, body) {
 }
 
 const DEFAULT_STRIPE_PUBLISHABLE_KEY =
-  "pk_test_51TeycBPJOp8s8XsSvgsYs2KtFZt1F2fUg9W32bxS2rDcORtp4F89PUj54Dz1WJbhPS1i8vnouVLeSiUX9cWfzp4v00RLV2KMcT";
+  "pk_live_51TeycBPJOp8s8XsSjWLZD8n3JweuczqhYYgoJKLkiNfogQUnveNxlB3YMOM8GPrBAd8YCWYNXxVv4vKdgcoftxoR00IsTaLRDD";
 
 exports.handler = async () => {
+  const configuredKeys = [
+    process.env.STRIPE_PUBLISHABLE_KEY,
+    process.env.VITE_STRIPE_PUBLISHABLE_KEY,
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
+    process.env.STRIPE_PUBLIC_KEY
+  ].filter(Boolean);
+
   const publishableKey =
-    process.env.STRIPE_PUBLISHABLE_KEY ||
-    process.env.VITE_STRIPE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
-    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
-    process.env.STRIPE_PUBLIC_KEY ||
+    configuredKeys.find((key) => key.startsWith("pk_live_")) ||
     DEFAULT_STRIPE_PUBLISHABLE_KEY;
 
   if (!publishableKey) {
