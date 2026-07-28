@@ -31,9 +31,6 @@ export function StrategyPaymentSuccess({
   if (redirecting) {
     return (
       <div className="nl-success-wrap nl-success-wrap--redirect" role="status" aria-live="polite">
-        <div className="nl-success-icon">
-          <CheckCircleIcon />
-        </div>
         <h2 className="nl-success-headline">Thank You For Your Purchase</h2>
         <p className="nl-success-text">Now it's time to schedule your strategy call.</p>
         <p className="nl-redirect-note">Taking you to Zoom...</p>

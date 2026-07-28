@@ -53,6 +53,11 @@
   opacity: 1;
 }
 
+.nl-overlay:has(.nl-success-wrap--redirect) {
+  align-items: center;
+  background: linear-gradient(135deg, #0b1743 0%, #183777 48%, #2f5fa8 100%);
+}
+
 .nl-overlay[data-state="closing"] {
   opacity: 0;
   transition-duration: 200ms;
@@ -82,6 +87,15 @@
   opacity: 1;
 }
 
+.nl-modal:has(.nl-success-wrap--redirect) {
+  max-width: min(900px, calc(100vw - 40px));
+  min-height: 55vh;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: #ffffff;
+}
+
 .nl-overlay[data-state="closing"] .nl-modal {
   transform: scale(0.98);
   opacity: 0;
@@ -101,6 +115,17 @@
   min-height: auto;
   padding: clamp(28px, 3.4vw, 56px) clamp(40px, 4.4vw, 76px) clamp(30px, 3.5vw, 58px);
   overflow: visible;
+}
+
+.nl-modal:has(.nl-success-wrap--redirect) .nl-modal-inner {
+  min-height: 55vh;
+  padding: 0;
+  justify-content: center;
+}
+
+.nl-modal:has(.nl-success-wrap--redirect) .nl-brand-row,
+.nl-modal:has(.nl-success-wrap--redirect) .nl-close-btn {
+  display: none;
 }
 
 .nl-close-btn {
@@ -740,6 +765,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0;
   animation: nlSuccessFadeIn 900ms ease-out both;
 }
 .nl-success-icon {
@@ -760,11 +786,23 @@
   margin: 0 0 10px;
   color: var(--nl-text-primary);
 }
+.nl-success-wrap--redirect .nl-success-headline {
+  font-size: clamp(30px, 4.8vw, 58px);
+  line-height: 1.08;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
 .nl-success-text {
   font-size: 14px;
   line-height: 1.55;
   color: var(--nl-text-secondary);
   margin: 0 0 22px;
+}
+.nl-success-wrap--redirect .nl-success-text {
+  font-size: clamp(17px, 2vw, 24px);
+  line-height: 1.45;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
 }
 .nl-success-meta {
   font-size: 12.5px;
@@ -776,6 +814,11 @@
   font-size: 13px;
   color: var(--nl-text-tertiary);
   margin-top: 14px;
+}
+.nl-success-wrap--redirect .nl-redirect-note {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 14px;
+  margin-top: 24px;
 }
 
 @keyframes nlSuccessFadeIn {
