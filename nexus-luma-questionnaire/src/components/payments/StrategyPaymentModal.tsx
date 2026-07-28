@@ -133,16 +133,9 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
   function handlePaymentSuccess(result: StrategyPaymentResult) {
     outcomeReachedRef.current = true;
     setIsBusy(false);
+    setSuccessResult(result);
     track("strategy_payment_completed", { paymentIntentId: result.paymentIntentId });
     onPaymentSuccess?.(result);
-
-    if (result.bookingUrl) {
-      track("strategy_booking_clicked");
-      window.location.assign(result.bookingUrl);
-      return;
-    }
-
-    setSuccessResult(result);
   }
 
   const elementsOptions: StripeElementsOptions = {

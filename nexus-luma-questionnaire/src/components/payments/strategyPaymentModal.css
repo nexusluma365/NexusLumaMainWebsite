@@ -734,6 +734,14 @@
   text-align: center;
   padding: 12px 4px 4px;
 }
+.nl-success-wrap--redirect {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: nlSuccessFadeIn 900ms ease-out both;
+}
 .nl-success-icon {
   width: 52px;
   height: 52px;
@@ -768,6 +776,17 @@
   font-size: 13px;
   color: var(--nl-text-tertiary);
   margin-top: 14px;
+}
+
+@keyframes nlSuccessFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nl-sr-only {

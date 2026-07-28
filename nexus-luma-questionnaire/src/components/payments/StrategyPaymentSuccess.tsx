@@ -23,10 +23,23 @@ export function StrategyPaymentSuccess({
     if (!autoRedirect) return;
     const timeout = setTimeout(() => {
       onBookingClick();
-      window.location.href = bookingUrl;
-    }, 1800);
+      window.location.assign(bookingUrl);
+    }, 2400);
     return () => clearTimeout(timeout);
   }, [autoRedirect, bookingUrl, onBookingClick]);
+
+  if (redirecting) {
+    return (
+      <div className="nl-success-wrap nl-success-wrap--redirect" role="status" aria-live="polite">
+        <div className="nl-success-icon">
+          <CheckCircleIcon />
+        </div>
+        <h2 className="nl-success-headline">Thank You For Your Purchase</h2>
+        <p className="nl-success-text">Now it's time to schedule your strategy call.</p>
+        <p className="nl-redirect-note">Taking you to Zoom...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="nl-success-wrap" role="status" aria-live="polite">
@@ -36,18 +49,14 @@ export function StrategyPaymentSuccess({
       <h2 className="nl-success-headline">{headline}</h2>
       <p className="nl-success-text">{text}</p>
 
-      {redirecting ? (
-        <p className="nl-redirect-note">Taking you to the booking page...</p>
-      ) : (
-        <a
-          className="nl-submit-btn"
-          href={bookingUrl}
-          onClick={onBookingClick}
-          style={{ textDecoration: "none" }}
-        >
-          {buttonLabel}
-        </a>
-      )}
+      <a
+        className="nl-submit-btn"
+        href={bookingUrl}
+        onClick={onBookingClick}
+        style={{ textDecoration: "none" }}
+      >
+        {buttonLabel}
+      </a>
 
       <p className="nl-success-meta">
         A receipt has been sent to your email. Your $99 payment is credited toward your

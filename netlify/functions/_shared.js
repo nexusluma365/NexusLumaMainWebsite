@@ -2,7 +2,7 @@ const BOOKING_TIMEZONE = process.env.BOOKING_TIMEZONE || 'America/New_York';
 const SLOT_START_HOUR = Number(process.env.BOOKING_START_HOUR || 9);
 const SLOT_END_HOUR = Number(process.env.BOOKING_END_HOUR || 17);
 const SLOT_MINUTES = Number(process.env.BOOKING_SLOT_MINUTES || 30);
-const DEFAULT_GOOGLE_CALENDAR_BOOKING_URL = 'https://calendar.app.google/nrmfrLcW2mooUNUz6';
+const DEFAULT_BOOKING_URL = 'https://scheduler.zoom.us/elijah-thornton/30-min-strategy-call';
 
 function hasGoogleCalendarConfig() {
   return Boolean(
@@ -182,7 +182,13 @@ function makeJsonResponse(statusCode, payload) {
 }
 
 function getGoogleCalendarBookingUrl() {
-  return process.env.GOOGLE_CALENDAR_BOOKING_URL || DEFAULT_GOOGLE_CALENDAR_BOOKING_URL;
+  return (
+    process.env.ZOOM_SCHEDULER_URL ||
+    process.env.ZOOM_BOOKING_URL ||
+    process.env.BOOKING_URL ||
+    process.env.GOOGLE_CALENDAR_BOOKING_URL ||
+    DEFAULT_BOOKING_URL
+  );
 }
 
 function makeCalendarErrorResponse(error, fallbackMessage) {
