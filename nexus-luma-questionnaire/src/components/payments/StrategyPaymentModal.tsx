@@ -1,7 +1,4 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import type { Stripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { ModalOverlay } from "./ModalOverlay";
 import { PaymentModalErrorBoundary } from "./PaymentModalErrorBoundary";
 import { StrategyPaymentForm } from "./StrategyPaymentForm";
@@ -10,23 +7,9 @@ import { useStrategyPayment } from "../../hooks/useStrategyPayment";
 import { useModalFocusTrap } from "../../hooks/useModalFocusTrap";
 import { usePaymentAnalytics } from "../../hooks/usePaymentAnalytics";
 import { getStrategyContent } from "../../config/strategyPaymentContent";
-import { readStripePublishableKey } from "../../utils/readStripePublishableKey";
-import { formatWholeDollar } from "../../utils/formatCurrency";
 import { AUTO_REDIRECT_AFTER_PAYMENT } from "../../config/paymentLinks";
 import type { StrategyPaymentModalProps, StrategyPaymentResult } from "../../types/strategyPayment";
 import "./strategyPaymentModal.css";
-
-// Cache the loadStripe() promise per publishable key so we never call it
-// more than once for the same key (loadStripe injects a <script> tag).
-const stripePromiseCacheByKey = new Map<string, Promise<Stripe | null>>();
-function getStripePromise(key: string) {
-  let cached = stripePromiseCacheByKey.get(key);
-  if (!cached) {
-    cached = loadStripe(key);
-    stripePromiseCacheByKey.set(key, cached);
-  }
-  return cached;
-}
 
 const ASSET_BASE = import.meta.env.BASE_URL || "/";
 
@@ -46,21 +29,10 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
     websiteDesignBookingUrl,
     paymentPolicyUrl,
     autoRedirectAfterPayment = AUTO_REDIRECT_AFTER_PAYMENT,
-    stripePublishableKey,
     onClose,
     onPaymentSuccess,
     onAnalyticsEvent,
   } = props;
-
-  const resolvedKey = useMemo(
-    () => readStripePublishableKey(stripePublishableKey),
-    [stripePublishableKey]
-  );
-  const [remotePublishableKey, setRemotePublishableKey] = useState<string | undefined>();
-  const [stripeConfigStatus, setStripeConfigStatus] = useState<
-    "idle" | "loading" | "ready" | "failed"
-  >("idle");
-  const activeStripeKey = resolvedKey || remotePublishableKey;
 
   const content = useMemo(() => getStrategyContent(serviceType), [serviceType]);
   const bookingUrl =
@@ -84,32 +56,6 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
   });
 
   const containerRef = useModalFocusTrap(isOpen);
-
-  useEffect(() => {
-    if (!isOpen || resolvedKey || remotePublishableKey) return;
-
-    let cancelled = false;
-    setStripeConfigStatus("loading");
-
-    fetch("/api/stripe-config")
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Stripe config request failed.");
-        const payload = (await response.json()) as { publishableKey?: string };
-        if (!payload.publishableKey) throw new Error("Stripe publishable key missing.");
-        if (!cancelled) {
-          setRemotePublishableKey(payload.publishableKey);
-          setStripeConfigStatus("ready");
-        }
-      })
-      .catch((error) => {
-        console.error("[StrategyPaymentModal] Stripe config could not be loaded.", error);
-        if (!cancelled) setStripeConfigStatus("failed");
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isOpen, remotePublishableKey, resolvedKey]);
 
   // Fire "opened" once per open, and track abandonment if closed without
   // reaching a terminal (success) outcome.
@@ -136,47 +82,6 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
     setSuccessResult(result);
     track("strategy_payment_completed", { paymentIntentId: result.paymentIntentId });
     onPaymentSuccess?.(result);
-  }
-
-  const elementsOptions: StripeElementsOptions = {
-    appearance: {
-      theme: "stripe",
-      variables: {
-        colorPrimary: "#4d61d8",
-        colorBackground: "#ffffff",
-        colorText: "#222638",
-        colorTextSecondary: "#6e7388",
-        colorDanger: "#d63f3f",
-        fontFamily: "Inter, system-ui, sans-serif",
-        borderRadius: "6px",
-        spacingUnit: "4px",
-      },
-      rules: {
-        ".Input": {
-          border: "1px solid #d9deea",
-          backgroundColor: "#ffffff",
-          borderRadius: "6px",
-          padding: "14px 18px",
-        },
-        ".Tab": {
-          border: "1px solid #d9deea",
-          backgroundColor: "#ffffff",
-          borderRadius: "6px",
-        },
-        ".Tab--selected": {
-          border: "1px solid #4d61d8",
-        },
-      },
-    },
-  };
-
-  if (isOpen && stripeConfigStatus === "failed" && !activeStripeKey) {
-    // Fail loudly in development rather than silently rendering a broken form.
-    console.error(
-      "[StrategyPaymentModal] No Stripe publishable key found. Pass `stripePublishableKey` " +
-        "as a prop, set VITE_STRIPE_PUBLISHABLE_KEY at build time, or configure " +
-        "STRIPE_PUBLISHABLE_KEY for /api/stripe-config. See .env.example."
-    );
   }
 
   return (
@@ -225,36 +130,24 @@ export function StrategyPaymentModal(props: StrategyPaymentModalProps) {
                 </p>
               </div>
 
-              {activeStripeKey ? (
-                <Elements stripe={getStripePromise(activeStripeKey)} options={elementsOptions}>
-                  <ConnectedForm
-                    serviceType={serviceType}
-                    leadId={leadId}
-                    customer={customer}
-                    content={content}
-                    questionnaireAnswers={questionnaireAnswers}
-                    bookingUrl={bookingUrl}
-                    amount={content.price}
-                    paymentPolicyUrl={paymentPolicyUrl}
-                    descriptionId={descriptionId}
-                    onBusyChange={setIsBusy}
-                    onSuccess={handlePaymentSuccess}
-                    onFormViewed={() => track("strategy_payment_form_viewed")}
-                    onInteracted={() => track("strategy_payment_started")}
-                    onFailed={(detail) =>
-                      track("strategy_payment_failed", { detail: String(detail) })
-                    }
-                  />
-                </Elements>
-              ) : stripeConfigStatus === "loading" ? (
-                <div className="nl-payment-form">
-                  <div className="nl-loading-box" role="status">
-                    Loading secure checkout...
-                  </div>
-                </div>
-              ) : (
-                <UnavailableCheckout content={content} paymentPolicyUrl={paymentPolicyUrl} />
-              )}
+              <ConnectedForm
+                serviceType={serviceType}
+                leadId={leadId}
+                customer={customer}
+                content={content}
+                questionnaireAnswers={questionnaireAnswers}
+                bookingUrl={bookingUrl}
+                amount={content.price}
+                paymentPolicyUrl={paymentPolicyUrl}
+                descriptionId={descriptionId}
+                onBusyChange={setIsBusy}
+                onSuccess={handlePaymentSuccess}
+                onFormViewed={() => track("strategy_payment_form_viewed")}
+                onInteracted={() => track("strategy_payment_started")}
+                onFailed={(detail) =>
+                  track("strategy_payment_failed", { detail: String(detail) })
+                }
+              />
             </>
           )}
         </PaymentModalErrorBoundary>
@@ -333,109 +226,6 @@ function ConnectedForm({
       onDismissError={resetError}
       onFormInteracted={onInteracted}
     />
-  );
-}
-
-function UnavailableCheckout({
-  content,
-  paymentPolicyUrl,
-}: {
-  content: ReturnType<typeof getStrategyContent>;
-  paymentPolicyUrl?: string;
-}) {
-  return (
-    <div className="nl-payment-form">
-      <div className="nl-checkout-grid">
-        <section className="nl-payment-column" aria-labelledby="nl-payment-unavailable-title">
-          <div className="nl-section-header">
-            <h3 id="nl-payment-unavailable-title">Payment Method</h3>
-            <span className="nl-secure-label">Secure Server</span>
-          </div>
-
-          <div className="nl-payment-method-card nl-payment-method-card--empty">
-            <div className="nl-payment-method-head">
-              <label className="nl-radio-label">
-                <span className="nl-radio-dot" aria-hidden="true" />
-                Credit Card
-              </label>
-              <span className="nl-card-brands" aria-label="Major cards accepted">
-                Visa
-              </span>
-            </div>
-
-            <div className="nl-unavailable-box" role="alert">
-              <p className="nl-unavailable-title">Payment setup is not connected yet</p>
-              <p>
-                Add your Stripe publishable key to this app and run the payment server with
-                your Stripe secret key to enable this checkout.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <aside className="nl-summary-column" aria-labelledby="nl-unavailable-summary-title">
-          <div className="nl-summary-top">
-            <h3 id="nl-unavailable-summary-title">Booking Summary</h3>
-            <img className="nl-summary-logo" src={`${ASSET_BASE}Nexus%20Luma%20Logo.png`} alt="Nexus Luma" />
-          </div>
-
-          <div className="nl-summary-divider" />
-
-          <p className="nl-summary-service">{content.priceLabel}</p>
-          <p className="nl-summary-copy">{content.description}</p>
-
-          <dl className="nl-summary-details">
-            <div>
-              <dt>Session</dt>
-              <dd>Strategy Call</dd>
-            </div>
-            <div>
-              <dt>Credit</dt>
-              <dd>Applied to project</dd>
-            </div>
-          </dl>
-
-          <div className="nl-summary-divider nl-summary-divider--dashed" />
-
-          <dl className="nl-summary-totals">
-            <div>
-              <dt>Subtotal</dt>
-              <dd>{formatWholeDollar(content.price)}</dd>
-            </div>
-            <div>
-              <dt>Discount</dt>
-              <dd>$0</dd>
-            </div>
-            <div>
-              <dt>Taxes & Fees</dt>
-              <dd>$0</dd>
-            </div>
-          </dl>
-
-          <div className="nl-summary-divider" />
-
-          <div className="nl-summary-total">
-            <span>Total</span>
-            <strong>{formatWholeDollar(content.price)}</strong>
-          </div>
-
-          <button type="button" className="nl-submit-btn" disabled>
-            Make payment
-          </button>
-
-          {paymentPolicyUrl && (
-            <a
-              className="nl-policy-link"
-              href={paymentPolicyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Payment policy
-            </a>
-          )}
-        </aside>
-      </div>
-    </div>
   );
 }
 

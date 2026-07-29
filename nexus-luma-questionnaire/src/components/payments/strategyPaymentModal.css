@@ -491,24 +491,6 @@
   margin: 0 0 16px;
 }
 
-.nl-payment-element-wrap {
-  padding: 15px 16px;
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid var(--nl-checkout-border);
-  margin-top: 0;
-  margin-bottom: 0;
-  min-height: 44px;
-}
-
-.nl-card-element-shell {
-  box-shadow: 0 8px 20px rgba(31, 42, 79, 0.06);
-}
-
-.nl-card-element {
-  min-height: 24px;
-}
-
 .nl-summary-column {
   position: relative;
   display: flex;

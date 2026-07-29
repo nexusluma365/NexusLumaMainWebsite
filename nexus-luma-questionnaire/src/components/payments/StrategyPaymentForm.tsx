@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { FormEvent } from "react";
-import { CardElement } from "@stripe/react-stripe-js";
 import { PaymentTrustMessage } from "./PaymentTrustMessage";
 import { StrategyPaymentError } from "./StrategyPaymentError";
 import { StrategyPaymentPending } from "./StrategyPaymentPending";
@@ -34,12 +33,8 @@ export function StrategyPaymentForm({
   descriptionId,
   onSubmit,
   onDismissError,
-  onFormInteracted,
+  onFormInteracted: _onFormInteracted,
 }: StrategyPaymentFormProps) {
-  const [elementReady, setElementReady] = useState(false);
-  const [cardComplete, setCardComplete] = useState(false);
-  const [interacted, setInteracted] = useState(false);
-
   const billingName = useMemo(
     () => [customer?.firstName, customer?.lastName].filter(Boolean).join(" ").trim(),
     [customer?.firstName, customer?.lastName]
@@ -51,16 +46,9 @@ export function StrategyPaymentForm({
 
   const isProcessing = status === "processing";
   const isPending = status === "pending";
-  const disabled = !elementReady || !cardComplete || !formValid || isProcessing || isPending;
+  const disabled = !formValid || isProcessing || isPending;
 
   const buttonText = isProcessing || isPending ? loadingLabel : paymentButtonLabel;
-
-  function markInteracted() {
-    if (!interacted) {
-      setInteracted(true);
-      onFormInteracted();
-    }
-  }
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -104,33 +92,6 @@ export function StrategyPaymentForm({
                 Contact information is missing. Please go back and enter your name and email.
               </p>
             )}
-
-            <div className="nl-payment-element-wrap nl-card-element-shell">
-              <CardElement
-                className="nl-card-element"
-                onReady={() => setElementReady(true)}
-                onFocus={markInteracted}
-                onChange={(event) => setCardComplete(event.complete)}
-                options={{
-                  hidePostalCode: false,
-                  style: {
-                    base: {
-                      color: "#222638",
-                      fontFamily: "Inter, system-ui, sans-serif",
-                      fontSize: "16px",
-                      fontSmoothing: "antialiased",
-                      "::placeholder": {
-                        color: "#8b91a3",
-                      },
-                    },
-                    invalid: {
-                      color: "#d63f3f",
-                      iconColor: "#d63f3f",
-                    },
-                  },
-                }}
-              />
-            </div>
 
           </div>
         </section>
