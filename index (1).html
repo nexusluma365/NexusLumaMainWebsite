@@ -1636,6 +1636,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+      min-width: 0;
     }
     .payment-field label,
     .stripe-card-label {
@@ -1678,6 +1679,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       margin-top: 14px;
+      min-width: 0;
     }
     .payment-helper {
       display: flex;
@@ -2159,6 +2161,16 @@
       }
       .payment-input-grid {
         grid-template-columns: 1fr;
+      }
+      .stripe-card-grid {
+        grid-template-columns: 1fr;
+      }
+      #funnelPaymentCard.payment-checkout-card,
+      .payment-checkout-main,
+      .payment-summary {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
       .payment-method-pill {
         flex: 1 1 72px;

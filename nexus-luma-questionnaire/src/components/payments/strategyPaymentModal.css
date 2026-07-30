@@ -66,6 +66,7 @@
 .nl-modal {
   position: relative;
   width: 100%;
+  box-sizing: border-box;
   max-width: min(1680px, calc(100vw - 48px));
   min-height: min-content;
   max-height: none;
@@ -110,6 +111,7 @@
 }
 
 .nl-modal-inner {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-height: auto;
@@ -215,6 +217,7 @@
   align-items: start;
   flex: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .nl-payment-column {
@@ -247,6 +250,9 @@
 }
 
 .nl-payment-method-card {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   flex: initial;
   border-radius: 6px;
   border: 1px solid var(--nl-checkout-border);
@@ -528,6 +534,9 @@
 
 .nl-summary-column {
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -618,6 +627,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 18px;
+  min-width: 0;
 }
 
 .nl-summary-details dt,
@@ -633,6 +643,7 @@
   color: #ffffff;
   font-weight: 700;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .nl-summary-total {
@@ -933,17 +944,19 @@
 /* Mobile */
 @media (max-width: 480px) {
   .nl-overlay {
-    padding: 0;
-    align-items: flex-end;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(14px, env(safe-area-inset-bottom));
+    align-items: flex-start;
   }
   .nl-modal {
-    max-width: 100%;
+    width: 100%;
+    max-width: calc(100vw - 20px);
     max-height: none;
-    overflow: visible;
-    border-radius: var(--nl-radius-lg) var(--nl-radius-lg) 0 0;
+    overflow: hidden;
+    border-radius: 8px;
   }
   .nl-modal-inner {
-    padding: 24px 18px 28px;
+    width: 100%;
+    padding: 22px 14px 24px;
     overflow: visible;
   }
   .nl-checkout-intro {
@@ -951,9 +964,10 @@
   }
   .nl-checkout-grid {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 16px;
     flex: initial;
     min-height: auto;
+    width: 100%;
   }
   .nl-payment-column {
     min-height: auto;
@@ -963,7 +977,7 @@
   }
   .nl-payment-method-card,
   .nl-summary-column {
-    padding: 18px;
+    padding: 16px;
   }
 
   .nl-brand-logo {
@@ -977,7 +991,7 @@
   }
   .nl-summary-column {
     min-height: auto;
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px;
   }
   .nl-form-row {
     grid-template-columns: 1fr;
@@ -988,6 +1002,20 @@
   }
   .nl-payment-method-copy {
     margin-left: 0;
+  }
+  .nl-summary-details div,
+  .nl-summary-totals div {
+    gap: 12px;
+  }
+  .nl-summary-total {
+    gap: 10px;
+  }
+  .nl-summary-total strong {
+    font-size: 24px;
+  }
+  .nl-submit-btn {
+    padding-inline: 12px;
+    font-size: 14px;
   }
 }
 
