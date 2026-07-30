@@ -1,4 +1,12 @@
 import { useCallback, useRef, useState } from "react";
+import { CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import {
+  createStrategyPaymentIntent,
+  verifyStrategyPayment,
+} from "../services/stripePaymentService";
+import { submitPaymentToCrm } from "../services/crmPaymentService";
+import { mapStripeError, PENDING_PAYMENT_MESSAGE } from "../utils/mapStripeError";
+import { toApiServiceType } from "../utils/paymentMetadata";
 import type {
   PaymentStatus,
   StrategyCustomer,
@@ -18,18 +26,97 @@ interface UseStrategyPaymentParams {
 }
 
 export function useStrategyPayment({
+  serviceType,
+  leadId,
   customer,
+  questionnaireAnswers,
+  bookingUrl,
+  amount,
+  onSuccess,
   onEvent,
 }: UseStrategyPaymentParams) {
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [status, setStatus] = useState<PaymentStatus>("ready");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [clientSecret] = useState<string | null>(null);
-  const [paymentIntentId] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
 
+  const intentRequestInFlight = useRef<Promise<{
+    clientSecret: string;
+    paymentIntentId: string;
+  }> | null>(null);
   const submissionInFlight = useRef(false);
 
+  const ensurePaymentIntent = useCallback(
+    async (customerEmail: string) => {
+      if (clientSecret && paymentIntentId) {
+        return { clientSecret, paymentIntentId };
+      }
+      if (intentRequestInFlight.current) {
+        return intentRequestInFlight.current;
+      }
+
+      const request = (async () => {
+        const result = await createStrategyPaymentIntent({
+          leadId,
+          serviceType: toApiServiceType(serviceType),
+          customerEmail,
+        });
+        setClientSecret(result.clientSecret);
+        setPaymentIntentId(result.paymentIntentId);
+        return result;
+      })();
+
+      intentRequestInFlight.current = request;
+      try {
+        return await request;
+      } finally {
+        intentRequestInFlight.current = null;
+      }
+    },
+    [clientSecret, paymentIntentId, leadId, serviceType]
+  );
+
+  const handleConfirmedSuccess = useCallback(
+    async (confirmedPaymentIntentId: string, customerEmail: string) => {
+      setStatus("succeeded");
+      onEvent?.("succeeded");
+
+      try {
+        await verifyStrategyPayment(confirmedPaymentIntentId);
+      } catch {
+        // The webhook remains authoritative; keep the successful client result visible.
+      }
+
+      submitPaymentToCrm({
+        leadId,
+        serviceType: toApiServiceType(serviceType),
+        amount,
+        currency: "usd",
+        paymentIntentId: confirmedPaymentIntentId,
+        paymentStatus: "succeeded",
+        customerEmail,
+        completedAt: new Date().toISOString(),
+        questionnaireAnswers,
+      });
+
+      onSuccess?.({
+        paymentIntentId: confirmedPaymentIntentId,
+        serviceType,
+        status: "succeeded",
+        bookingUrl,
+        amount,
+        currency: "usd",
+      });
+    },
+    [amount, bookingUrl, leadId, onEvent, onSuccess, questionnaireAnswers, serviceType]
+  );
+
   const submitPayment = useCallback(
-    async (_billingDetails: { name: string; email: string; phone?: string }) => {
+    async (billingDetails: { name: string; email: string; phone?: string }) => {
+      if (!stripe || !elements) return;
       if (submissionInFlight.current) return; // prevent duplicate clicks
       submissionInFlight.current = true;
 
@@ -38,14 +125,83 @@ export function useStrategyPayment({
       onEvent?.("started");
 
       try {
-        setErrorMessage("The embedded card form has been removed.");
+        const cardNumberElement = elements.getElement(CardNumberElement);
+        if (!cardNumberElement) {
+          setErrorMessage("The card form could not load. Please refresh and try again.");
+          setStatus("failed");
+          onEvent?.("failed", "card_number_element_missing");
+          return;
+        }
+
+        let intent: { clientSecret: string; paymentIntentId: string };
+        try {
+          intent = await ensurePaymentIntent(billingDetails.email);
+        } catch {
+          setErrorMessage(
+            "We could not connect to the payment service. Please try again."
+          );
+          setStatus("failed");
+          onEvent?.("failed", "intent_creation_failed");
+          return;
+        }
+
+        const { error, paymentIntent } = await stripe.confirmCardPayment(
+          intent.clientSecret,
+          {
+            payment_method: {
+              card: cardNumberElement,
+              billing_details: {
+                name: billingDetails.name,
+                email: billingDetails.email,
+                phone: billingDetails.phone || undefined,
+                address: { country: "US" },
+              },
+            },
+            receipt_email: billingDetails.email,
+          }
+        );
+
+        if (error) {
+          setErrorMessage(mapStripeError(error));
+          setStatus("failed");
+          onEvent?.("failed", error);
+          return;
+        }
+
+        if (!paymentIntent) {
+          setErrorMessage(
+            "Your payment may still be processing. Do not submit another payment yet."
+          );
+          setStatus("pending");
+          return;
+        }
+
+        if (paymentIntent.status === "succeeded") {
+          await handleConfirmedSuccess(paymentIntent.id, billingDetails.email);
+          return;
+        }
+
+        if (paymentIntent.status === "processing") {
+          setStatus("pending");
+          setErrorMessage(PENDING_PAYMENT_MESSAGE);
+          onEvent?.("pending");
+          return;
+        }
+
+        setErrorMessage(
+          "Your payment could not be completed. Check your information and try again."
+        );
         setStatus("failed");
-        onEvent?.("failed", "card_element_removed");
+        onEvent?.("failed", paymentIntent.status);
+      } catch (err) {
+        setErrorMessage(mapStripeError(err));
+        setStatus("failed");
+        onEvent?.("failed", err);
       } finally {
         submissionInFlight.current = false;
       }
     },
-    [onEvent]
+    [stripe, elements, ensurePaymentIntent, handleConfirmedSuccess, onEvent]
   );
 
   const resetError = useCallback(() => {

@@ -1637,7 +1637,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
-    .payment-field label {
+    .payment-field label,
+    .stripe-card-label {
       display: flex;
       justify-content: space-between;
       gap: 12px;
@@ -1647,7 +1648,8 @@
       letter-spacing: .02em;
       margin-bottom: 8px;
     }
-    .payment-field input {
+    .payment-field input,
+    .stripe-card-box {
       width: 100%;
       box-sizing: border-box;
       min-height: 50px;
@@ -1662,10 +1664,20 @@
       transition: border-color .18s ease, box-shadow .18s ease;
       will-change: box-shadow;
     }
-    .payment-field input:focus {
+    .payment-field input:focus,
+    .stripe-card-box.is-focused {
       outline: none;
       border-color: #2563eb;
       box-shadow: 0 0 0 4px rgba(37,99,235,.10), 0 14px 30px rgba(15,43,87,.06);
+    }
+    .payment-field--full {
+      grid-column: 1 / -1;
+    }
+    .stripe-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
     }
     .payment-helper {
       display: flex;
@@ -2816,6 +2828,32 @@
                   <div class="payment-field">
                     <label for="paymentEmail">Email receipt</label>
                     <input id="paymentEmail" type="email" autocomplete="email" placeholder="you@yourbusiness.com">
+                  </div>
+                  <div class="payment-field payment-field--full">
+                    <label for="paymentPhone">Phone</label>
+                    <input id="paymentPhone" type="tel" autocomplete="tel" placeholder="Optional">
+                  </div>
+                </div>
+
+                <div class="stripe-card-grid">
+                  <div class="payment-field payment-field--full">
+                    <div class="stripe-card-label">
+                      <span>Card number</span>
+                      <span>Powered by Stripe</span>
+                    </div>
+                    <div class="stripe-card-box" id="stripeCardNumberElement"></div>
+                  </div>
+                  <div class="payment-field">
+                    <div class="stripe-card-label">
+                      <span>Expiration</span>
+                    </div>
+                    <div class="stripe-card-box" id="stripeCardExpiryElement"></div>
+                  </div>
+                  <div class="payment-field">
+                    <div class="stripe-card-label">
+                      <span>CVC</span>
+                    </div>
+                    <div class="stripe-card-box" id="stripeCardCvcElement"></div>
                   </div>
                 </div>
 
@@ -4216,7 +4254,16 @@
 	    const payLaterBtn = document.getElementById("funnelPayLaterBtn");
 	    const paymentNameInput = document.getElementById("paymentName");
 	    const paymentEmailInput = document.getElementById("paymentEmail");
+	    const paymentPhoneInput = document.getElementById("paymentPhone");
 	    const paymentError = document.getElementById("paymentError");
+	    const stripeCardNumberBox = document.getElementById("stripeCardNumberElement");
+	    const stripeCardExpiryBox = document.getElementById("stripeCardExpiryElement");
+	    const stripeCardCvcBox = document.getElementById("stripeCardCvcElement");
+	    let stripe = null;
+	    let stripeCardNumber = null;
+	    let stripeCardExpiry = null;
+	    let stripeCardCvc = null;
+	    let stripeReadyPromise = null;
 	    let leadRowCreated = false;
 
 	    function leadPayload(status, extra) {
@@ -4267,21 +4314,121 @@
 	      return message;
 	    }
 
-		    paymentForm.addEventListener("submit", async (event) => {
-		      event.preventDefault();
-		      const originalLabel = payBtn.textContent;
-		      setPaymentError("");
-		      updatePaymentButton(true);
-		      try {
-		        paymentNameInput.value = state.name || paymentNameInput.value || "";
-		        paymentEmailInput.value = state.email || paymentEmailInput.value || "";
-		        const receiptEmail = paymentEmailInput.value.trim() || state.email;
-		        if (!isValidEmail(receiptEmail)) {
-		          throw new Error("Please enter a valid email for your receipt.");
-		        }
-		        throw new Error("The embedded card form has been removed.");
-		      } catch (error) {
-		        setPaymentError(getPaymentErrorMessage(error.message));
+	    function loadStripeJs() {
+	      if (window.Stripe) return Promise.resolve();
+	      return new Promise((resolve, reject) => {
+	        const existing = document.querySelector('script[src="https://js.stripe.com/v3/"]');
+	        if (existing) {
+	          existing.addEventListener("load", resolve, { once: true });
+	          existing.addEventListener("error", () => reject(new Error("Stripe.js could not load.")), { once: true });
+	          return;
+	        }
+	        const script = document.createElement("script");
+	        script.src = "https://js.stripe.com/v3/";
+	        script.async = true;
+	        script.onload = resolve;
+	        script.onerror = () => reject(new Error("Stripe.js could not load."));
+	        document.head.appendChild(script);
+	      });
+	    }
+
+	    async function initStripePayment() {
+	      paymentNameInput.value = state.name || paymentNameInput.value || "";
+	      paymentEmailInput.value = state.email || paymentEmailInput.value || "";
+	      if (stripeReadyPromise) return stripeReadyPromise;
+	      stripeReadyPromise = (async () => {
+	        setPaymentError("");
+	        await loadStripeJs();
+	        const configResponse = await fetch("/api/stripe-config");
+	        const config = await configResponse.json().catch(() => null);
+	        if (!configResponse.ok || !config?.publishableKey) {
+	          throw new Error(config?.error || "Stripe publishable key is not configured.");
+	        }
+	        stripe = window.Stripe(config.publishableKey);
+	        const elements = stripe.elements({
+	          fonts: [{ cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,500,600,700" }]
+	        });
+	        const style = {
+	          base: {
+	            color: "#071536",
+	            fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif",
+	            fontSize: "16px",
+	            "::placeholder": { color: "rgba(7,21,54,.34)" }
+	          },
+	          invalid: { color: "#dc2626" }
+	        };
+	        stripeCardNumber = elements.create("cardNumber", { showIcon: true, style });
+	        stripeCardExpiry = elements.create("cardExpiry", { style });
+	        stripeCardCvc = elements.create("cardCvc", { style });
+	        stripeCardNumber.mount("#stripeCardNumberElement");
+	        stripeCardExpiry.mount("#stripeCardExpiryElement");
+	        stripeCardCvc.mount("#stripeCardCvcElement");
+	        [
+	          [stripeCardNumber, stripeCardNumberBox],
+	          [stripeCardExpiry, stripeCardExpiryBox],
+	          [stripeCardCvc, stripeCardCvcBox]
+	        ].forEach(([element, box]) => {
+	          element.on("focus", () => box.classList.add("is-focused"));
+	          element.on("blur", () => box.classList.remove("is-focused"));
+	          element.on("change", event => setPaymentError(event.error?.message || ""));
+	        });
+	      })().catch(error => {
+	        stripeReadyPromise = null;
+	        setPaymentError(error.message || "Payment form could not load.");
+	        throw error;
+	      });
+	      return stripeReadyPromise;
+	    }
+
+	    paymentForm.addEventListener("submit", async (event) => {
+	      event.preventDefault();
+	      const originalLabel = payBtn.textContent;
+	      setPaymentError("");
+	      updatePaymentButton(true);
+	      try {
+	        await initStripePayment();
+	        const receiptEmail = paymentEmailInput.value.trim() || state.email;
+	        if (!isValidEmail(receiptEmail)) {
+	          throw new Error("Please enter a valid email for your receipt.");
+	        }
+	        trackVisitorStep("payment_started", { email: receiptEmail, status: "payment_started" });
+	        const intentResponse = await fetch("/api/create-payment-intent", {
+	          method: "POST",
+	          headers: { "Content-Type": "application/json" },
+	          body: JSON.stringify({
+	            email: receiptEmail,
+	            name: paymentNameInput.value.trim() || state.name,
+	            phone: paymentPhoneInput.value.trim(),
+	            business: state.business,
+	            url: state.url,
+	            goal: state.goal,
+	            budget: state.budget,
+	            timeline: state.timeline,
+	            auditScore: state.resultData?.overall_score || ""
+	          })
+	        });
+	        const intent = await intentResponse.json().catch(() => null);
+	        if (!intentResponse.ok || !intent?.clientSecret) {
+	          throw new Error(intent?.error || "Unable to prepare payment.");
+	        }
+	        const result = await stripe.confirmCardPayment(intent.clientSecret, {
+	          payment_method: {
+	            card: stripeCardNumber,
+	            billing_details: {
+	              name: paymentNameInput.value.trim() || state.name,
+	              email: receiptEmail,
+	              phone: paymentPhoneInput.value.trim() || undefined
+	            }
+	          },
+	          receipt_email: receiptEmail
+	        });
+	        if (result.error) throw new Error(result.error.message || "Payment was not completed.");
+	        state.paid = true;
+	        state.paymentIntentId = result.paymentIntent?.id || intent.paymentIntentId || "";
+	        submitLead("purchased", { paymentIntentId: state.paymentIntentId });
+	        goToStep(6);
+	      } catch (error) {
+	        setPaymentError(getPaymentErrorMessage(error.message));
 	        updatePaymentButton(false, originalLabel);
 	      }
 	    });

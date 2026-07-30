@@ -1,5 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+} from "@stripe/react-stripe-js";
+import type { StripeCardNumberElementChangeEvent } from "@stripe/stripe-js";
 import { PaymentTrustMessage } from "./PaymentTrustMessage";
 import { StrategyPaymentError } from "./StrategyPaymentError";
 import { StrategyPaymentPending } from "./StrategyPaymentPending";
@@ -21,6 +27,21 @@ interface StrategyPaymentFormProps {
 }
 
 const ASSET_BASE = import.meta.env.BASE_URL || "/";
+const CARD_ELEMENT_STYLE = {
+  base: {
+    color: "#222638",
+    fontFamily: "Inter, system-ui, sans-serif",
+    fontSize: "16px",
+    fontSmoothing: "antialiased",
+    "::placeholder": {
+      color: "#8b91a3",
+    },
+  },
+  invalid: {
+    color: "#d63f3f",
+    iconColor: "#d63f3f",
+  },
+};
 
 export function StrategyPaymentForm({
   status,
@@ -33,22 +54,53 @@ export function StrategyPaymentForm({
   descriptionId,
   onSubmit,
   onDismissError,
-  onFormInteracted: _onFormInteracted,
+  onFormInteracted,
 }: StrategyPaymentFormProps) {
-  const billingName = useMemo(
+  const initialBillingName = useMemo(
     () => [customer?.firstName, customer?.lastName].filter(Boolean).join(" ").trim(),
     [customer?.firstName, customer?.lastName]
   );
-  const email = customer?.email?.trim() ?? "";
-  const phone = customer?.phone?.trim() ?? "";
+  const initialEmail = customer?.email?.trim() ?? "";
+  const initialPhone = customer?.phone?.trim() ?? "";
+
+  const [billingName, setBillingName] = useState(initialBillingName);
+  const [email, setEmail] = useState(initialEmail);
+  const [phone, setPhone] = useState(initialPhone);
+  const [cardNumberComplete, setCardNumberComplete] = useState(false);
+  const [cardExpiryComplete, setCardExpiryComplete] = useState(false);
+  const [cardCvcComplete, setCardCvcComplete] = useState(false);
+  const [cardBrand, setCardBrand] = useState("Card");
+  const [interacted, setInteracted] = useState(false);
+
+  useEffect(() => {
+    setBillingName(initialBillingName);
+    setEmail(initialEmail);
+    setPhone(initialPhone);
+  }, [initialBillingName, initialEmail, initialPhone]);
+
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const formValid = emailValid && billingName.length > 1;
+  const cardValid = cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
   const isProcessing = status === "processing";
   const isPending = status === "pending";
-  const disabled = !formValid || isProcessing || isPending;
+  const disabled = !formValid || !cardValid || isProcessing || isPending;
 
   const buttonText = isProcessing || isPending ? loadingLabel : paymentButtonLabel;
+
+  function markInteracted() {
+    if (!interacted) {
+      setInteracted(true);
+      onFormInteracted();
+    }
+  }
+
+  function handleCardNumberChange(event: StripeCardNumberElementChangeEvent) {
+    setCardNumberComplete(event.complete);
+    if (event.brand && event.brand !== "unknown") {
+      setCardBrand(event.brand.toUpperCase());
+    }
+  }
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -79,12 +131,12 @@ export function StrategyPaymentForm({
                 Credit Card
               </label>
               <span className="nl-card-brands" aria-label="Major cards accepted">
-                Visa
+                {cardBrand}
               </span>
             </div>
 
             <p className="nl-payment-method-copy">
-              Secure card payment through Stripe. Your name and email are already attached from the questionnaire.
+              Your contact details are prefilled from the questionnaire. Add your card details below to complete payment.
             </p>
 
             {!formValid && (
@@ -92,6 +144,85 @@ export function StrategyPaymentForm({
                 Contact information is missing. Please go back and enter your name and email.
               </p>
             )}
+
+            <div className="nl-customer-grid">
+              <label className="nl-form-group">
+                <span className="nl-label">Cardholder name</span>
+                <input
+                  className="nl-input"
+                  type="text"
+                  autoComplete="cc-name"
+                  value={billingName}
+                  onChange={(event) => setBillingName(event.target.value)}
+                  onFocus={markInteracted}
+                  aria-invalid={billingName.length <= 1}
+                />
+              </label>
+
+              <label className="nl-form-group">
+                <span className="nl-label">Email receipt</span>
+                <input
+                  className="nl-input"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  onFocus={markInteracted}
+                  aria-invalid={!emailValid}
+                />
+              </label>
+
+              <label className="nl-form-group nl-form-group--full">
+                <span className="nl-label">Phone</span>
+                <input
+                  className="nl-input"
+                  type="tel"
+                  autoComplete="tel"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  onFocus={markInteracted}
+                  placeholder="Optional"
+                />
+              </label>
+            </div>
+
+            <div className="nl-card-field-grid">
+              <label className="nl-form-group nl-form-group--full">
+                <span className="nl-label">Card number</span>
+                <div className="nl-stripe-input">
+                  <CardNumberElement
+                    onFocus={markInteracted}
+                    onChange={handleCardNumberChange}
+                    options={{
+                      showIcon: true,
+                      style: CARD_ELEMENT_STYLE,
+                    }}
+                  />
+                </div>
+              </label>
+
+              <label className="nl-form-group">
+                <span className="nl-label">Expiration</span>
+                <div className="nl-stripe-input">
+                  <CardExpiryElement
+                    onFocus={markInteracted}
+                    onChange={(event) => setCardExpiryComplete(event.complete)}
+                    options={{ style: CARD_ELEMENT_STYLE }}
+                  />
+                </div>
+              </label>
+
+              <label className="nl-form-group">
+                <span className="nl-label">CVC</span>
+                <div className="nl-stripe-input">
+                  <CardCvcElement
+                    onFocus={markInteracted}
+                    onChange={(event) => setCardCvcComplete(event.complete)}
+                    options={{ style: CARD_ELEMENT_STYLE }}
+                  />
+                </div>
+              </label>
+            </div>
 
           </div>
         </section>
