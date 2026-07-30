@@ -15,109 +15,208 @@
         box-sizing: border-box;
       }
 
+      :root {
+        --dark: #082c36;
+        --dark-2: #052630;
+        --teal: #07566a;
+        --red: #ff3048;
+        --gold: #e7d36a;
+        --pale: #e9f3f4;
+        --ink: #0c2d38;
+        --muted: #4a5960;
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
-        background: #f6f7fb;
-        color: #141623;
+        background: var(--dark);
+        color: var(--ink);
         font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
       .page {
-        min-height: 100vh;
-        display: grid;
-        grid-template-columns: minmax(0, 0.96fr) minmax(390px, 0.86fr);
-        align-items: stretch;
+        width: min(1280px, 100%);
+        margin: 0 auto;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.28);
       }
 
-      .copy {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: clamp(42px, 6vw, 92px);
+      .top-band {
+        background: var(--dark);
+        padding: 22px 22px 58px;
+        text-align: center;
+      }
+
+      .section {
+        padding: clamp(48px, 6vw, 90px) clamp(28px, 8vw, 108px);
+      }
+
+      .section--hero {
+        margin-top: -36px;
         background: #ffffff;
-        border-right: 1px solid #e5e8f0;
+      }
+
+      .section--pale {
+        background: var(--pale);
+        text-align: center;
+      }
+
+      .section--dark {
+        background:
+          radial-gradient(circle at 72% 74%, rgba(0, 154, 178, 0.28), transparent 31%),
+          var(--dark-2);
+        color: #ffffff;
+      }
+
+      .section--summary {
+        text-align: center;
+        background: #ffffff;
+      }
+
+      .cta-strip {
+        width: min(700px, 100%);
+        min-height: 74px;
+        margin: 0 auto;
+        border: 0;
+        border-radius: 0;
+        background: var(--red);
+        color: #ffffff;
+        padding: 16px 28px;
+        font: inherit;
+        font-size: clamp(14px, 1.6vw, 18px);
+        font-weight: 900;
+        line-height: 1.25;
+        cursor: pointer;
+        box-shadow: 0 12px 0 rgba(0, 0, 0, 0.12);
+        transition: transform 150ms ease, filter 150ms ease;
+      }
+
+      .cta-strip:hover:not(:disabled),
+      .button:hover:not(:disabled) {
+        filter: brightness(1.04);
+        transform: translateY(-1px);
+      }
+
+      .cta-strip:disabled,
+      .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.62;
+      }
+
+      .hero-grid,
+      .warning-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1fr);
+        gap: clamp(34px, 6vw, 80px);
+        align-items: center;
       }
 
       .eyebrow {
-        color: #315eda;
-        letter-spacing: 0.12em;
+        color: var(--red);
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 900;
-        margin: 0 0 16px;
+        margin: 0 0 14px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
       }
 
       h1 {
-        max-width: 760px;
-        margin: 0;
-        font-size: clamp(42px, 5.8vw, 84px);
-        line-height: 0.96;
-        letter-spacing: -0.04em;
-      }
-
-      .lead {
-        max-width: 700px;
-        margin: 28px 0 0;
-        color: #6d7282;
-        font-size: clamp(18px, 2vw, 25px);
-        font-weight: 700;
-        line-height: 1.5;
-      }
-
-      .offer-card {
-        margin-top: 34px;
-        max-width: 700px;
-        border: 1px solid #e0e4ee;
-        border-radius: 8px;
-        background: #fafbff;
-        padding: clamp(22px, 3vw, 34px);
-      }
-
-      .offer-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        align-items: baseline;
-        padding-bottom: 18px;
-        border-bottom: 1px solid #e1e5ef;
-      }
-
-      .offer-row h2 {
-        margin: 0;
-        font-size: clamp(22px, 2.4vw, 34px);
-        line-height: 1.1;
-      }
-
-      .price {
+        color: var(--ink);
         font-size: clamp(32px, 4vw, 52px);
-        font-weight: 900;
+        line-height: 1.04;
         letter-spacing: -0.04em;
+        margin-bottom: 24px;
+        text-transform: uppercase;
       }
 
-      .bullets {
+      h1 span,
+      .teal {
+        color: #008ca2;
+      }
+
+      h2 {
+        color: var(--teal);
+        font-size: clamp(32px, 4vw, 54px);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        text-transform: uppercase;
+      }
+
+      .section--dark h2 {
+        color: var(--gold);
+      }
+
+      .section--summary h2 {
+        margin-bottom: 24px;
+      }
+
+      .body-copy {
+        color: var(--muted);
+        font-size: clamp(16px, 1.8vw, 20px);
+        font-weight: 700;
+        line-height: 1.55;
+        margin-bottom: 20px;
+      }
+
+      .section--dark .body-copy {
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .product-shot {
+        display: block;
+        width: 100%;
+        max-width: 660px;
+        margin: 0 auto;
+        height: auto;
+        filter: drop-shadow(0 22px 32px rgba(5, 19, 31, 0.16));
+      }
+
+      .benefit-grid {
         display: grid;
-        gap: 14px;
-        margin: 22px 0 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(24px, 4vw, 52px);
+        max-width: 940px;
+        margin: 34px auto 46px;
+      }
+
+      .benefit-box {
+        background: #ffffff;
+        box-shadow: 0 8px 16px rgba(22, 55, 62, 0.1);
+        padding: 28px 32px;
+        text-align: left;
+      }
+
+      .benefit-list {
+        display: grid;
+        gap: 18px;
+        margin: 0;
         padding: 0;
         list-style: none;
       }
 
-      .bullets li {
+      .benefit-list li {
         display: grid;
-        grid-template-columns: 24px minmax(0, 1fr);
+        grid-template-columns: 26px minmax(0, 1fr);
         gap: 12px;
-        color: #4f5669;
+        color: #244451;
         font-size: 16px;
-        font-weight: 700;
-        line-height: 1.45;
+        font-weight: 800;
+        line-height: 1.35;
       }
 
       .check {
         width: 24px;
         height: 24px;
         border-radius: 999px;
-        background: #133dce;
+        background: var(--gold);
         color: #ffffff;
         display: inline-grid;
         place-items: center;
@@ -125,130 +224,134 @@
         font-weight: 900;
       }
 
-      .visual {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: clamp(34px, 5vw, 76px);
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(246, 247, 251, 0.96)),
-          radial-gradient(circle at top right, rgba(49, 94, 218, 0.16), transparent 34%);
-      }
-
-      .product-frame {
-        border: 1px solid #e2e6f0;
-        border-radius: 8px;
-        background: #ffffff;
-        padding: clamp(18px, 2.4vw, 28px);
-        box-shadow: 0 20px 60px rgba(18, 25, 45, 0.08);
-      }
-
-      .product-frame img {
-        display: block;
-        width: 100%;
-        height: auto;
-        border-radius: 6px;
-      }
-
-      .cta-panel {
-        margin-top: 24px;
-        border: 1px solid #e2e6f0;
-        border-radius: 8px;
-        background: #ffffff;
-        padding: clamp(22px, 2.8vw, 32px);
-        box-shadow: 0 12px 34px rgba(18, 25, 45, 0.07);
-      }
-
-      .cta-panel p {
-        color: #777d8e;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1.55;
-        margin: 0 0 18px;
-      }
-
-      .button {
-        width: 100%;
-        min-height: 64px;
-        border: 0;
-        border-radius: 6px;
-        background: #312c4f;
-        color: #ffffff;
-        font: inherit;
-        font-size: clamp(17px, 2vw, 24px);
+      .center-note {
+        color: var(--ink);
+        font-size: clamp(20px, 2.2vw, 28px);
         font-weight: 900;
+        line-height: 1.3;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      .sub-note {
+        color: var(--ink);
+        font-weight: 900;
+        margin-bottom: 28px;
+      }
+
+      .gold-button {
+        width: min(560px, 100%);
+        min-height: 74px;
+        border: 0;
+        background: var(--gold);
+        color: #082c36;
+        padding: 16px 28px;
+        font: inherit;
+        font-size: clamp(15px, 1.8vw, 19px);
+        font-weight: 900;
+        line-height: 1.28;
         cursor: pointer;
-        transition: transform 150ms ease, filter 150ms ease;
       }
 
-      .button:hover:not(:disabled) {
-        filter: brightness(1.05);
-        transform: translateY(-1px);
-      }
-
-      .button:disabled {
-        cursor: not-allowed;
-        opacity: 0.62;
-      }
-
-      .fine-print,
-      .status {
-        color: #818797;
-        font-size: 13px;
+      .summary-copy {
+        max-width: 820px;
+        color: var(--muted);
+        font-size: clamp(16px, 1.7vw, 20px);
         font-weight: 700;
+        line-height: 1.6;
+        margin: 0 auto 32px;
+      }
+
+      .summary-price {
+        color: var(--ink);
+        font-size: clamp(34px, 5vw, 68px);
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        margin-bottom: 22px;
+      }
+
+      .status {
+        min-height: 22px;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 800;
         line-height: 1.5;
         text-align: center;
+        margin-top: 14px;
+      }
+
+      .section--summary .status {
+        color: var(--teal);
       }
 
       .fine-print {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.5;
+        text-align: center;
         margin-top: 14px;
       }
 
-      .status {
-        min-height: 20px;
-        margin-top: 14px;
+      .section--summary .fine-print {
+        color: #66747b;
       }
 
       .close {
         position: fixed;
-        top: 26px;
-        right: 26px;
+        top: 22px;
+        right: 22px;
         width: 46px;
         height: 46px;
         border-radius: 999px;
-        border: 1px solid #dfe3ee;
-        background: #ffffff;
-        color: #25283a;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.96);
+        color: #082c36;
         font-size: 28px;
         line-height: 1;
         cursor: pointer;
-        box-shadow: 0 10px 24px rgba(18, 25, 45, 0.08);
+        z-index: 10;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
       }
 
       @media (max-width: 900px) {
         .page {
+          width: 100%;
+        }
+
+        .top-band {
+          padding: 18px 18px 46px;
+        }
+
+        .section {
+          padding: 44px 22px;
+        }
+
+        .section--hero {
+          margin-top: -28px;
+        }
+
+        .hero-grid,
+        .warning-grid,
+        .benefit-grid {
           grid-template-columns: 1fr;
         }
 
-        .copy {
-          border-right: 0;
-          border-bottom: 1px solid #e5e8f0;
-          padding: 72px 22px 34px;
+        .hero-grid {
+          gap: 28px;
         }
 
-        .visual {
-          padding: 28px 22px 38px;
+        .warning-grid {
+          gap: 34px;
         }
 
-        .offer-row {
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 10px;
+        .benefit-box {
+          padding: 22px;
         }
 
         .close {
-          top: 16px;
-          right: 16px;
+          top: 14px;
+          right: 14px;
         }
       }
     </style>
@@ -257,41 +360,97 @@
     <button class="close" type="button" aria-label="Close offer">×</button>
 
     <main class="page">
-      <section class="copy" aria-labelledby="offer-title">
-        <p class="eyebrow">One-time Digital Bundle Offer</p>
-        <h1 id="offer-title">Turn Your Relationships Into Paying Clients</h1>
-        <p class="lead">
-          Building relationships is one half of the game. Now it is time to turn those relationships
-          into paying clients with this Digital Bundle Offer.
-        </p>
+      <section class="top-band" aria-label="Digital Bundle instant offer">
+        <button class="cta-strip offer-button" type="button">
+          Yes! Send me This Digital BUNDLE for just $97!<br />
+          Click Here For Instant Access Using The Same Card From My Rich Relationship Ebook Purchase
+        </button>
+        <div class="status" id="statusTop" role="status" aria-live="polite"></div>
+      </section>
 
-        <div class="offer-card">
-          <div class="offer-row">
-            <h2>Digital Bundle</h2>
-            <div class="price">$97</div>
+      <section class="section section--hero" aria-labelledby="offer-title">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">One-Time Offer For Just $97</p>
+            <h1 id="offer-title">For just $97 you get access to the <span>Digital Bundle</span></h1>
+            <p class="body-copy">
+              Building relationships is one half of the game. Now it is time to turn those relationships
+              into paying clients with this Digital Bundle Offer.
+            </p>
+            <p class="body-copy">
+              This bundle gives you the client path resources, scripts, prompts, and follow-up assets
+              designed to help you move from warm connection to paid client conversation.
+            </p>
+            <p class="body-copy">
+              Your card will not need to be entered again. This private page uses the same secure Stripe
+              payment information from your Rich Relationship Ebook purchase.
+            </p>
           </div>
-          <ul class="bullets">
-            <li><span class="check">✓</span><span>Client path resources built to help you turn warm relationships into clear offers.</span></li>
-            <li><span class="check">✓</span><span>Templates, scripts, prompts, and action steps for faster follow-up.</span></li>
-            <li><span class="check">✓</span><span>No new checkout form. We use the same secure Stripe card from your Rich Relationship Ebook purchase.</span></li>
-          </ul>
+          <img class="product-shot" src="/Asset/digital-bundle-offer.png" alt="Digital Bundle product mockup" />
         </div>
       </section>
 
-      <section class="visual" aria-label="Digital Bundle checkout">
-        <div class="product-frame">
-          <img src="/Asset/digital-bundle-offer.png" alt="Digital Bundle product mockup" />
+      <section class="section section--pale" aria-label="Digital Bundle benefits">
+        <h2>Upgrade to the Digital Bundle and get:</h2>
+        <div class="benefit-grid">
+          <div class="benefit-box">
+            <ul class="benefit-list">
+              <li><span class="check">✓</span><span>Relationship-to-client follow-up scripts</span></li>
+              <li><span class="check">✓</span><span>Client path templates for turning trust into offers</span></li>
+              <li><span class="check">✓</span><span>Prompt packs that help you write messages faster</span></li>
+            </ul>
+          </div>
+          <div class="benefit-box">
+            <ul class="benefit-list">
+              <li><span class="check">✓</span><span>Digital offer positioning worksheets</span></li>
+              <li><span class="check">✓</span><span>Simple action plan for booking paid conversations</span></li>
+              <li><span class="check">✓</span><span>Instant electronic delivery after successful payment</span></li>
+            </ul>
+          </div>
         </div>
+        <p class="center-note">You already started building stronger relationships.</p>
+        <p class="sub-note">Now use this bundle to turn those relationships into paying clients.</p>
+        <button class="cta-strip offer-button" type="button">
+          Yes! Send me This Digital BUNDLE for just $97!
+        </button>
+      </section>
 
-        <div class="cta-panel">
-          <p>
-            This private offer is only available in this purchase session. Click once and your saved card
-            will be charged $97 for instant access.
-          </p>
-          <button class="button" type="button" id="acceptOffer">Send me This Digital BUNDLE</button>
-          <div class="status" id="status" role="status" aria-live="polite"></div>
-          <div class="fine-print">Secure one-click payment powered by Stripe. No card information is stored by Nexus Luma.</div>
+      <section class="section section--dark" aria-label="Digital Bundle warning">
+        <div class="warning-grid">
+          <div>
+            <h2>Digital Bundle Warning</h2>
+            <p class="body-copy">
+              This one-click offer is only valid during this purchase session. If you refresh this page,
+              close it, or try to visit the URL directly, you will be sent back home.
+            </p>
+            <p class="body-copy">
+              This page only appears after the Rich Relationship Ebook payment has processed and you have
+              reached the next training step. It cannot be accessed by manually typing the URL.
+            </p>
+            <button class="gold-button offer-button" type="button">
+              Yes! I want the Digital BUNDLE!<br />
+              Send me instant access for $97
+            </button>
+          </div>
+          <img class="product-shot" src="/Asset/digital-bundle-offer.png" alt="Digital Bundle product mockup" />
         </div>
+        <div class="fine-print">Secure one-click payment powered by Stripe. No card information is stored by Nexus Luma.</div>
+      </section>
+
+      <section class="section section--summary" aria-label="Digital Bundle summary">
+        <p class="eyebrow">For those who skip to the bottom, here is the summary:</p>
+        <h2>Everything you get when you upgrade to the Digital Bundle:</h2>
+        <p class="summary-copy">
+          You get the practical next-step resources for turning relationship equity into paid opportunities:
+          scripts, templates, prompts, offer positioning, follow-up workflows, and a simple client path you
+          can use right away.
+        </p>
+        <div class="summary-price">$97 Today</div>
+        <button class="cta-strip offer-button" type="button">
+          Send me This Digital BUNDLE
+        </button>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+        <div class="fine-print">This is a one-click charge using the saved Stripe payment method from your completed Rich Relationship Ebook order.</div>
       </section>
     </main>
 
@@ -319,16 +478,28 @@
         window.location.replace(HOME_URL);
       }
 
-      const button = document.getElementById("acceptOffer");
-      const status = document.getElementById("status");
+      const buttons = Array.from(document.querySelectorAll(".offer-button"));
+      const statuses = Array.from(document.querySelectorAll(".status"));
+
+      function setStatus(message) {
+        statuses.forEach((status) => {
+          status.textContent = message;
+        });
+      }
+
+      function setButtonsDisabled(disabled) {
+        buttons.forEach((button) => {
+          button.disabled = disabled;
+        });
+      }
 
       document.querySelector(".close").addEventListener("click", () => {
         window.location.replace(HOME_URL);
       });
 
-      button.addEventListener("click", async () => {
-        button.disabled = true;
-        status.textContent = "Processing your Digital Bundle...";
+      async function acceptOffer() {
+        setButtonsDisabled(true);
+        setStatus("Processing your Digital Bundle...");
 
         try {
           const response = await fetch("/api/charge-digital-bundle-upsell", {
@@ -347,9 +518,13 @@
           }));
           window.location.assign(THANK_YOU_URL);
         } catch (error) {
-          status.textContent = error.message || "Unable to process the offer.";
-          button.disabled = false;
+          setStatus(error.message || "Unable to process the offer.");
+          setButtonsDisabled(false);
         }
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", acceptOffer);
       });
     </script>
   </body>
