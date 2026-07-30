@@ -18,6 +18,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/create-digital-bundle-upsell-session"
+  to = "/.netlify/functions/create-digital-bundle-upsell-session"
+  status = 200
+
+[[redirects]]
+  from = "/api/charge-digital-bundle-upsell"
+  to = "/.netlify/functions/charge-digital-bundle-upsell"
+  status = 200
+
+[[redirects]]
   from = "/api/create-payment-intent"
   to = "/.netlify/functions/create-payment-intent"
   status = 200
