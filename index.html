@@ -52,6 +52,11 @@
       --content-max: 1200px;
     }
     section { scroll-margin-top: var(--navH); }
+    /* Lenis smooth scrolling (desktop pointers) */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
     h1, h2, h3 { text-wrap: balance; }
 
     .page-loader {
@@ -65,8 +70,7 @@
     #mainNav {
       position: fixed; top: 0; width: 100%; z-index: 1000;
       padding: 16px 0;
-      background: rgba(11,11,15,.92);
-      backdrop-filter: blur(20px);
+      background: rgba(11,11,15,.96);
       border-bottom: 1px solid rgba(255,255,255,.08);
       transform: translateZ(0);
       will-change: transform;
@@ -1342,7 +1346,7 @@
 
   <!-- ANALYZER RESULTS MODAL -->
   <div class="analyzer-modal-backdrop" id="analyzerModalBackdrop" aria-hidden="true">
-    <div class="analyzer-modal" role="dialog" aria-modal="true" aria-labelledby="analyzerResultTitle" id="analyzerModal">
+    <div class="analyzer-modal" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="analyzerResultTitle" id="analyzerModal">
       <button class="analyzer-modal-close" id="analyzerModalClose" type="button" aria-label="Close results">×</button>
       <div class="analyzer-modal-body" id="analyzerModalBody">
         <!-- Populated by JS -->
@@ -1384,7 +1388,7 @@
   </footer>
 
   <!-- PRIVACY / TERMS MODAL -->
-  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modal-backdrop" id="modalBackdrop" data-lenis-prevent aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle" data-modal="privacy">
       <button class="modal-close" type="button" aria-label="Close privacy dialog">×</button>
       <h3 id="privacyTitle">Privacy Notice</h3>
@@ -1415,6 +1419,7 @@
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollToPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 
   <script>
     /* ============================================================
@@ -1532,13 +1537,15 @@
     });
 
     /* ============================================================
-       SCROLL — NATIVE-FIRST, NO WHEEL INTERCEPTION
-       The browser handles wheel/trackpad scroll natively.
-       GSAP only drives the hero parallax timeline and reveal
-       animations. enableSmoothWheelScroll() has been removed
-       entirely — it caused double-smoothing, lag, and jitter.
+       SCROLL
+       Desktop (fine pointer): Lenis smooths wheel/trackpad input and
+       drives ScrollTrigger from GSAP's ticker; the hero timeline maps
+       1:1 (scrub: true) so there is only one layer of smoothing.
+       Touch and reduced-motion: native scrolling. Nested scrollers
+       (modals) opt out with data-lenis-prevent.
     ============================================================ */
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let lenis = null;
     const isMobileView = () => window.matchMedia("(max-width: 900px)").matches;
 
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -1563,6 +1570,7 @@
         setNavHeightVar();
         const navH = parseFloat(getComputedStyle(root).getPropertyValue("--navH")) || 0;
         const targetY = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+        if (lenis) { lenis.scrollTo(targetY, { duration: 1.2 }); return; }
         const useNative = window.matchMedia("(max-width: 900px)").matches || typeof gsap === "undefined";
         if (useNative) { window.scrollTo({ top: targetY, behavior: "smooth" }); return; }
         gsap.to(window, { scrollTo: { y: targetY, autoKill: true }, duration: 1.15, ease: "power2.inOut" });
@@ -1574,12 +1582,13 @@
       const backdrop = document.getElementById("modalBackdrop");
       if (!backdrop) return;
       const modals = backdrop.querySelectorAll(".modal");
-      const closeAll = () => { backdrop.classList.remove("active"); backdrop.setAttribute("aria-hidden","true"); modals.forEach(m => m.classList.remove("active")); };
+      const closeAll = () => { backdrop.classList.remove("active"); backdrop.setAttribute("aria-hidden","true"); modals.forEach(m => m.classList.remove("active")); if (lenis) lenis.start(); };
       const openModal = (name) => {
         const modal = backdrop.querySelector(`.modal[data-modal="${name}"]`);
         if (!modal) return;
         modals.forEach(m => m.classList.remove("active"));
         backdrop.classList.add("active"); backdrop.setAttribute("aria-hidden","false"); modal.classList.add("active");
+        if (lenis) lenis.stop();
       };
       document.querySelectorAll("[data-modal-trigger]").forEach(link => { link.addEventListener("click", (e) => { e.preventDefault(); openModal(link.dataset.modalTrigger); }); });
       backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeAll(); });
@@ -1600,6 +1609,17 @@
       const nonHeroToggleActions = "play none none none";
 
       ScrollTrigger.config({ ignoreMobileResize: true, limitCallbacks: true });
+
+      // Smooth scrolling for mouse wheels / trackpads: Lenis interpolates the
+      // scroll position every animation frame (60/120Hz, matching the display)
+      // and drives ScrollTrigger from GSAP's ticker so both share one frame.
+      // Touch devices keep native scrolling, which is already frame-smooth.
+      if (window.Lenis && window.matchMedia("(pointer: fine)").matches) {
+        lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
 
       const allRevealEls = [
         ".bendo-title",
@@ -1662,7 +1682,7 @@
           trigger: ".hero-parallax",
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.8,
+          scrub: lenis ? true : 0.6,
           invalidateOnRefresh: true
         }
       })
@@ -1770,11 +1790,13 @@
         backdrop.classList.add("active");
         backdrop.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
+        if (lenis) lenis.stop();
       }
       function closeModal() {
         backdrop.classList.remove("active");
         backdrop.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
+        if (lenis) lenis.start();
       }
 
       modalClose.addEventListener("click", closeModal);
