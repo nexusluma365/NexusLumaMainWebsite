@@ -9,10 +9,9 @@
   <meta property="og:description" content="Get found. Get clicked. Get leads. Website, Google Search Ads, lead tracking, and 30 days of campaign management for contractors." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="Asset/astro%20man%20in%20space.webp" />
-  <link rel="icon" href="2.png" type="image/png">
-  <link rel="apple-touch-icon" href="2.png">
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
-  <link rel="dns-prefetch" href="//unpkg.com">
+  <link rel="icon" href="favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" as="image" href="Asset/astro%20man%20in%20space.webp" fetchpriority="high">
 
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -60,7 +59,7 @@
     h1, h2, h3 { text-wrap: balance; }
 
     .page-loader {
-      position: fixed; inset: 0; background: #fff; z-index: 9999;
+      position: fixed; inset: 0; background: #020308; z-index: 9999;
       display: flex; align-items: center; justify-content: center;
       opacity: 1; transition: opacity 0.5s ease; pointer-events: none;
     }
@@ -331,8 +330,8 @@
     .contractor-intro { max-width: 860px; margin: 0 auto 48px; text-align: center; opacity: 0; transform: translateY(28px); will-change: opacity; }
     .contractor-panel { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: .96fr 1.04fr; gap: 0; background: #101326; color: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px rgba(8,20,58,.22); }
     .contractor-media { min-height: 560px; position: relative; overflow: hidden; opacity: 0; transform: translateX(-28px); will-change: opacity; }
-    .contractor-media img { width: 100%; height: 100%; object-fit: cover; display: none; opacity: 0; position: absolute; inset: 0; transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
-    .contractor-media img.active { display: block; opacity: 1; position: relative; transform: scale(1.02); }
+    .contractor-media img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; position: absolute; inset: 0; transform: scale(1.02); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+    .contractor-media img.active { opacity: 1; }
     .contractor-panel:hover .contractor-media img.active { transform: scale(1.07); }
     .contractor-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(16,19,38,.04), rgba(16,19,38,.32)); }
     .contractor-side { padding: 64px; position: relative; opacity: 0; transform: translateX(28px); will-change: opacity; }
@@ -474,12 +473,15 @@
       justify-content: center;
       padding: 20px;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity .3s ease;
+      transition: opacity .3s ease, visibility 0s linear .3s;
     }
     .analyzer-modal-backdrop.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity .3s ease;
     }
     .analyzer-modal {
       background: #0d0f14;
@@ -699,8 +701,8 @@
     .footer-contact a:hover { color: #9fd3dd; text-decoration: underline; }
 
     /* PRIVACY / TERMS MODAL */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(11,11,15,.6); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(11,11,15,.6); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0s linear .3s; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal-backdrop.active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.3s ease; }
     .modal { max-width: 720px; width: 100%; background: #0f1014; border-radius: 24px; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 70px rgba(0,0,0,.45); color: #fff; padding: 32px; position: relative; display: none; }
     .modal.active { display: block; }
     .modal h3 { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 12px; }
@@ -732,7 +734,7 @@
     .hero-copy h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); line-height: 1.04; font-weight: 900; letter-spacing: -.025em; text-shadow: 0 12px 40px rgba(0,0,0,.45); }
     .hero-copy > p { max-width: 690px; margin: 16px auto 0; color: rgba(255,255,255,.82); font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.55; }
     .hero-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
-    .btn-glass { color: #fff; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.24); backdrop-filter: blur(10px); }
+    .btn-glass { color: #fff; background: rgba(12,14,22,.55); border-color: rgba(255,255,255,.24); }
     .btn-glass:hover { transform: translateY(-2px); background: rgba(255,255,255,.16); }
     .hero-trust { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-top: 22px; color: rgba(255,255,255,.8); font-size: .88rem; font-weight: 750; }
     .hero-trust li::before { content: "✓"; color: #9fd3dd; font-weight: 900; margin-right: 7px; }
@@ -1025,7 +1027,7 @@
   <nav id="mainNav">
     <div class="nav-inner">
       <a class="nav-brand" href="#home" style="text-decoration:none">
-        <img class="brand-logo" src="2.png" alt="Nexus Luma Logo" width="3250" height="3250" decoding="async" fetchpriority="high">
+        <img class="brand-logo" src="Asset/nexus-luma-logo-176.webp" alt="Nexus Luma Logo" width="176" height="176" decoding="async">
         <span class="brand-name">Nexus Luma</span>
       </a>
       <ul id="navLinks">
@@ -1164,18 +1166,18 @@
           <div class="testimonial-stack">
             <div class="video-rail" aria-label="Customer testimonial videos">
               <article class="testimonial-video is-front" tabindex="0" role="button" aria-label="Bring Meeting Spiderman story to the front">
-                <div class="video-fallback"><img src="Spiderman-AD-poster.jpg" alt="Spiderman ad video preview" loading="lazy" decoding="async" /></div>
-                <video controls preload="metadata" poster="Spiderman-AD-poster.jpg" playsinline aria-label="Meeting Spiderman video"><source src="Spiderman-AD-web.mp4" type="video/mp4"></video>
+                <div class="video-fallback"><img src="Spiderman-AD-poster.webp" alt="Spiderman ad video preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="none" poster="Spiderman-AD-poster.webp" playsinline aria-label="Meeting Spiderman video"><source src="Spiderman-AD-web.mp4" type="video/mp4"></video>
                 <div class="video-caption"><strong>Meeting Spiderman</strong><span>Watch how a strong visual hook can make an offer feel memorable from the first second.</span></div>
               </article>
               <article class="testimonial-video is-middle" tabindex="0" role="button" aria-label="Bring Naphtali customer story to the front">
-                <div class="video-fallback"><img src="Naphtali-poster.jpg" alt="Naphtali customer testimonial preview" loading="lazy" decoding="async" /></div>
-                <video controls preload="metadata" poster="Naphtali-poster.jpg" playsinline aria-label="Naphtali customer testimonial video"><source src="Naphtali-web.mp4" type="video/mp4"></video>
+                <div class="video-fallback"><img src="Naphtali-poster.webp" alt="Naphtali customer testimonial preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="none" poster="Naphtali-poster.webp" playsinline aria-label="Naphtali customer testimonial video"><source src="Naphtali-web.mp4" type="video/mp4"></video>
                 <div class="video-caption"><strong>Naphtali</strong><span>See how professional presentation helps customers feel confident before the first call.</span></div>
               </article>
               <article class="testimonial-video is-back" tabindex="0" role="button" aria-label="Bring George customer story to the front">
-                <div class="video-fallback"><img src="George-poster.jpg" alt="George customer testimonial preview" loading="lazy" decoding="async" /></div>
-                <video controls preload="metadata" poster="George-poster.jpg" playsinline aria-label="George customer testimonial video"><source src="George-web.mp4" type="video/mp4"></video>
+                <div class="video-fallback"><img src="George-poster.webp" alt="George customer testimonial preview" loading="lazy" decoding="async" /></div>
+                <video controls preload="none" poster="George-poster.webp" playsinline aria-label="George customer testimonial video"><source src="George-web.mp4" type="video/mp4"></video>
                 <div class="video-caption"><strong>George</strong><span>See how clear messaging and trust-focused design can move visitors closer to action.</span></div>
               </article>
             </div>
@@ -1374,7 +1376,7 @@
     <span class="footer-anchor" id="terms" aria-hidden="true"></span>
     <div class="footer-inner">
       <div class="footer-brand">
-        <img class="brand-logo" src="2.png" alt="Nexus Luma Logo" width="3250" height="3250" loading="lazy" decoding="async">
+        <img class="brand-logo" src="Asset/nexus-luma-logo-176.webp" alt="Nexus Luma Logo" width="176" height="176" loading="lazy" decoding="async">
         <span>Nexus Luma</span>
       </div>
       <div class="footer-legal">
@@ -1416,9 +1418,8 @@
 
   <script src="js/nl-track.js"></script>
   <!-- GSAP -->
-  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/gsap@3/dist/ScrollToPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 
   <script>
@@ -1496,7 +1497,12 @@
       // Contractor slideshow
       const slides = document.querySelectorAll('.contractor-media.slideshow .slide');
       let cCurrent = 0;
-      function showSlide(idx) { slides.forEach((img, i) => img.classList.toggle('active', i === idx)); }
+      function showSlide(idx) {
+        const next = slides[idx];
+        // Decode off the main thread before swapping so the crossfade never hitches.
+        const ready = next && next.decode ? next.decode().catch(() => {}) : Promise.resolve();
+        ready.then(() => slides.forEach((img, i) => img.classList.toggle('active', i === idx)));
+      }
       let contractorInterval = null;
       startContractor = () => { if (contractorInterval) return; contractorInterval = setInterval(() => { cCurrent = (cCurrent + 1) % slides.length; showSlide(cCurrent); }, 3000); };
       stopContractor  = () => { if (!contractorInterval) return; clearInterval(contractorInterval); contractorInterval = null; };
@@ -1548,7 +1554,7 @@
     let lenis = null;
     const isMobileView = () => window.matchMedia("(max-width: 900px)").matches;
 
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+    gsap.registerPlugin(ScrollTrigger);
 
     const nav  = document.getElementById("mainNav");
     const root = document.documentElement;
@@ -1571,9 +1577,7 @@
         const navH = parseFloat(getComputedStyle(root).getPropertyValue("--navH")) || 0;
         const targetY = target.getBoundingClientRect().top + window.scrollY - navH - 16;
         if (lenis) { lenis.scrollTo(targetY, { duration: 1.2 }); return; }
-        const useNative = window.matchMedia("(max-width: 900px)").matches || typeof gsap === "undefined";
-        if (useNative) { window.scrollTo({ top: targetY, behavior: "smooth" }); return; }
-        gsap.to(window, { scrollTo: { y: targetY, autoKill: true }, duration: 1.15, ease: "power2.inOut" });
+        window.scrollTo({ top: targetY, behavior: reduceMotion ? "auto" : "smooth" });
       });
     });
 
@@ -1741,21 +1745,19 @@
       ScrollTrigger.refresh();
     }
 
-    window.addEventListener("load", async () => {
-      loader.classList.add("loaded");
+    // Start as soon as the hero photo is ready (capped at 1.5s) rather than
+    // waiting for every image/video on the page. ScrollTrigger re-measures on
+    // the window "load" event, so later-loading images can't skew positions.
+    (async () => {
       scheduleNavMeasure();
-      try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e) {}
-      await preloadImage("Asset/astro man in space.webp");
+      await Promise.race([preloadImage("Asset/astro man in space.webp"), new Promise((r) => setTimeout(r, 1500))]);
+      loader.classList.add("loaded");
       await initScroll();
       if (!reduceMotion) {
         let resizeTimer;
         window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250); });
       }
-    });
-
-    if (reduceMotion) {
-      window.addEventListener("load", () => { loader.classList.add("loaded"); scheduleNavMeasure(); });
-    }
+    })();
 
     /* ============================================================
        WEBSITE ANALYZER — standalone modal (kept for direct API use)
