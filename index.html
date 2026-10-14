@@ -115,16 +115,17 @@
     #mainNav a:hover::after { width: 100%; }
 
     /* HERO */
-    .hero-parallax { min-height: 205vh; background: #020308; margin-top: 0; position: relative; }
-    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; will-change: background-color; z-index: 100; }
+    .hero-parallax { min-height: 250vh; background: #020308; margin-top: 0; position: relative; }
+    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; z-index: 100; }
     .hero-bg-parallax {
       position: absolute; inset: 0;
       background-image: url("Asset/astro man in space.webp");
       background-size: cover; background-position: center;
-      transform: translate3d(0,0,0) scale(1.12); transform-origin: center;
+      transform: translate3d(0,0,0) scale(1.14); transform-origin: 50% 50%;
       will-change: transform, opacity; backface-visibility: hidden;
     }
-    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18), rgba(0,0,0,.52)); will-change: opacity; }
+    /* Dims the photo but not the word above it: that contrast is what makes the aligned letters read as a cut-out window. */
+    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 35%, rgba(2,3,8,.58), rgba(2,3,8,.78)); will-change: opacity; }
     .mask-text {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-size: clamp(7rem, 28vw, 34rem); font-weight: 900; letter-spacing: -0.06em;
@@ -132,8 +133,12 @@
       background-image: url("Asset/astro man in space.webp");
       background-size: cover; background-position: center;
       -webkit-background-clip: text; background-clip: text;
-      transform: translate3d(0,0,0) scale(1.28);
-      will-change: opacity; backface-visibility: hidden;
+      /* Same box, background and transform as .hero-bg-parallax, so the letters
+         are a pixel-aligned window into the photo. Position the word with
+         padding only: padding never moves the background. */
+      transform: translate3d(0,0,0) scale(1.14); transform-origin: 50% 50%;
+      will-change: transform, opacity; backface-visibility: hidden;
+      filter: brightness(1.5) saturate(1.15) drop-shadow(0 0 1px rgba(159,211,221,.75)) drop-shadow(0 0 22px rgba(159,211,221,.16));
     }
     .reveal-copy {
       position: absolute; top: 70%; left: 0; right: 0; margin: 0 auto;
@@ -698,8 +703,8 @@
     #mainNav .nav-cta::after, #mainNav .nav-brand::after { display: none; }
 
     /* Hero copy (sits over the existing parallax) */
-    .mask-text { inset: 0 0 42% 0; font-size: clamp(6rem, 20vw, 24rem); }
-    .hero-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 68%; background: linear-gradient(180deg, rgba(2,3,8,0) 0%, rgba(2,3,8,.72) 46%, rgba(2,3,8,.92) 100%); pointer-events: none; z-index: 2; }
+    .mask-text { padding-bottom: 40vh; font-size: clamp(6rem, 20vw, 24rem); }
+    .hero-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 60%; background: linear-gradient(180deg, rgba(2,3,8,0) 0%, rgba(2,3,8,.72) 46%, rgba(2,3,8,.92) 100%); pointer-events: none; z-index: 2; }
     .hero-copy { position: absolute; left: 0; right: 0; bottom: clamp(28px, 7vh, 72px); z-index: 3; width: min(900px, 100%); margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
     .hero-eyebrow { color: #9fd3dd; font-size: 12px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 14px; }
     .hero-copy h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); line-height: 1.04; font-weight: 900; letter-spacing: -.025em; text-shadow: 0 12px 40px rgba(0,0,0,.45); }
@@ -840,7 +845,7 @@
       .nav-inner { grid-template-columns: 1fr auto; gap: 8px; position: relative; }
       .nav-toggle { display: inline-flex; }
       #mainNav ul { position: absolute; top: calc(100% + 4px); right: 14px; }
-      .mask-text { inset: 0 0 50% 0; }
+      .mask-text { padding-bottom: 48vh; }
       .hero-copy { bottom: max(24px, env(safe-area-inset-bottom)); }
       .included-grid { grid-template-columns: 1fr 1fr; }
       .included-grid .icon-card:nth-child(3n) { border-right: 1px solid rgba(8,20,58,.08); }
@@ -1575,23 +1580,7 @@
       const staggerSlow  = mobileMotion ? 0.1 : 0.15;
       const nonHeroToggleActions = "play none none none";
 
-      // ── Ticker: minimal lag budget, tight sync interval ────────────
-      // lagSmoothing(0, 16) = no lag budget, 16ms threshold — eliminates
-      // the GSAP frame-skip that previously caused scroll jitter.
-      gsap.ticker.lagSmoothing(0, 16);
-
-      ScrollTrigger.config({
-        ignoreMobileResize: true,
-        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
-        limitCallbacks: true,
-        syncInterval: mobileMotion ? 100 : 40   // was 80 — tighter sync on desktop
-      });
-      ScrollTrigger.normalizeScroll(false);   // keep native scroll as-is
-
-      // ── Initial GSAP states ────────────────────────────────────────
-      gsap.set(".hero-bg-parallax", { scale: 1.08, opacity: 1, y: 0, force3D: true });
-      gsap.set(".mask-text",        { scale: 1.25, y: 0, opacity: 1, force3D: false });
-      gsap.set(".reveal-copy",      { opacity: 0, y: 36, force3D: false });
+      ScrollTrigger.config({ ignoreMobileResize: true, limitCallbacks: true });
 
       const allRevealEls = [
         ".bendo-title",
@@ -1599,78 +1588,36 @@
         ".icon-card"
       ];
 
-      if (mobileMotion) {
-        // Mobile hero: gentle scale the whole way through
-        gsap.to(".hero-bg-parallax", {
-          scale: 1.02, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "bottom top", scrub: 0.6 }
-        });
-        // Hero copy hands off to the cinematic beat as soon as scrolling starts
-        gsap.to(".hero-copy, .hero-scrim", {
-          autoAlpha: 0, y: -40, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "6% top", end: "26% top", scrub: 0.5 }
-        });
-        // Overlay fades out in the first third of scroll
-        gsap.to(".hero-parallax-overlay", {
-          opacity: 0.1, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "35% top", scrub: 0.6 }
-        });
-        // Headline drifts up and fades out before the blackout
-        gsap.to(".mask-text", {
-          y: -160, opacity: 0, ease: "none", force3D: false,
-          scrollTrigger: { trigger: ".hero-parallax", start: "top top", end: "52% top", scrub: 0.6 }
-        });
-        // Photo fades to black — mirrors the desktop cinematic beat
-        gsap.to(".hero-bg-parallax", {
-          opacity: 0, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "38% top", end: "64% top", scrub: 0.8 }
-        });
-        gsap.to(".hero-sticky", {
-          backgroundColor: "#020308", ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "38% top", end: "64% top", scrub: 0.8 }
-        });
-        // Reveal copy fades in after the blackout
-        gsap.fromTo(".reveal-copy",
-          { opacity: 0, y: 28 },
-          { opacity: 1, y: 0, ease: "none",
-            scrollTrigger: { trigger: ".hero-parallax", start: "62% top", end: "78% top", scrub: 0.8 }
-          }
-        );
-        // Reveal copy exits near the bottom of the hero
-        gsap.to(".reveal-copy", {
-          opacity: 0, y: -50, ease: "none",
-          scrollTrigger: { trigger: ".hero-parallax", start: "88% top", end: "bottom top", scrub: 0.8 }
-        });
-        gsap.set(allRevealEls, { opacity: 1, x: 0, y: 0 });
-        return;
-      }
+      // ── Hero parallax ─────────────────────────────────────────────
+      // CSS position:sticky holds the scene (no GSAP pin, so Chrome scrolls
+      // natively). One timeline maps the hero's scroll length 1:1 with a light
+      // scrub. The photo and the "Leads" word share identical geometry and are
+      // always transformed together, so the word stays aligned with the photo.
+      const heroLayers = [".hero-bg-parallax", ".mask-text"];
+      gsap.set(heroLayers, { scale: 1.14, y: 0, opacity: 1, force3D: true, transformOrigin: "50% 50%" });
+      gsap.set(".reveal-copy", { autoAlpha: 0, y: 36 });
 
-      // ── Desktop hero parallax (UNTOUCHED) ─────────────────────────
-      const tl = gsap.timeline({
+      gsap.timeline({
+        defaults: { ease: "none" },
         scrollTrigger: {
           trigger: ".hero-parallax",
           start: "top top",
-          end: "+=155%",
-          scrub: 1.6,
-          pin: ".hero-sticky",
-          pinType: "fixed",
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          fastScrollEnd: false,
-          preventOverlaps: true
+          end: "bottom bottom",
+          scrub: mobileMotion ? 0.35 : 0.5,
+          invalidateOnRefresh: true
         }
-      });
-      tl.to(".hero-copy, .hero-scrim", { autoAlpha: 0, y: -48, ease: "none", duration: 0.28 }, 0.06)
-        .to(".hero-bg-parallax", { scale: 1, ease: "none" }, 0.00)
-        .to(".mask-text",         { scale: 1, y: -40, ease: "none", force3D: false }, 0.00)
-        .to(".hero-parallax-overlay", { opacity: 0, ease: "none" }, 0.32)
-        .to(".hero-bg-parallax",  { opacity: 0, ease: "none" }, 0.64)
-        .to(".hero-sticky",       { backgroundColor: "#020308", ease: "none" }, 0.64)
-        .to(".reveal-copy",       { opacity: 1, y: 36, ease: "none", force3D: false }, 0.66)
-        .to(".reveal-copy",       { opacity: 1, y: 0,  ease: "none", force3D: false }, 0.78)
-        .to(".mask-text",         { y: -520, opacity: 0, ease: "none", force3D: false }, 0.85)
-        .to(".reveal-copy",       { opacity: 1, y: 0,  ease: "none", force3D: false }, 0.90)
-        .to(".reveal-copy",       { opacity: 0, y: -80, ease: "none", force3D: false }, 0.98);
+      })
+        .to(".hero-copy, .hero-scrim", { autoAlpha: 0, y: -48, duration: 0.16 }, 0.03)
+        .to(heroLayers, { scale: 1, duration: 0.55 }, 0)
+        .to(".hero-bg-parallax", { opacity: 0, duration: 0.14 }, 0.5)
+        .to(".reveal-copy", { autoAlpha: 1, y: 0, duration: 0.12 }, 0.6)
+        .to(".mask-text", { yPercent: -45, opacity: 0, duration: 0.16 }, 0.76)
+        .to(".reveal-copy", { autoAlpha: 0, y: -60, duration: 0.1 }, 0.9);
+
+      if (mobileMotion) {
+        gsap.set(allRevealEls, { opacity: 1, x: 0, y: 0 });
+        return;
+      }
 
       // ── Reveal animations (desktop) ───────────────────────────────
       // Make all reveal elements visible — scroll triggers below will
