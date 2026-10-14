@@ -116,29 +116,47 @@
 
     /* HERO */
     .hero-parallax { min-height: 255vh; background: #020308; margin-top: 0; position: relative; }
-    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; z-index: 100; }
+    .hero-sticky {
+      position: sticky; top: 0; height: 100vh; overflow: hidden; background: #020308; z-index: 100;
+      /* Photo framing shared by .hero-bg-parallax and .mask-text. Identical
+         size + position on identical boxes keeps the letters aligned with the
+         photo. The 3:2 photo is centered on the word (--hero-img-cy) so the
+         bright Earth horizon sits behind the letters; width >= 3 * cy keeps
+         the top covered, and the bottom fades into space. */
+      --hero-img-w: max(100vw, 87vh);
+      --hero-img-cy: 29vh;
+      --hero-img-pos: 50% calc(var(--hero-img-cy) - var(--hero-img-w) / 3);
+      --hero-img-bottom: calc(var(--hero-img-cy) + var(--hero-img-w) / 3);
+    }
+    .mask-text {
+      background-image: url("Asset/astro man in space.webp");
+      background-repeat: no-repeat;
+      background-size: var(--hero-img-w) auto;
+      background-position: var(--hero-img-pos);
+    }
     .hero-bg-parallax {
       position: absolute; inset: 0;
-      background-image: url("Asset/astro man in space.webp");
-      background-size: cover; background-position: center;
-      transform: translate3d(0,0,0) scale(1.14); transform-origin: 50% 50%;
+      background-color: #020308;
+      background-image:
+        linear-gradient(180deg, rgba(2,3,8,0) calc(var(--hero-img-bottom) - 24vh), #020308 calc(var(--hero-img-bottom) - 1px)),
+        url("Asset/astro man in space.webp");
+      background-repeat: no-repeat;
+      background-size: 100% 100%, var(--hero-img-w) auto;
+      background-position: 0 0, var(--hero-img-pos);
+      transform: translate3d(0,0,0) scale(1.08); transform-origin: 50% 50%;
       will-change: transform, opacity; backface-visibility: hidden;
     }
-    /* Dims the photo but not the word above it: that contrast is what makes the aligned letters read as a cut-out window. */
-    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 35%, rgba(2,3,8,.58), rgba(2,3,8,.78)); will-change: opacity; }
+    /* Dims the photo but not the word above it, so the aligned letters glow. */
+    .hero-parallax-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, rgba(2,3,8,.5), rgba(2,3,8,.72)); will-change: opacity; }
     .mask-text {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-size: clamp(7rem, 28vw, 34rem); font-weight: 900; letter-spacing: -0.06em;
       color: transparent;
-      background-image: url("Asset/astro man in space.webp");
-      background-size: cover; background-position: center;
       -webkit-background-clip: text; background-clip: text;
-      /* Same box, background and transform as .hero-bg-parallax, so the letters
-         are a pixel-aligned window into the photo. Position the word with
-         padding only: padding never moves the background. */
-      transform: translate3d(0,0,0) scale(1.14); transform-origin: 50% 50%;
+      /* Full-size box like .hero-bg-parallax; the word is placed with padding,
+         which never moves the background. */
+      transform: translate3d(0,0,0) scale(1.08); transform-origin: 50% 50%;
       will-change: transform, opacity; backface-visibility: hidden;
-      filter: brightness(1.5) saturate(1.15) drop-shadow(0 0 1px rgba(159,211,221,.75)) drop-shadow(0 0 22px rgba(159,211,221,.16));
     }
     .reveal-copy {
       position: absolute; top: 70%; left: 0; right: 0; margin: 0 auto;
@@ -703,8 +721,8 @@
     #mainNav .nav-cta::after, #mainNav .nav-brand::after { display: none; }
 
     /* Hero copy (sits over the existing parallax) */
-    .mask-text { padding-bottom: 40vh; font-size: clamp(6rem, 20vw, 24rem); }
-    .hero-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 60%; background: linear-gradient(180deg, rgba(2,3,8,0) 0%, rgba(2,3,8,.72) 46%, rgba(2,3,8,.92) 100%); pointer-events: none; z-index: 2; }
+    .mask-text { padding-bottom: 42vh; font-size: clamp(6.9rem, 23vw, 27.7rem); }
+    .hero-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 68%; background: linear-gradient(180deg, rgba(2,3,8,0) 0%, rgba(2,3,8,.72) 46%, rgba(2,3,8,.92) 100%); pointer-events: none; z-index: 2; }
     .hero-copy { position: absolute; left: 0; right: 0; bottom: clamp(28px, 7vh, 72px); z-index: 3; width: min(900px, 100%); margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
     .hero-eyebrow { color: #9fd3dd; font-size: 12px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 14px; }
     .hero-copy h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); line-height: 1.04; font-weight: 900; letter-spacing: -.025em; text-shadow: 0 12px 40px rgba(0,0,0,.45); }
@@ -845,7 +863,8 @@
       .nav-inner { grid-template-columns: 1fr auto; gap: 8px; position: relative; }
       .nav-toggle { display: inline-flex; }
       #mainNav ul { position: absolute; top: calc(100% + 4px); right: 14px; }
-      .mask-text { padding-bottom: 48vh; }
+      .mask-text { padding-bottom: 50vh; }
+      .hero-sticky { --hero-img-w: max(100vw, 75vh); --hero-img-cy: 25vh; }
       .hero-copy { bottom: max(24px, env(safe-area-inset-bottom)); }
       .included-grid { grid-template-columns: 1fr 1fr; }
       .included-grid .icon-card:nth-child(3n) { border-right: 1px solid rgba(8,20,58,.08); }
@@ -892,7 +911,7 @@
       #mainNav { padding: 10px 0; }
       .nav-inner { padding: 0 14px; grid-template-columns: 1fr auto; row-gap: 8px; }
       .hero-parallax { min-height: 220vh; }
-      .mask-text { font-size: clamp(4.5rem, 22vw, 18rem); }
+      .mask-text { font-size: clamp(5.2rem, 25.5vw, 20.8rem); }
       .reveal-copy { top: 66%; width: min(720px, 90vw); }
       .nav-brand { justify-self: start; }
       .brand-logo { width: 60px; height: 60px; }
@@ -945,7 +964,7 @@
     }
     @media (max-width: 520px) {
       .hero-parallax { min-height: 190vh; }
-      .mask-text { font-size: clamp(3.5rem, 24vw, 13rem); }
+      .mask-text { font-size: clamp(4rem, 27.8vw, 15rem); }
       .reveal-copy { top: 60%; padding: 0 8px; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -1589,40 +1608,11 @@
       ];
 
       // ── Hero parallax ─────────────────────────────────────────────
-      // Original choreography: the "Leads" word zooms and drifts at its own
-      // rate over the photo (parallax). To keep the photo inside the letters
-      // aligned with the photo behind them, syncMaskImage() counter-scales and
-      // counter-shifts the word's background every frame.
-      const maskEl = document.querySelector(".mask-text");
-      const bgEl = document.querySelector(".hero-bg-parallax");
-      const heroImg = new Image();
-      heroImg.src = "Asset/astro man in space.webp";
-      let coverW = 0, coverH = 0, lastMaskKey = "";
-      const measureCover = () => {
-        if (!heroImg.naturalWidth) return;
-        const cover = Math.max(maskEl.clientWidth / heroImg.naturalWidth, maskEl.clientHeight / heroImg.naturalHeight);
-        coverW = heroImg.naturalWidth * cover;
-        coverH = heroImg.naturalHeight * cover;
-        lastMaskKey = "";
-      };
-      const syncMaskImage = () => {
-        if (!coverW) return;
-        const wordScale = gsap.getProperty(maskEl, "scale");
-        const wordY = gsap.getProperty(maskEl, "y");
-        const k = gsap.getProperty(bgEl, "scale") / wordScale;
-        const key = k.toFixed(5) + "|" + wordY.toFixed(2);
-        if (key === lastMaskKey) return;
-        lastMaskKey = key;
-        maskEl.style.backgroundSize = `${coverW * k}px ${coverH * k}px`;
-        maskEl.style.backgroundPosition = `50% calc(50% + ${(-wordY / wordScale).toFixed(2)}px)`;
-      };
-      if (heroImg.complete) measureCover(); else heroImg.onload = measureCover;
-      ScrollTrigger.addEventListener("refresh", measureCover);
-      gsap.ticker.add(syncMaskImage);
-
-      gsap.set(".hero-bg-parallax", { scale: 1.08, opacity: 1, y: 0, force3D: true });
-      gsap.set(".mask-text",        { scale: 1.25, y: 0, opacity: 1 });
-      gsap.set(".reveal-copy",      { opacity: 0, y: 36 });
+      // Photo and word start at the same scale, so the letters are aligned
+      // with the photo. On scroll the word zooms out faster and drifts up
+      // (parallax). Transform/opacity only, so Chrome composites it on the GPU.
+      gsap.set([".hero-bg-parallax", ".mask-text"], { scale: 1.08, y: 0, opacity: 1, force3D: true, transformOrigin: "50% 50%" });
+      gsap.set(".reveal-copy", { opacity: 0, y: 36 });
 
       if (mobileMotion) {
         // Mobile hero: gentle scale the whole way through
@@ -1678,7 +1668,7 @@
       })
         .to(".hero-copy, .hero-scrim", { autoAlpha: 0, y: -48, ease: "none", duration: 0.28 }, 0.06)
         .to(".hero-bg-parallax",  { scale: 1, ease: "none" }, 0.00)
-        .to(".mask-text",         { scale: 1, y: -40, ease: "none" }, 0.00)
+        .to(".mask-text",         { scale: 0.86, y: -40, ease: "none" }, 0.00)
         .to(".hero-parallax-overlay", { opacity: 0, ease: "none" }, 0.32)
         .to(".hero-bg-parallax",  { opacity: 0, ease: "none" }, 0.64)
         .to(".reveal-copy",       { opacity: 1, y: 36, ease: "none" }, 0.66)
