@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Build My Lead System | Nexus Luma</title>
+  <meta name="description" content="Tell us about your contracting business and start your Nexus Luma Contractor Lead System: website, Google Search Ads setup, lead tracking, and 30 days of campaign management." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/2.png" type="image/png">
+  <link rel="apple-touch-icon" href="/2.png">
+  <link rel="preconnect" href="https://js.stripe.com">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/nl-track.js"></script>
+</head>
+<body>
+  <nav class="fn-nav">
+    <div class="fn-nav-inner">
+      <a class="fn-brand" href="/"><img src="/2.png" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
+      <a class="fn-nav-link" href="/book/" data-track="strategy_call_clicked" data-track-location="start_nav">Prefer to talk first?</a>
+    </div>
+  </nav>
+
+  <main class="fn-main" id="flow">
+    <div class="fn-step-meta">
+      <button class="fn-back" id="backBtn" type="button" hidden>← Back</button>
+      <span id="stepLabel">Step 1 of 7</span>
+    </div>
+    <div class="fn-progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+    <!-- 1. Trade -->
+    <section class="fn-step" data-step="trade" aria-labelledby="q-trade">
+      <p class="fn-eyebrow">Build My Lead System</p>
+      <h1 class="fn-title" id="q-trade" tabindex="-1">What type of contracting business do you own?</h1>
+      <p class="fn-sub">A few quick questions so we can plan your website and Google Ads campaign around your work.</p>
+      <div class="fn-options fn-options--compact" data-choice="trade">
+        <button type="button" class="fn-option">Roofing</button>
+        <button type="button" class="fn-option">HVAC</button>
+        <button type="button" class="fn-option">Plumbing</button>
+        <button type="button" class="fn-option">Electrical</button>
+        <button type="button" class="fn-option">Remodeling</button>
+        <button type="button" class="fn-option">General Contracting</button>
+        <button type="button" class="fn-option">Painting</button>
+        <button type="button" class="fn-option">Flooring</button>
+        <button type="button" class="fn-option">Concrete</button>
+        <button type="button" class="fn-option">Landscaping</button>
+        <button type="button" class="fn-option">Fencing</button>
+        <button type="button" class="fn-option">Decks</button>
+        <button type="button" class="fn-option">Handyman</button>
+        <button type="button" class="fn-option">Pressure Washing</button>
+        <button type="button" class="fn-option" data-other>Other</button>
+      </div>
+      <div id="tradeOtherWrap" hidden>
+        <div class="fn-field" style="margin-top:14px">
+          <label for="tradeOther">Your trade</label>
+          <input class="fn-input" id="tradeOther" type="text" maxlength="80" placeholder="e.g. Gutter installation" autocomplete="off">
+          <div class="fn-error" data-error-for="tradeOther"></div>
+        </div>
+        <div class="fn-actions"><button class="fn-btn" type="button" id="tradeOtherNext">Continue</button></div>
+      </div>
+    </section>
+
+    <!-- 2. Service -->
+    <section class="fn-step" data-step="service" aria-labelledby="q-service" hidden>
+      <h1 class="fn-title" id="q-service" tabindex="-1">What service do you most want more leads for?</h1>
+      <p class="fn-sub">We'll build your first campaign around this.</p>
+      <div class="fn-field">
+        <label for="service">Service</label>
+        <input class="fn-input" id="service" type="text" maxlength="160" placeholder="e.g. Roof replacement" autocomplete="off">
+        <div class="fn-chips" id="serviceChips"></div>
+        <div class="fn-error" data-error-for="service"></div>
+      </div>
+      <div class="fn-actions"><button class="fn-btn" type="button" data-next="service">Continue</button></div>
+    </section>
+
+    <!-- 3. Service area -->
+    <section class="fn-step" data-step="area" aria-labelledby="q-area" hidden>
+      <h1 class="fn-title" id="q-area" tabindex="-1">Where do you provide service?</h1>
+      <p class="fn-sub">City, county, or ZIP codes. Ads only show to people in your area.</p>
+      <div class="fn-field">
+        <label for="serviceArea">Service area</label>
+        <input class="fn-input" id="serviceArea" type="text" maxlength="160" placeholder="e.g. Greensboro, NC + 25 miles" autocomplete="address-level2">
+        <div class="fn-error" data-error-for="serviceArea"></div>
+      </div>
+      <div class="fn-actions"><button class="fn-btn" type="button" data-next="area">Continue</button></div>
+    </section>
+
+    <!-- 4. Website -->
+    <section class="fn-step" data-step="website" aria-labelledby="q-website" hidden>
+      <h1 class="fn-title" id="q-website" tabindex="-1">Do you currently have a website?</h1>
+      <div class="fn-options fn-options--single" data-choice="hasWebsite">
+        <button type="button" class="fn-option">Yes</button>
+        <button type="button" class="fn-option">Yes, but it needs work</button>
+        <button type="button" class="fn-option">No</button>
+      </div>
+    </section>
+
+    <!-- 5. Google Ads -->
+    <section class="fn-step" data-step="ads" aria-labelledby="q-ads" hidden>
+      <h1 class="fn-title" id="q-ads" tabindex="-1">Are you currently running Google Ads?</h1>
+      <div class="fn-options fn-options--single" data-choice="runningAds">
+        <button type="button" class="fn-option">Yes, right now</button>
+        <button type="button" class="fn-option">I've tried it before</button>
+        <button type="button" class="fn-option">No, never</button>
+      </div>
+    </section>
+
+    <!-- 6. Budget -->
+    <section class="fn-step" data-step="budget" aria-labelledby="q-budget" hidden>
+      <h1 class="fn-title" id="q-budget" tabindex="-1">What monthly Google ad budget are you comfortable funding?</h1>
+      <div class="fn-options fn-options--single" data-choice="adBudget">
+        <button type="button" class="fn-option">$300–$500</button>
+        <button type="button" class="fn-option">$500–$1,000</button>
+        <button type="button" class="fn-option">$1,000–$2,500</button>
+        <button type="button" class="fn-option">$2,500+</button>
+        <button type="button" class="fn-option">Not sure yet</button>
+      </div>
+      <div class="fn-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span>Your ad budget is <strong>paid directly to Google</strong> from your own Google Ads account. It is not part of the Nexus Luma package price.</span>
+      </div>
+    </section>
+
+    <!-- 7. Contact -->
+    <section class="fn-step" data-step="contact" aria-labelledby="q-contact" hidden>
+      <h1 class="fn-title" id="q-contact" tabindex="-1">Where should we send your project details?</h1>
+      <p class="fn-sub">Last step before your project summary.</p>
+      <form id="contactForm" novalidate>
+        <div class="fn-grid-2">
+          <div class="fn-field">
+            <label for="name">Your name</label>
+            <input class="fn-input" id="name" type="text" autocomplete="name" maxlength="120" required>
+            <div class="fn-error" data-error-for="name"></div>
+          </div>
+          <div class="fn-field">
+            <label for="business">Business name</label>
+            <input class="fn-input" id="business" type="text" autocomplete="organization" maxlength="160" required>
+            <div class="fn-error" data-error-for="business"></div>
+          </div>
+          <div class="fn-field">
+            <label for="email">Email</label>
+            <input class="fn-input" id="email" type="email" inputmode="email" autocomplete="email" maxlength="160" required>
+            <div class="fn-error" data-error-for="email"></div>
+          </div>
+          <div class="fn-field">
+            <label for="phone">Phone</label>
+            <input class="fn-input" id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" required>
+            <div class="fn-error" data-error-for="phone"></div>
+          </div>
+        </div>
+        <div class="fn-field" id="websiteUrlWrap" hidden>
+          <label for="websiteUrl">Current website (optional)</label>
+          <input class="fn-input" id="websiteUrl" type="text" inputmode="url" autocomplete="url" maxlength="240" placeholder="yourbusiness.com">
+        </div>
+        <div class="fn-hp" aria-hidden="true"><label for="hpField">Leave blank</label><input id="hpField" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="fn-alert" id="contactAlert" role="alert" hidden></div>
+        <div class="fn-actions"><button class="fn-btn" type="submit" id="contactSubmit">See My Project Summary</button></div>
+      </form>
+    </section>
+
+    <!-- Review -->
+    <section class="fn-step" data-step="review" aria-labelledby="q-review" hidden>
+      <p class="fn-eyebrow">Your Project</p>
+      <h1 class="fn-title" id="q-review" tabindex="-1">Contractor Lead System</h1>
+      <p class="fn-sub" id="reviewSub">Website, Google Search Ads setup, lead tracking, and your first 30 days of campaign management.</p>
+      <div class="fn-card">
+        <div class="fn-summary-head"><h3>Launch package</h3><span>One-time</span></div>
+        <ul class="fn-lines">
+          <li><span>Total project price</span><strong>$799</strong></li>
+          <li class="is-today"><span>Due today — deposit</span><strong>$275</strong></li>
+          <li><span>Remaining balance</span><strong>$524</strong></li>
+        </ul>
+        <ul class="fn-included">
+          <li>Professional mobile-first contractor website</li>
+          <li>Google Search Ads campaign setup &amp; keyword research</li>
+          <li>Quote forms, call buttons &amp; conversion tracking</li>
+          <li>Organized lead tracking</li>
+          <li>30 days of Google Ads campaign management</li>
+        </ul>
+      </div>
+      <div class="fn-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <span><strong>What your deposit starts:</strong> it reserves your build slot and kicks off onboarding — strategy kickoff, website build, and Google Ads campaign planning. The remaining $524 is due according to your project payment terms.</span>
+      </div>
+      <div class="fn-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span><strong>Google advertising media spend is separate</strong> and paid by you directly to Google, so you always know exactly what you're spending on ads.</span>
+      </div>
+      <div class="fn-alert" id="reviewAlert" role="alert" hidden style="margin-top:14px"></div>
+      <div class="fn-actions">
+        <button class="fn-btn" type="button" id="startCheckoutBtn">Start My Project</button>
+      </div>
+      <p class="fn-alt">Want to talk it through first? <a href="/book/" data-track="strategy_call_clicked" data-track-location="start_review">Book a strategy call</a></p>
+    </section>
+
+    <!-- Checkout -->
+    <section class="fn-step" data-step="checkout" aria-labelledby="q-checkout" hidden>
+      <p class="fn-eyebrow">Secure Deposit</p>
+      <h1 class="fn-title" id="q-checkout" tabindex="-1">Start your project with $275</h1>
+      <div class="fn-card">
+        <ul class="fn-lines">
+          <li><span>Contractor Lead Generation System</span><strong>$799</strong></li>
+          <li class="is-today"><span>Due today</span><strong>$275</strong></li>
+          <li><span>Remaining after deposit</span><strong>$524</strong></li>
+        </ul>
+      </div>
+      <form class="fn-card" id="payForm" novalidate>
+        <span class="fn-test-badge" id="testBadge" hidden>TEST MODE — no real charge</span>
+        <div class="fn-alert" id="payAlert" role="alert" hidden></div>
+        <div class="fn-field">
+          <label for="billingName">Name on card</label>
+          <input class="fn-input" id="billingName" type="text" autocomplete="cc-name" maxlength="120">
+        </div>
+        <div class="fn-field">
+          <label>Card number</label>
+          <div class="fn-stripe" id="cardNumber"></div>
+        </div>
+        <div class="fn-grid-2">
+          <div class="fn-field"><label>Expiration</label><div class="fn-stripe" id="cardExpiry"></div></div>
+          <div class="fn-field"><label>CVC</label><div class="fn-stripe" id="cardCvc"></div></div>
+        </div>
+        <div class="fn-actions" style="margin-top:8px">
+          <button class="fn-btn" type="submit" id="payBtn" disabled>Pay $275 Deposit</button>
+        </div>
+        <p class="fn-secure">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Payments processed securely by Stripe. You'll be charged $275 today.
+        </p>
+      </form>
+      <p class="fn-alt" style="font-size:.82rem">Google Ads media spend is separate and paid directly to Google.</p>
+    </section>
+
+    <!-- Success -->
+    <section class="fn-step" data-step="success" aria-labelledby="q-success" hidden>
+      <div class="fn-success-icon" aria-hidden="true">✓</div>
+      <p class="fn-eyebrow">Deposit Received</p>
+      <h1 class="fn-title" id="q-success" tabindex="-1">Your lead system project is started.</h1>
+      <p class="fn-sub">A receipt for your $275 deposit is on its way to your email. Remaining balance: $524.</p>
+      <div class="fn-card">
+        <div class="fn-summary-head"><h3>What happens next</h3></div>
+        <ol class="fn-next">
+          <li>We reach out within one business day to schedule your onboarding call.</li>
+          <li>We build your contractor website and quote/call conversion paths.</li>
+          <li>We set up your Google Search Ads, keywords, and conversion tracking. You connect billing in your own Google Ads account.</li>
+          <li>Your campaign launches, leads are tracked, and we manage it for the first 30 days.</li>
+        </ol>
+      </div>
+      <div class="fn-actions"><a class="fn-btn fn-btn--ghost" href="/">Return Home</a></div>
+    </section>
+
+    <!-- Pending -->
+    <section class="fn-step" data-step="pending" aria-labelledby="q-pending" hidden>
+      <p class="fn-eyebrow">Almost There</p>
+      <h1 class="fn-title" id="q-pending" tabindex="-1">Your payment is still processing.</h1>
+      <p class="fn-sub">Please don't submit another payment. We'll email you as soon as it's confirmed. Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a>.</p>
+      <div class="fn-actions"><button class="fn-btn fn-btn--ghost" type="button" id="recheckBtn">Check Again</button></div>
+    </section>
+  </main>
+
+  <footer class="fn-footer">
+    Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a> · © 2026 Nexus Luma
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var STORE_KEY = "nl_lead_system_v1";
+    var DEPOSIT_CENTS = 27500; // display sanity check only — the server sets the amount
+    var CONTENT_STEPS = ["trade", "service", "area", "website", "ads", "budget", "contact"];
+    var SERVICE_SUGGESTIONS = {
+      "Roofing": ["Roof replacement", "Roof repair", "Storm damage", "Metal roofing"],
+      "HVAC": ["AC repair", "HVAC replacement", "Heat pump install", "Furnace repair"],
+      "Plumbing": ["Water heaters", "Drain cleaning", "Leak repair", "Repiping"],
+      "Electrical": ["Panel upgrades", "EV chargers", "Lighting installs", "Generators"],
+      "Remodeling": ["Kitchen remodel", "Bathroom remodel", "Basement finishing", "Additions"],
+      "General Contracting": ["Home additions", "Kitchen remodel", "New construction", "Renovations"],
+      "Painting": ["Interior painting", "Exterior painting", "Cabinet painting", "Commercial painting"],
+      "Flooring": ["Hardwood install", "LVP flooring", "Tile install", "Refinishing"],
+      "Concrete": ["Driveways", "Patios", "Foundations", "Stamped concrete"],
+      "Landscaping": ["Landscape design", "Hardscaping", "Lawn care", "Retaining walls"],
+      "Fencing": ["Wood fences", "Vinyl fences", "Chain link", "Fence repair"],
+      "Decks": ["New deck builds", "Deck repair", "Composite decks", "Covered patios"],
+      "Handyman": ["Home repairs", "Drywall repair", "Small remodels", "Installations"],
+      "Pressure Washing": ["House washing", "Driveway cleaning", "Roof soft washing", "Deck cleaning"]
+    };
+
+    var state = load() || { step: "trade", history: [], answers: {}, contact: {}, leadId: "", started: false };
+    var stripe = null, cardNumber = null, intent = null, paying = false;
+
+    var $ = function (id) { return document.getElementById(id); };
+    var steps = Array.prototype.slice.call(document.querySelectorAll("[data-step]"));
+
+    function load() {
+      try { return JSON.parse(sessionStorage.getItem(STORE_KEY) || "null"); } catch (e) { return null; }
+    }
+    function save() {
+      try { sessionStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+    }
+    function track(name, data) { if (window.nlTrack) window.nlTrack(name, data); }
+
+    function show(step, opts) {
+      opts = opts || {};
+      if (!opts.back && state.step && state.step !== step && !opts.replace) state.history.push(state.step);
+      state.step = step;
+      save();
+      steps.forEach(function (el) { el.hidden = el.getAttribute("data-step") !== step; });
+      var idx = CONTENT_STEPS.indexOf(step);
+      var total = CONTENT_STEPS.length;
+      $("stepLabel").textContent = idx >= 0 ? "Step " + (idx + 1) + " of " + total
+        : step === "review" ? "Review" : step === "checkout" ? "Secure Checkout" : "";
+      $("progressBar").style.width = (idx >= 0 ? Math.round((idx / total) * 100) : 100) + "%";
+      $("backBtn").hidden = !state.history.length || step === "success" || step === "pending";
+      if (step === "service") renderServiceChips();
+      if (step === "contact") prefillContact();
+      if (step === "review") {
+        var a = state.answers;
+        $("reviewSub").textContent = "For " + (state.contact.business || "your business") +
+          ": website, Google Search Ads for " + (a.service || "your services").toLowerCase() +
+          " in " + (a.serviceArea || "your area") + ", lead tracking, and 30 days of campaign management.";
+      }
+      var heading = document.querySelector('[data-step="' + step + '"] .fn-title');
+      if (heading && !opts.initial) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(function () { heading.focus({ preventScroll: true }); }, 50);
+      }
+      restoreChoices();
+    }
+
+    function next() {
+      var order = CONTENT_STEPS.concat(["review"]);
+      var i = order.indexOf(state.step);
+      show(order[i + 1]);
+    }
+
+    function markStarted() {
+      if (state.started) return;
+      state.started = true;
+      save();
+      track("qualification_started");
+    }
+
+    $("backBtn").addEventListener("click", function () {
+      if (paying) return;
+      var prev = state.history.pop();
+      if (prev) show(prev, { back: true });
+    });
+
+    // Choice questions auto-advance
+    document.querySelectorAll("[data-choice]").forEach(function (group) {
+      var key = group.getAttribute("data-choice");
+      group.addEventListener("click", function (e) {
+        var btn = e.target.closest(".fn-option");
+        if (!btn) return;
+        markStarted();
+        group.querySelectorAll(".fn-option").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+        if (btn.hasAttribute("data-other")) {
+          $("tradeOtherWrap").hidden = false;
+          $("tradeOther").focus();
+          return;
+        }
+        if (key === "trade") $("tradeOtherWrap").hidden = true;
+        state.answers[key] = btn.textContent.trim();
+        save();
+        setTimeout(next, 260);
+      });
+    });
+
+    function restoreChoices() {
+      document.querySelectorAll("[data-choice]").forEach(function (group) {
+        var val = state.answers[group.getAttribute("data-choice")];
+        group.querySelectorAll(".fn-option").forEach(function (b) {
+          b.setAttribute("aria-pressed", val && b.textContent.trim() === val ? "true" : "false");
+        });
+      });
+      $("service").value = state.answers.service || "";
+      $("serviceArea").value = state.answers.serviceArea || "";
+    }
+
+    $("tradeOtherNext").addEventListener("click", function () {
+      var v = $("tradeOther").value.trim();
+      if (!setError("tradeOther", v ? "" : "Please tell us your trade.")) return;
+      state.answers.trade = v;
+      save();
+      next();
+    });
+
+    function setError(field, msg) {
+      var el = document.querySelector('[data-error-for="' + field + '"]');
+      if (el) el.textContent = msg || "";
+      var input = $(field);
+      if (input) input.classList.toggle("is-invalid", Boolean(msg));
+      return !msg;
+    }
+
+    function renderServiceChips() {
+      var wrap = $("serviceChips");
+      wrap.textContent = "";
+      (SERVICE_SUGGESTIONS[state.answers.trade] || []).forEach(function (label) {
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "fn-chip";
+        chip.textContent = label;
+        chip.addEventListener("click", function () { $("service").value = label; setError("service", ""); });
+        wrap.appendChild(chip);
+      });
+      var placeholder = (SERVICE_SUGGESTIONS[state.answers.trade] || ["Roof replacement"])[0];
+      $("service").placeholder = "e.g. " + placeholder;
+    }
+
+    document.querySelectorAll("[data-next]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var which = btn.getAttribute("data-next");
+        if (which === "service") {
+          var s = $("service").value.trim();
+          if (!setError("service", s ? "" : "Please enter the service you want more leads for.")) return;
+          state.answers.service = s;
+        }
+        if (which === "area") {
+          var a = $("serviceArea").value.trim();
+          if (!setError("serviceArea", a ? "" : "Please enter where you provide service.")) return;
+          state.answers.serviceArea = a;
+        }
+        markStarted();
+        save();
+        next();
+      });
+    });
+    ["service", "serviceArea"].forEach(function (id) {
+      $(id).addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); document.querySelector('[data-step="' + state.step + '"] [data-next]').click(); }
+      });
+    });
+
+    function prefillContact() {
+      ["name", "business", "email", "phone"].forEach(function (k) { if (state.contact[k]) $(k).value = state.contact[k]; });
+      $("websiteUrlWrap").hidden = !state.answers.hasWebsite || state.answers.hasWebsite === "No";
+      if (state.contact.website) $("websiteUrl").value = state.contact.website;
+    }
+
+    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+    function validPhone(v) { return v.replace(/\D/g, "").length >= 10; }
+
+    $("contactForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var c = {
+        name: $("name").value.trim(),
+        business: $("business").value.trim(),
+        email: $("email").value.trim(),
+        phone: $("phone").value.trim(),
+        website: $("websiteUrlWrap").hidden ? "" : $("websiteUrl").value.trim()
+      };
+      var ok = [
+        setError("name", c.name.length >= 2 ? "" : "Please enter your name."),
+        setError("business", c.business ? "" : "Please enter your business name."),
+        setError("email", validEmail(c.email) ? "" : "Please enter a valid email."),
+        setError("phone", validPhone(c.phone) ? "" : "Please enter a valid phone number.")
+      ].every(Boolean);
+      if (!ok) return;
+      state.contact = c;
+      save();
+
+      var btn = $("contactSubmit");
+      btn.disabled = true;
+      btn.textContent = "Saving…";
+      $("contactAlert").hidden = true;
+
+      fetch("/api/submit-qualification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.assign({ intent: "deposit", source: "lead-system-start", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, state.answers, c))
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            var fields = (res.data && res.data.fields) || {};
+            Object.keys(fields).forEach(function (f) { setError(f, fields[f]); });
+            throw new Error((res.data && res.data.error) || "Please check your details.");
+          }
+          state.leadId = res.data.leadId || "";
+          save();
+          track("qualification_completed", { trade: state.answers.trade, ad_budget: state.answers.adBudget, has_website: state.answers.hasWebsite, running_ads: state.answers.runningAds });
+          show("review");
+        })
+        .catch(function (err) {
+          $("contactAlert").textContent = err.message || "Something went wrong. Please try again.";
+          $("contactAlert").hidden = false;
+        })
+        .then(function () { btn.disabled = false; btn.textContent = "See My Project Summary"; });
+    });
+
+    // ---- Checkout ----------------------------------------------------------
+    function loadStripeJs() {
+      if (window.Stripe) return Promise.resolve();
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement("script");
+        s.src = "https://js.stripe.com/v3/";
+        s.onload = resolve;
+        s.onerror = function () { reject(new Error("Secure checkout could not load. Please check your connection and try again.")); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function createIntent() {
+      return fetch("/api/create-lead-system-deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.assign({ leadId: state.leadId }, state.answers, state.contact))
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (!r.ok || !d.clientSecret) throw new Error(d.error || "We couldn't start secure checkout. Please try again.");
+          if (d.amount !== DEPOSIT_CENTS) throw new Error("Checkout amount mismatch. Please contact us before paying.");
+          return d;
+        });
+      });
+    }
+
+    $("startCheckoutBtn").addEventListener("click", function () {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = "Opening secure checkout…";
+      $("reviewAlert").hidden = true;
+      track("deposit_checkout_started", { value: 275, currency: "USD" });
+      Promise.all([loadStripeJs(), intent ? Promise.resolve(intent) : createIntent()])
+        .then(function (results) {
+          intent = results[1];
+          if (!stripe) {
+            stripe = window.Stripe(intent.publishableKey);
+            var elements = stripe.elements();
+            var style = { base: { color: "#101326", fontSize: "16px", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "::placeholder": { color: "#8b91a3" } }, invalid: { color: "#d63f3f" } };
+            var complete = { number: false, expiry: false, cvc: false };
+            var sync = function () { $("payBtn").disabled = paying || !(complete.number && complete.expiry && complete.cvc); };
+            cardNumber = elements.create("cardNumber", { style: style, showIcon: true });
+            var expiry = elements.create("cardExpiry", { style: style });
+            var cvc = elements.create("cardCvc", { style: style });
+            cardNumber.mount("#cardNumber"); expiry.mount("#cardExpiry"); cvc.mount("#cardCvc");
+            [["number", cardNumber], ["expiry", expiry], ["cvc", cvc]].forEach(function (pair) {
+              pair[1].on("change", function (ev) {
+                complete[pair[0]] = ev.complete;
+                if (ev.error) showPayError(ev.error.message); else $("payAlert").hidden = true;
+                sync();
+              });
+            });
+          }
+          $("testBadge").hidden = intent.mode !== "test";
+          $("billingName").value = $("billingName").value || state.contact.name || "";
+          show("checkout");
+        })
+        .catch(function (err) {
+          $("reviewAlert").textContent = err.message;
+          $("reviewAlert").hidden = false;
+        })
+        .then(function () { btn.disabled = false; btn.textContent = "Start My Project"; });
+    });
+
+    function showPayError(msg) {
+      $("payAlert").textContent = msg;
+      $("payAlert").hidden = false;
+    }
+
+    function friendlyStripeError(err) {
+      if (!err) return "Your payment could not be completed. Please try again.";
+      if (err.type === "card_error" || err.type === "validation_error") return err.message;
+      return "Your payment could not be completed. Please try another card or try again.";
+    }
+
+    function verify(paymentIntentId, attempt) {
+      attempt = attempt || 0;
+      return fetch("/api/verify-lead-system-deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentIntentId: paymentIntentId })
+      })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) {
+          if (d.verified) {
+            if (state.paidIntent !== paymentIntentId) {
+              state.paidIntent = paymentIntentId;
+              track("deposit_paid", { value: 275, currency: "USD", transaction_id: paymentIntentId, lead_id: state.leadId });
+            }
+            state.history = [];
+            save();
+            show("success", { replace: true });
+            return;
+          }
+          if (attempt < 4) return new Promise(function (res) { setTimeout(res, 2000); }).then(function () { return verify(paymentIntentId, attempt + 1); });
+          state.pendingIntent = paymentIntentId;
+          save();
+          show("pending", { replace: true });
+        });
+    }
+
+    $("payForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (paying || !stripe || !intent) return;
+      var name = $("billingName").value.trim();
+      if (name.length < 2) { showPayError("Please enter the name on the card."); return; }
+      paying = true;
+      var btn = $("payBtn");
+      btn.disabled = true;
+      btn.textContent = "Processing secure payment…";
+      $("payAlert").hidden = true;
+
+      stripe.confirmCardPayment(intent.clientSecret, {
+        payment_method: { card: cardNumber, billing_details: { name: name, email: state.contact.email, phone: state.contact.phone || undefined } },
+        receipt_email: state.contact.email
+      })
+        .then(function (result) {
+          if (result.error) {
+            track("deposit_payment_failed", { code: result.error.code || result.error.type });
+            showPayError(friendlyStripeError(result.error));
+            return;
+          }
+          var pi = result.paymentIntent;
+          if (pi && (pi.status === "succeeded" || pi.status === "processing")) return verify(pi.id);
+          showPayError("Your payment could not be completed. Please try again.");
+        })
+        .catch(function () { showPayError("We couldn't reach the payment service. Please try again."); })
+        .then(function () {
+          paying = false;
+          btn.textContent = "Pay $275 Deposit";
+          btn.disabled = false;
+        });
+    });
+
+    $("recheckBtn").addEventListener("click", function () {
+      if (state.pendingIntent) verify(state.pendingIntent, 4);
+    });
+
+    // Resume where the visitor left off (checkout needs a fresh intent).
+    var resumeStep = state.step === "checkout" ? "review" : state.step;
+    if (resumeStep === "success" && !state.paidIntent) resumeStep = "trade";
+    show(resumeStep || "trade", { replace: true, initial: true });
+  })();
+  </script>
+</body>
+</html>

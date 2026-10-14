@@ -1,6 +1,14 @@
 # Nexus Luma Website
 
-Static Nexus Luma landing page with a single-page Website Audit lead generation flow, Claude-powered analysis, and Stripe Checkout for the $99 Website Improvement Starter Package.
+Nexus Luma builds **lead generation systems for contractors**: website + Google Search Ads setup + conversion/lead tracking + 30 days of campaign management.
+
+- `/` — contractor sales page (static HTML + GSAP)
+- `/start/` — qualification → **$275 deposit** on the **$799** Contractor Lead System (Stripe, amount fixed server-side)
+- `/book/` — strategy call booking
+- Website analyzer (Claude-powered) as a secondary lead magnet on the homepage
+
+Full architecture, tracking events, client lead tracking, legacy routes, and the
+setup checklist: **[docs/LEAD-SYSTEM.md](docs/LEAD-SYSTEM.md)**.
 
 ## Local Development
 
@@ -31,16 +39,20 @@ ANTHROPIC_API_KEY
 ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
-Required for the $99 Stripe Checkout payment:
+Required for the $275 Contractor Lead System deposit (use test keys until verified):
 
 ```text
 STRIPE_SECRET_KEY
+STRIPE_PUBLISHABLE_KEY   (same mode as the secret key)
+STRIPE_WEBHOOK_SECRET
 ```
 
-Optional if you need the Stripe config endpoint elsewhere:
+Lead pipeline + client lead tracking (see docs/LEAD-SYSTEM.md):
 
 ```text
-STRIPE_PUBLISHABLE_KEY
+LEAD_SYSTEM_WEBHOOK_URL
+CLIENT_LEADS_WEBHOOK_URL, CLIENT_LEADS_WEBHOOK_SECRET
+CLIENT_LEAD_ALLOWED_CLIENTS, CLIENT_LEAD_ALLOWED_ORIGINS
 ```
 
 Optional lead capture webhook:
@@ -84,6 +96,8 @@ The sheet records the lead details, submitted website, analyzed website, score, 
    - `ANTHROPIC_MODEL`
    - `STRIPE_PUBLISHABLE_KEY`
    - `STRIPE_SECRET_KEY`
+   - `STRIPE_WEBHOOK_SECRET`
+   - `LEAD_SYSTEM_WEBHOOK_URL`
    - `LEAD_WEBHOOK_URL` if used
 
 ## Checks
@@ -91,13 +105,13 @@ The sheet records the lead details, submitted website, analyzed website, score, 
 Run:
 
 ```bash
-npm run check
+npm run check   # syntax of page scripts + all Netlify functions
+npm test        # Lead System payment/lead logic (Stripe + webhooks mocked; no network)
 ```
-
-This checks inline page JavaScript and Netlify function syntax.
 
 ## Notes
 
 - Claude and Stripe keys are only used by Netlify functions.
 - The audit runs server-side through Claude, using the live page fetch as source evidence.
-- Stripe Checkout opens in the same tab and returns visitors to the site after payment.
+- The deposit amount (27500 cents) is set only in `netlify/functions/_lead-system.js`; `deposit_paid` is tracked only after server-side verification.
+- `/questionnaire/` and `index (1).html` are legacy $99 funnels kept for existing links (`noindex`, not linked from the homepage).

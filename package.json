@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "npx netlify-cli@latest dev --port 8888",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "test": "node --test scripts/test-lead-system.mjs"
   },
   "dependencies": {
     "googleapis": "^144.0.0"

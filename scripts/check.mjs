@@ -1,31 +1,33 @@
-import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 
-const html = readFileSync("index.html", "utf8");
-const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]
-  .map((match) => match[1])
-  .join("\n");
-
 const dir = mkdtempSync(join(tmpdir(), "nexus-luma-check-"));
-const inlineScriptPath = join(dir, "inline-scripts.js");
-writeFileSync(inlineScriptPath, scripts);
 
-const files = [
-  inlineScriptPath,
-  "netlify/functions/analyze-website.js",
-  "netlify/functions/_shared.js",
-  "netlify/functions/calendar-config.js",
-  "netlify/functions/check-availability.js",
-  "netlify/functions/create-booking.js",
-  "netlify/functions/create-upgrade-payment.js",
-  "netlify/functions/stripe-config.js"
-];
+// Inline <script> blocks of the active pages (external/src scripts are skipped).
+const pages = ["index.html", "start/index.html", "book/index.html"];
+const files = pages.map((page) => {
+  const html = readFileSync(page, "utf8");
+  const scripts = [...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
+    .map((match) => match[1])
+    .join("\n");
+  const out = join(dir, page.replace(/\W+/g, "_") + ".js");
+  writeFileSync(out, scripts);
+  return out;
+});
+
+files.push("js/nl-track.js");
+for (const name of readdirSync("netlify/functions")) {
+  if (name.endsWith(".js")) files.push(join("netlify/functions", name));
+}
 
 for (const file of files) {
   const result = spawnSync(process.execPath, ["--check", file], { stdio: "inherit" });
-  if (result.status !== 0) process.exit(result.status || 1);
+  if (result.status !== 0) {
+    console.error(`Syntax check failed: ${file}`);
+    process.exit(result.status || 1);
+  }
 }
 
-console.log("Syntax checks passed.");
+console.log(`Syntax checks passed (${files.length} files).`);
