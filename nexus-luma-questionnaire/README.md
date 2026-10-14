@@ -1,3 +1,5 @@
+> **Legacy funnel.** This $99 strategy-session questionnaire is no longer linked from the homepage. The primary offer is the Contractor Lead System (`/start/`). See `docs/LEAD-SYSTEM.md` in the repo root.
+
 # Nexus Luma Questionnaire
 
 A premium, app-style business questionnaire that routes visitors toward one of

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Book A Strategy Call | Nexus Luma</title>
+  <meta name="description" content="Book a strategy call with Nexus Luma to see if a contractor lead generation system fits your business." />
+  <link rel="icon" href="/2.png" type="image/png">
+  <link rel="apple-touch-icon" href="/2.png">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/nl-track.js"></script>
+</head>
+<body>
+  <nav class="fn-nav">
+    <div class="fn-nav-inner">
+      <a class="fn-brand" href="/"><img src="/2.png" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
+      <a class="fn-nav-link" href="/start/" data-track="lead_system_cta_clicked" data-track-location="book_nav">Ready to start?</a>
+    </div>
+  </nav>
+
+  <main class="fn-main">
+    <section class="fn-step" data-step="form" aria-labelledby="bookTitle">
+      <p class="fn-eyebrow">Strategy Call</p>
+      <h1 class="fn-title" id="bookTitle" tabindex="-1">Let's See If The System Fits Your Business.</h1>
+      <p class="fn-sub">Tell us what you do, where you serve, and what type of work you want more of.</p>
+      <form class="fn-card" id="bookForm" novalidate>
+        <div class="fn-grid-2">
+          <div class="fn-field">
+            <label for="name">Your name</label>
+            <input class="fn-input" id="name" type="text" autocomplete="name" maxlength="120">
+            <div class="fn-error" data-error-for="name"></div>
+          </div>
+          <div class="fn-field">
+            <label for="business">Business name</label>
+            <input class="fn-input" id="business" type="text" autocomplete="organization" maxlength="160">
+            <div class="fn-error" data-error-for="business"></div>
+          </div>
+          <div class="fn-field">
+            <label for="email">Email</label>
+            <input class="fn-input" id="email" type="email" inputmode="email" autocomplete="email" maxlength="160">
+            <div class="fn-error" data-error-for="email"></div>
+          </div>
+          <div class="fn-field">
+            <label for="phone">Phone</label>
+            <input class="fn-input" id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40">
+            <div class="fn-error" data-error-for="phone"></div>
+          </div>
+          <div class="fn-field">
+            <label for="trade">What you do</label>
+            <select class="fn-select" id="trade">
+              <option value="">Choose your trade</option>
+              <option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option>
+              <option>Remodeling</option><option>General Contracting</option><option>Painting</option><option>Flooring</option>
+              <option>Concrete</option><option>Landscaping</option><option>Fencing</option><option>Decks</option>
+              <option>Handyman</option><option>Pressure Washing</option><option>Other</option>
+            </select>
+            <div class="fn-error" data-error-for="trade"></div>
+          </div>
+          <div class="fn-field">
+            <label for="serviceArea">Where you serve</label>
+            <input class="fn-input" id="serviceArea" type="text" maxlength="160" placeholder="City, county, or ZIP">
+          </div>
+        </div>
+        <div class="fn-field">
+          <label for="notes">What type of work do you want more of?</label>
+          <textarea class="fn-textarea" id="notes" maxlength="1500" placeholder="e.g. More roof replacements, fewer small repair calls"></textarea>
+        </div>
+        <div class="fn-hp" aria-hidden="true"><label for="hpField">Leave blank</label><input id="hpField" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="fn-alert" id="formAlert" role="alert" hidden></div>
+        <div class="fn-actions"><button class="fn-btn" type="submit" id="formSubmit">Choose A Call Time</button></div>
+      </form>
+      <p class="fn-alt">Already know you want it? <a href="/start/" data-track="lead_system_cta_clicked" data-track-location="book_form">Build my lead system</a></p>
+    </section>
+
+    <section class="fn-step" data-step="schedule" aria-labelledby="scheduleTitle" hidden>
+      <p class="fn-eyebrow">Pick A Time</p>
+      <h1 class="fn-title" id="scheduleTitle" tabindex="-1">Choose a time for your strategy call.</h1>
+      <p class="fn-sub" id="tzNote">30 minutes. Times shown in Eastern Time.</p>
+
+      <div class="fn-card" id="calendarCard" hidden>
+        <div class="fn-days" id="days" role="group" aria-label="Choose a day"></div>
+        <div class="fn-times" id="times" role="group" aria-label="Choose a time"></div>
+        <div class="fn-alert" id="calAlert" role="alert" hidden style="margin-top:14px"></div>
+        <div class="fn-actions"><button class="fn-btn" type="button" id="confirmBtn" disabled>Confirm My Call</button></div>
+      </div>
+
+      <div class="fn-card" id="schedulerCard" hidden>
+        <p class="fn-sub" style="margin-bottom:0">We've got your details. Pick any open time on our scheduler and you'll get a calendar invite.</p>
+        <div class="fn-actions"><a class="fn-btn" id="schedulerLink" href="#" target="_blank" rel="noopener">Open The Scheduler</a></div>
+      </div>
+      <p class="fn-muted" id="loadingNote">Loading available times…</p>
+    </section>
+
+    <section class="fn-step" data-step="done" aria-labelledby="doneTitle" hidden>
+      <div class="fn-success-icon" aria-hidden="true">✓</div>
+      <p class="fn-eyebrow">You're Booked</p>
+      <h1 class="fn-title" id="doneTitle" tabindex="-1">Your strategy call is confirmed.</h1>
+      <p class="fn-sub" id="doneText">A calendar invite is on its way to your email.</p>
+      <div class="fn-actions"><a class="fn-btn fn-btn--ghost" href="/">Return Home</a></div>
+    </section>
+  </main>
+
+  <footer class="fn-footer">
+    Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a> · © 2026 Nexus Luma
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var DEFAULT_SCHEDULER = "https://scheduler.zoom.us/elijah-thornton/30-min-strategy-call";
+    var contact = {}, selectedDate = "", selectedSlot = null, booking = false;
+
+    function track(n, d) { if (window.nlTrack) window.nlTrack(n, d); }
+    function show(step) {
+      document.querySelectorAll("[data-step]").forEach(function (el) { el.hidden = el.getAttribute("data-step") !== step; });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      var h = document.querySelector('[data-step="' + step + '"] .fn-title');
+      if (h) setTimeout(function () { h.focus({ preventScroll: true }); }, 50);
+    }
+    function setError(field, msg) {
+      var el = document.querySelector('[data-error-for="' + field + '"]');
+      if (el) el.textContent = msg || "";
+      $(field).classList.toggle("is-invalid", Boolean(msg));
+      return !msg;
+    }
+
+    $("bookForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      contact = {
+        name: $("name").value.trim(), business: $("business").value.trim(), email: $("email").value.trim(),
+        phone: $("phone").value.trim(), trade: $("trade").value, serviceArea: $("serviceArea").value.trim(), notes: $("notes").value.trim()
+      };
+      var ok = [
+        setError("name", contact.name.length >= 2 ? "" : "Please enter your name."),
+        setError("business", contact.business ? "" : "Please enter your business name."),
+        setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact.email) ? "" : "Please enter a valid email."),
+        setError("phone", contact.phone.replace(/\D/g, "").length >= 10 ? "" : "Please enter a valid phone number."),
+        setError("trade", contact.trade ? "" : "Please choose your trade.")
+      ].every(Boolean);
+      if (!ok) return;
+      var btn = $("formSubmit");
+      btn.disabled = true; btn.textContent = "Saving…";
+      $("formAlert").hidden = true;
+      fetch("/api/submit-qualification", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.assign({ intent: "strategy_call", source: "book-page", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, contact))
+      })
+        .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Please check your details."); return d; }); })
+        .then(function () { show("schedule"); loadScheduler(); })
+        .catch(function (err) { $("formAlert").textContent = err.message; $("formAlert").hidden = false; })
+        .then(function () { btn.disabled = false; btn.textContent = "Choose A Call Time"; });
+    });
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function dateKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+    function upcomingWeekdays(count) {
+      var out = [], d = new Date();
+      d.setDate(d.getDate() + 1);
+      while (out.length < count) { if (d.getDay() > 0 && d.getDay() < 6) out.push(new Date(d)); d.setDate(d.getDate() + 1); }
+      return out;
+    }
+
+    function useScheduler(url) {
+      $("loadingNote").hidden = true;
+      $("calendarCard").hidden = true;
+      $("tzNote").textContent = "30 minutes.";
+      $("schedulerLink").href = url || DEFAULT_SCHEDULER;
+      $("schedulerCard").hidden = false;
+    }
+
+    $("schedulerLink").addEventListener("click", function () { track("strategy_call_clicked", { cta_location: "book_scheduler" }); });
+
+    function fetchSlots(key) {
+      return fetch("/api/check-availability?date=" + encodeURIComponent(key)).then(function (r) { return r.json(); });
+    }
+
+    function loadScheduler() {
+      var days = upcomingWeekdays(10);
+      // Only use the live calendar when real Google Calendar availability is configured;
+      // otherwise fall back to the hosted scheduler so no booking is ever faked.
+      fetchSlots(dateKey(days[0]))
+        .then(function (data) {
+          if (data.mode !== "google") {
+            return fetch("/api/calendar-config").then(function (r) { return r.json(); }).catch(function () { return {}; })
+              .then(function (cfg) { useScheduler(cfg.bookingUrl || data.bookingUrl); });
+          }
+          $("loadingNote").hidden = true;
+          $("calendarCard").hidden = false;
+          renderDays(days);
+          selectDay(dateKey(days[0]), data);
+        })
+        .catch(function () { useScheduler(); });
+    }
+
+    function renderDays(days) {
+      var wrap = $("days");
+      wrap.textContent = "";
+      days.forEach(function (d) {
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "fn-day"; b.dataset.key = dateKey(d);
+        var s = document.createElement("small"); s.textContent = d.toLocaleDateString("en-US", { weekday: "short" });
+        var st = document.createElement("strong"); st.textContent = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        b.appendChild(s); b.appendChild(st);
+        b.addEventListener("click", function () { selectDay(b.dataset.key); });
+        wrap.appendChild(b);
+      });
+    }
+
+    function selectDay(key, preloaded) {
+      selectedDate = key; selectedSlot = null; $("confirmBtn").disabled = true;
+      document.querySelectorAll(".fn-day").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.key === key ? "true" : "false"); });
+      var times = $("times");
+      times.innerHTML = '<p class="fn-muted">Loading times…</p>';
+      (preloaded ? Promise.resolve(preloaded) : fetchSlots(key)).then(function (data) {
+        if (data.mode === "fallback") { useScheduler(data.bookingUrl); return; }
+        times.textContent = "";
+        if (!data.availableSlots || !data.availableSlots.length) { times.innerHTML = '<p class="fn-muted">No open times this day. Try another day.</p>'; return; }
+        data.availableSlots.forEach(function (slot) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "fn-time"; b.textContent = slot.label;
+          b.addEventListener("click", function () {
+            selectedSlot = slot;
+            times.querySelectorAll(".fn-time").forEach(function (t) { t.setAttribute("aria-pressed", t === b ? "true" : "false"); });
+            $("confirmBtn").disabled = false;
+          });
+          times.appendChild(b);
+        });
+      }).catch(function () { useScheduler(); });
+    }
+
+    $("confirmBtn").addEventListener("click", function () {
+      if (!selectedSlot || booking) return;
+      booking = true;
+      var btn = this; btn.disabled = true; btn.textContent = "Booking…";
+      $("calAlert").hidden = true;
+      track("strategy_call_clicked", { cta_location: "book_calendar" });
+      var parts = contact.name.split(" ");
+      fetch("/api/create-booking", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: contact.email, fname: parts[0], lname: parts.slice(1).join(" "), biz: contact.business,
+          selectedDate: selectedDate, slotStart: selectedSlot.start, slotEnd: selectedSlot.end,
+          answers: { q1: "Contractor Lead System strategy call", q2: contact.notes, q3: contact.trade, q4: "Service area: " + contact.serviceArea, q5: "Phone: " + contact.phone }
+        })
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.data.mode === "google") {
+            track("strategy_call_booked", { date: selectedDate });
+            var when = new Date(selectedSlot.start).toLocaleString("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+            $("doneText").textContent = when + " ET. A calendar invite is on its way to " + contact.email + ".";
+            show("done");
+            return;
+          }
+          if (res.data && res.data.bookingUrl) { useScheduler(res.data.bookingUrl); return; }
+          $("calAlert").textContent = (res.data && res.data.error) || "That time is no longer available. Please choose another.";
+          $("calAlert").hidden = false;
+          selectDay(selectedDate);
+        })
+        .catch(function () { useScheduler(); })
+        .then(function () { booking = false; btn.textContent = "Confirm My Call"; });
+    });
+  })();
+  </script>
+</body>
+</html>
