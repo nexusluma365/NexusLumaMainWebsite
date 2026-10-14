@@ -127,7 +127,11 @@
          bright Earth horizon sits behind the letters; width >= 3 * cy keeps
          the top covered, and the bottom fades into space. */
       --hero-img-w: max(100vw, 87vh);
-      --hero-img-cy: 29vh;
+      /* Hero copy sits 2in higher on tall screens (less on short ones); the
+         word is centered in the space between the nav (~107px) and the copy
+         (~400px tall): center = 50vh - bottom/2 - 147px. */
+      --hero-copy-bottom: calc(clamp(28px, 7vh, 72px) + clamp(0px, (100vh - 760px) * 0.75, 2in));
+      --hero-img-cy: calc(50vh - var(--hero-copy-bottom) / 2 - 147px);
       --hero-img-pos: 50% calc(var(--hero-img-cy) - var(--hero-img-w) / 3);
       --hero-img-bottom: calc(var(--hero-img-cy) + var(--hero-img-w) / 3);
     }
@@ -727,9 +731,10 @@
     #mainNav .nav-cta::after, #mainNav .nav-brand::after { display: none; }
 
     /* Hero copy (sits over the existing parallax) */
-    .mask-text { padding-bottom: 42vh; font-size: clamp(6.9rem, 23vw, 27.7rem); }
+    /* padding-top nudges the glyphs down so their ink (not the line box) is centered. */
+    .mask-text { padding-top: 0.28em; padding-bottom: calc(var(--hero-copy-bottom) + 294px); font-size: clamp(6rem, min(23vw, 21vh), 27.7rem); }
     .hero-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 68%; background: linear-gradient(180deg, rgba(2,3,8,0) 0%, rgba(2,3,8,.72) 46%, rgba(2,3,8,.92) 100%); pointer-events: none; z-index: 2; }
-    .hero-copy { position: absolute; left: 0; right: 0; bottom: clamp(28px, 7vh, 72px); z-index: 3; width: min(900px, 100%); margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
+    .hero-copy { position: absolute; left: 0; right: 0; bottom: var(--hero-copy-bottom); z-index: 3; width: min(900px, 100%); margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
     .hero-eyebrow { color: #9fd3dd; font-size: 12px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 14px; }
     .hero-copy h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); line-height: 1.04; font-weight: 900; letter-spacing: -.025em; text-shadow: 0 12px 40px rgba(0,0,0,.45); }
     .hero-copy > p { max-width: 690px; margin: 16px auto 0; color: rgba(255,255,255,.82); font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.55; }
