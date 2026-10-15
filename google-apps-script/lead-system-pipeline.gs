@@ -157,8 +157,8 @@ function addOrMergeLead_(sheet, data) {
 
   // Same person again (e.g. questionnaire, then the book page): update their row.
   var existing = findRow_(sheet, "email", lead.email);
-  if (existing > 0 && isRecent_(sheet.getRange(existing, col_("capturedAt")).getValue())) {
-    var current = readRow_(sheet, existing);
+  var current = existing > 0 ? readRow_(sheet, existing) : null;
+  if (current && isRecent_(current.capturedAt)) {
     var patch = { submissions: (Number(current.submissions) || 1) + 1, updatedAt: now };
     COLUMNS.forEach(function (column) {
       var key = column.key;
@@ -174,7 +174,7 @@ function addOrMergeLead_(sheet, data) {
   }
 
   var row = Math.max(sheet.getLastRow(), HEADER_ROWS) + 1;
-  writeFields_(sheet, row, lead);
+  writeFields_(sheet, row, fullRow_(lead)); // one write for the whole row
   if (NOTIFY.newLead) notify_("New lead: " + (lead.business || lead.name || lead.email) + (lead.trade ? " — " + lead.trade : ""), lead);
   return { added: true, row: row };
 }
@@ -184,27 +184,31 @@ function applyUpdate_(sheet, data) {
   var email = String(data.updateEmail || data.email || "").toLowerCase().trim();
   var row = findRow_(sheet, "leadId", data.leadId);
   if (row < 0) row = findRow_(sheet, "email", email);
+  var current;
   if (row < 0) {
     row = Math.max(sheet.getLastRow(), HEADER_ROWS) + 1;
-    writeFields_(sheet, row, { capturedAt: now, status: "New Lead", source: "Website", leadId: data.leadId, email: email, submissions: 1 });
+    current = fullRow_({ capturedAt: now, status: "New Lead", source: "Website", leadId: data.leadId, email: email, submissions: 1 });
+    writeFields_(sheet, row, current);
+  } else {
+    current = readRow_(sheet, row);
   }
 
   var patch = { updatedAt: now };
   var label = SERVER_STATUS[data.status];
-  if (label && rankOf_(label) > rankOf_(sheet.getRange(row, col_("status")).getValue())) patch.status = label;
+  if (label && rankOf_(label) > rankOf_(current.status)) patch.status = label;
 
   if (data.status === "CALL_BOOKED") {
     if (data.callStart) patch.callAt = new Date(data.callStart);
     if (data.eventLink) patch.callLink = data.eventLink;
   }
   if (data.status === "DEPOSIT_PAID") {
-    if (isBlank_(sheet.getRange(row, col_("depositAt")).getValue())) patch.depositAt = now;
+    if (isBlank_(current.depositAt)) patch.depositAt = now;
     if (data.amountCents) patch.depositAmount = Number(data.amountCents) / 100;
     if (data.paymentIntentId) patch.paymentId = data.paymentIntentId;
   }
   writeFields_(sheet, row, patch);
 
-  var lead = readRow_(sheet, row);
+  var lead = Object.assign({}, current, patch); // what the row now holds, without re-reading it
   if (data.status === "CALL_BOOKED" && NOTIFY.callBooked) {
     notify_("Call booked: " + (lead.business || lead.name || email) + " — " + formatDate_(lead.callAt), lead);
   }
@@ -498,23 +502,47 @@ function readRow_(sheet, row) {
   return out;
 }
 
-// Writes only the given fields. Text is guarded so a lead can't inject a formula.
+// Every column, blank where the lead has no value (so a new row is one write).
+function fullRow_(fields) {
+  var out = {};
+  COLUMNS.forEach(function (column) { out[column.key] = isBlank_(fields[column.key]) ? "" : fields[column.key]; });
+  return out;
+}
+
+// Writes only the given fields, batching side-by-side columns into a single
+// write. Untouched cells (your manual edits) are never rewritten. The calendar
+// link is written on its own because it is a clickable rich-text cell.
 function writeFields_(sheet, row, fields) {
+  var cells = [];
   Object.keys(fields).forEach(function (key) {
     var value = fields[key];
     if (value === undefined || value === null) return;
-    var cell = sheet.getRange(row, col_(key));
     if (key === "callLink" && value) {
-      cell.setRichTextValue(SpreadsheetApp.newRichTextValue().setText("Open event").setLinkUrl(String(value)).build());
+      sheet.getRange(row, col_(key)).setRichTextValue(
+        SpreadsheetApp.newRichTextValue().setText("Open event").setLinkUrl(String(value)).build()
+      );
       return;
     }
-    cell.setValue(value instanceof Date || typeof value === "number" ? value : safeText_(value));
+    cells.push({ col: col_(key), value: cellValue_(COLUMNS[col_(key) - 1], value) });
   });
+  cells.sort(function (a, b) { return a.col - b.col; });
+
+  for (var i = 0; i < cells.length;) {
+    var run = [cells[i].value];
+    var start = cells[i].col;
+    while (i + run.length < cells.length && cells[i + run.length].col === start + run.length) run.push(cells[i + run.length].value);
+    sheet.getRange(row, start, 1, run.length).setValues([run]);
+    i += run.length;
+  }
 }
 
-function safeText_(value) {
+// Text is guarded so a lead can't inject a formula. Plain-text (@) columns
+// already store "+1 336…" literally, so only a leading "=" is escaped there.
+function cellValue_(column, value) {
+  if (value instanceof Date || typeof value === "number") return value;
   var text = String(value).slice(0, 2000);
-  return /^[=+\-@]/.test(text) ? "'" + text : text;
+  var risky = column && column.type === "text" ? /^=/ : /^[=+\-@]/;
+  return risky.test(text) ? "'" + text : text;
 }
 
 function isBlank_(value) {
