@@ -3,100 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Book A Strategy Call | Nexus Luma</title>
-  <meta name="description" content="Book a strategy call with Nexus Luma to see if a contractor lead generation system fits your business." />
+  <title>Book Your Free Strategy Call | Nexus Luma</title>
+  <meta name="description" content="Tell us what you do and pick a time for a free Zoom strategy call with Nexus Luma about getting more contractor leads." />
   <link rel="icon" href="/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/funnel-config.js"></script>
   <script src="/js/nl-track.js"></script>
 </head>
 <body>
   <nav class="fn-nav">
     <div class="fn-nav-inner">
       <a class="fn-brand" href="/"><img src="/Asset/nexus-luma-logo-176.webp" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
-      <a class="fn-nav-link" href="/start/" data-track="lead_system_cta_clicked" data-track-location="book_nav">Ready to start?</a>
+      <a class="fn-nav-link" href="tel:+13365177347">(336) 517-7347</a>
     </div>
   </nav>
 
   <main class="fn-main">
-    <section class="fn-step" data-step="form" aria-labelledby="bookTitle">
-      <p class="fn-eyebrow">Strategy Call</p>
-      <h1 class="fn-title" id="bookTitle" tabindex="-1">Let's See If The System Fits Your Business.</h1>
-      <p class="fn-sub">Tell us what you do, where you serve, and what type of work you want more of.</p>
-      <form class="fn-card" id="bookForm" novalidate>
+    <div class="fn-step-meta">
+      <button class="fn-back" id="backBtn" type="button" hidden>← Edit details</button>
+      <span id="stepLabel">Step 1 of 2</span>
+    </div>
+    <div class="fn-progress" aria-hidden="true"><span id="progressBar" style="width:8%"></span></div>
+
+    <!-- STEP 1: tell us about your business -->
+    <section class="fn-step" data-step="form" aria-labelledby="formTitle">
+      <p class="fn-eyebrow">Free Zoom Strategy Call</p>
+      <h1 class="fn-title" id="formTitle" tabindex="-1">Tell us a little about your business.</h1>
+      <p class="fn-sub">So we can prepare for your call. Takes about a minute.</p>
+
+      <form class="fn-card" id="leadForm" novalidate autocomplete="on">
+        <div class="fn-field">
+          <label for="profession">What type of business do you own?</label>
+          <select class="fn-select" id="profession" name="profession" required>
+            <option value="">Select your profession</option>
+            <option>General Contractor</option>
+            <option>Roofing</option>
+            <option>HVAC</option>
+            <option>Plumbing</option>
+            <option>Electrical</option>
+            <option>Remodeling</option>
+            <option>Painting</option>
+            <option>Flooring</option>
+            <option>Landscaping</option>
+            <option>Concrete</option>
+            <option>Fencing</option>
+            <option>Deck Building</option>
+            <option>Pressure Washing</option>
+            <option>Handyman</option>
+            <option>Cleaning</option>
+            <option>Other Contractor / Home Service</option>
+          </select>
+          <div class="fn-error" data-error-for="profession"></div>
+        </div>
+        <div class="fn-field" id="professionOtherWrap" hidden>
+          <label for="professionOther">What type of business?</label>
+          <input class="fn-input" id="professionOther" name="professionOther" type="text" maxlength="80" autocomplete="off">
+          <div class="fn-error" data-error-for="professionOther"></div>
+        </div>
+
+        <div class="fn-field">
+          <label for="primaryService">What service do you most want more leads for?</label>
+          <input class="fn-input" id="primaryService" name="primaryService" type="text" maxlength="160" placeholder="Roof replacement, HVAC repair, kitchen remodeling..." autocomplete="off">
+          <div class="fn-error" data-error-for="primaryService"></div>
+        </div>
+
+        <div class="fn-field">
+          <label for="serviceArea">Where do you want customers?</label>
+          <input class="fn-input" id="serviceArea" name="serviceArea" type="text" maxlength="160" placeholder="Charlotte, NC or Dallas + surrounding areas" autocomplete="address-level2">
+          <div class="fn-error" data-error-for="serviceArea"></div>
+        </div>
+
+        <div class="fn-field">
+          <label id="hasWebsiteLabel">Do you already have a website?</label>
+          <div class="fn-seg" role="group" aria-labelledby="hasWebsiteLabel" id="hasWebsite">
+            <button type="button" data-value="yes" aria-pressed="false">Yes</button>
+            <button type="button" data-value="no" aria-pressed="false">No</button>
+          </div>
+          <div class="fn-error" data-error-for="hasWebsite"></div>
+        </div>
+        <div class="fn-field" id="websiteUrlWrap" hidden>
+          <label for="websiteUrl">Website URL <span style="text-transform:none;letter-spacing:0;font-weight:600">(optional)</span></label>
+          <input class="fn-input" id="websiteUrl" name="websiteUrl" type="url" inputmode="url" maxlength="240" placeholder="yourbusiness.com" autocomplete="url">
+        </div>
+
+        <div class="fn-field" id="adBudgetWrap" hidden>
+          <label for="adBudget">What monthly Google Ads budget are you considering?</label>
+          <select class="fn-select" id="adBudget" name="adBudget">
+            <option value="">Select a range (optional)</option>
+            <option>$300–$500</option>
+            <option>$500–$1,000</option>
+            <option>$1,000–$2,500</option>
+            <option>$2,500+</option>
+            <option>Not sure yet</option>
+          </select>
+          <p class="fn-hint">Ad spend is paid directly to Google. It's separate from Nexus Luma's fee.</p>
+        </div>
+
+        <p class="fn-section-label">Where should we send your call details?</p>
         <div class="fn-grid-2">
           <div class="fn-field">
-            <label for="name">Your name</label>
-            <input class="fn-input" id="name" type="text" autocomplete="name" maxlength="120">
-            <div class="fn-error" data-error-for="name"></div>
+            <label for="firstName">First name</label>
+            <input class="fn-input" id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="60">
+            <div class="fn-error" data-error-for="firstName"></div>
           </div>
           <div class="fn-field">
-            <label for="business">Business name</label>
-            <input class="fn-input" id="business" type="text" autocomplete="organization" maxlength="160">
-            <div class="fn-error" data-error-for="business"></div>
+            <label for="lastName">Last name</label>
+            <input class="fn-input" id="lastName" name="lastName" type="text" autocomplete="family-name" maxlength="60">
+            <div class="fn-error" data-error-for="lastName"></div>
           </div>
+        </div>
+        <div class="fn-field">
+          <label for="businessName">Business name</label>
+          <input class="fn-input" id="businessName" name="businessName" type="text" autocomplete="organization" maxlength="160">
+          <div class="fn-error" data-error-for="businessName"></div>
+        </div>
+        <div class="fn-grid-2">
           <div class="fn-field">
             <label for="email">Email</label>
-            <input class="fn-input" id="email" type="email" inputmode="email" autocomplete="email" maxlength="160">
+            <input class="fn-input" id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="160">
             <div class="fn-error" data-error-for="email"></div>
           </div>
           <div class="fn-field">
             <label for="phone">Phone</label>
-            <input class="fn-input" id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40">
+            <input class="fn-input" id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40">
             <div class="fn-error" data-error-for="phone"></div>
           </div>
-          <div class="fn-field">
-            <label for="trade">What you do</label>
-            <select class="fn-select" id="trade">
-              <option value="">Choose your trade</option>
-              <option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option>
-              <option>Remodeling</option><option>General Contracting</option><option>Painting</option><option>Flooring</option>
-              <option>Concrete</option><option>Landscaping</option><option>Fencing</option><option>Decks</option>
-              <option>Handyman</option><option>Pressure Washing</option><option>Other</option>
-            </select>
-            <div class="fn-error" data-error-for="trade"></div>
-          </div>
-          <div class="fn-field">
-            <label for="serviceArea">Where you serve</label>
-            <input class="fn-input" id="serviceArea" type="text" maxlength="160" placeholder="City, county, or ZIP">
-          </div>
-        </div>
-        <div class="fn-field">
-          <label for="notes">What type of work do you want more of?</label>
-          <textarea class="fn-textarea" id="notes" maxlength="1500" placeholder="e.g. More roof replacements, fewer small repair calls"></textarea>
         </div>
         <div class="fn-hp" aria-hidden="true"><label for="hpField">Leave blank</label><input id="hpField" type="text" tabindex="-1" autocomplete="off"></div>
+
         <div class="fn-alert" id="formAlert" role="alert" hidden></div>
-        <div class="fn-actions"><button class="fn-btn" type="submit" id="formSubmit">Choose A Call Time</button></div>
+        <div class="fn-actions" style="margin-top:6px">
+          <button class="fn-btn" type="submit" id="formSubmit">See Available Zoom Times</button>
+        </div>
+        <p class="fn-free">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Free 30-minute Zoom call. No payment required.
+        </p>
       </form>
-      <p class="fn-alt">Already know you want it? <a href="/start/" data-track="lead_system_cta_clicked" data-track-location="book_form">Build my lead system</a></p>
     </section>
 
+    <!-- STEP 2: choose a time -->
     <section class="fn-step" data-step="schedule" aria-labelledby="scheduleTitle" hidden>
-      <p class="fn-eyebrow">Pick A Time</p>
-      <h1 class="fn-title" id="scheduleTitle" tabindex="-1">Choose a time for your strategy call.</h1>
-      <p class="fn-sub" id="tzNote">30 minutes. Times shown in Eastern Time.</p>
+      <p class="fn-eyebrow">Choose A Time</p>
+      <h1 class="fn-title" id="scheduleTitle" tabindex="-1">Let's Find A Time That Works.</h1>
+      <p class="fn-sub">Choose a time for your free Zoom strategy call. We'll talk about the type of work you want more of and whether Nexus Luma is a good fit.</p>
+
+      <div class="fn-chip-summary" id="whoChip">
+        <span>Booking for <strong id="whoName"></strong> · <span id="whoBiz"></span></span>
+        <button type="button" class="fn-link-btn" id="editDetails">Edit details</button>
+      </div>
 
       <div class="fn-card" id="calendarCard" hidden>
         <div class="fn-days" id="days" role="group" aria-label="Choose a day"></div>
+        <p class="fn-hint" id="tzNote" style="margin-top:14px"></p>
         <div class="fn-times" id="times" role="group" aria-label="Choose a time"></div>
         <div class="fn-alert" id="calAlert" role="alert" hidden style="margin-top:14px"></div>
         <div class="fn-actions"><button class="fn-btn" type="button" id="confirmBtn" disabled>Confirm My Call</button></div>
       </div>
 
-      <div class="fn-card" id="schedulerCard" hidden>
-        <p class="fn-sub" style="margin-bottom:0">We've got your details. Pick any open time on our scheduler and you'll get a calendar invite.</p>
-        <div class="fn-actions"><a class="fn-btn" id="schedulerLink" href="#" target="_blank" rel="noopener">Open The Scheduler</a></div>
+      <div class="fn-card" id="fallbackCard" hidden>
+        <p class="fn-sub" style="margin-bottom:6px"><strong style="color:#fff">Your details are saved.</strong> Live scheduling is temporarily unavailable, so choose a time on our Zoom scheduler below, or we'll reach out within one business day to set it up.</p>
+        <div class="fn-actions"><a class="fn-btn" id="schedulerLink" href="#" target="_blank" rel="noopener" data-track="booking_fallback_scheduler">Open The Zoom Scheduler</a></div>
       </div>
       <p class="fn-muted" id="loadingNote">Loading available times…</p>
-    </section>
-
-    <section class="fn-step" data-step="done" aria-labelledby="doneTitle" hidden>
-      <div class="fn-success-icon" aria-hidden="true">✓</div>
-      <p class="fn-eyebrow">You're Booked</p>
-      <h1 class="fn-title" id="doneTitle" tabindex="-1">Your strategy call is confirmed.</h1>
-      <p class="fn-sub" id="doneText">A calendar invite is on its way to your email.</p>
-      <div class="fn-actions"><a class="fn-btn fn-btn--ghost" href="/">Return Home</a></div>
     </section>
   </main>
 
@@ -108,94 +178,178 @@
   (function () {
     "use strict";
     var $ = function (id) { return document.getElementById(id); };
-    var DEFAULT_SCHEDULER = "https://scheduler.zoom.us/elijah-thornton/30-min-strategy-call";
-    var contact = {}, selectedDate = "", selectedSlot = null, booking = false;
+    var CONFIG = window.NL_FUNNEL || {};
+    var STORE = "nl_book_v2";
+    var FIELDS = ["profession", "professionOther", "primaryService", "serviceArea", "websiteUrl", "adBudget", "firstName", "lastName", "businessName", "email", "phone"];
+    var state = load() || { values: {}, hasWebsite: "", leadToken: "", step: "form", summary: null };
+    var hash = new URLSearchParams(location.hash.slice(1));
+    var replaceBookingToken = hash.get("reschedule") || "";
+    if (hash.get("lt")) { state.leadToken = hash.get("lt"); state.step = "schedule"; }
+    var selected = { date: "", slot: null }, booking = false, startedTracked = false;
 
+    function load() { try { return JSON.parse(sessionStorage.getItem(STORE) || "null"); } catch (e) { return null; } }
+    function save() { try { sessionStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
     function track(n, d) { if (window.nlTrack) window.nlTrack(n, d); }
-    function show(step) {
-      document.querySelectorAll("[data-step]").forEach(function (el) { el.hidden = el.getAttribute("data-step") !== step; });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      var h = document.querySelector('[data-step="' + step + '"] .fn-title');
-      if (h) setTimeout(function () { h.focus({ preventScroll: true }); }, 50);
+
+    // ---- Form ------------------------------------------------------------
+    if (CONFIG.askAdBudget) $("adBudgetWrap").hidden = false;
+    var trade = new URLSearchParams(location.search).get("trade");
+    if (trade && !state.values.profession) state.values.profession = trade;
+
+    FIELDS.forEach(function (f) {
+      var el = $(f);
+      if (state.values[f]) el.value = state.values[f];
+      el.addEventListener("input", onInput);
+      el.addEventListener("change", onInput);
+    });
+    function onInput(e) {
+      state.values[e.target.id] = e.target.value;
+      setError(e.target.id, "");
+      if (!startedTracked) { startedTracked = true; track("qualification_started"); }
+      if (e.target.id === "profession") syncOther();
+      save();
     }
+    function syncOther() { $("professionOtherWrap").hidden = $("profession").value !== "Other Contractor / Home Service"; }
+    syncOther();
+
+    var seg = $("hasWebsite");
+    function syncSeg() {
+      seg.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.value === state.hasWebsite ? "true" : "false"); });
+      $("websiteUrlWrap").hidden = state.hasWebsite !== "yes";
+    }
+    seg.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      state.hasWebsite = b.dataset.value;
+      setError("hasWebsite", "");
+      syncSeg(); save();
+      if (state.hasWebsite === "yes") $("websiteUrl").focus();
+    });
+    syncSeg();
+
     function setError(field, msg) {
       var el = document.querySelector('[data-error-for="' + field + '"]');
       if (el) el.textContent = msg || "";
-      $(field).classList.toggle("is-invalid", Boolean(msg));
+      var input = $(field);
+      if (input && input.classList) input.classList.toggle("is-invalid", Boolean(msg));
       return !msg;
     }
 
-    $("bookForm").addEventListener("submit", function (e) {
+    function validate() {
+      var v = state.values, errs = {};
+      if (!v.profession) errs.profession = "Choose your type of business.";
+      if (v.profession === "Other Contractor / Home Service" && !(v.professionOther || "").trim()) errs.professionOther = "Tell us your type of business.";
+      if (!(v.primaryService || "").trim()) errs.primaryService = "Tell us the service you want more leads for.";
+      if (!(v.serviceArea || "").trim()) errs.serviceArea = "Tell us where you want customers.";
+      if (!state.hasWebsite) errs.hasWebsite = "Choose yes or no.";
+      if (!(v.firstName || "").trim()) errs.firstName = "Enter your first name.";
+      if (!(v.lastName || "").trim()) errs.lastName = "Enter your last name.";
+      if (!(v.businessName || "").trim()) errs.businessName = "Enter your business name.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((v.email || "").trim())) errs.email = "Enter a valid email.";
+      if ((v.phone || "").replace(/\D/g, "").length < 10) errs.phone = "Enter a valid phone number.";
+      return errs;
+    }
+
+    $("leadForm").addEventListener("submit", function (e) {
       e.preventDefault();
-      contact = {
-        name: $("name").value.trim(), business: $("business").value.trim(), email: $("email").value.trim(),
-        phone: $("phone").value.trim(), trade: $("trade").value, serviceArea: $("serviceArea").value.trim(), notes: $("notes").value.trim()
-      };
-      var ok = [
-        setError("name", contact.name.length >= 2 ? "" : "Please enter your name."),
-        setError("business", contact.business ? "" : "Please enter your business name."),
-        setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact.email) ? "" : "Please enter a valid email."),
-        setError("phone", contact.phone.replace(/\D/g, "").length >= 10 ? "" : "Please enter a valid phone number."),
-        setError("trade", contact.trade ? "" : "Please choose your trade.")
-      ].every(Boolean);
-      if (!ok) return;
+      FIELDS.forEach(function (f) { state.values[f] = $(f).value; });
+      var errs = validate();
+      ["profession", "professionOther", "primaryService", "serviceArea", "hasWebsite", "firstName", "lastName", "businessName", "email", "phone"].forEach(function (f) { setError(f, errs[f]); });
+      var first = Object.keys(errs)[0];
+      if (first) { var el = $(first); if (first === "hasWebsite") seg.querySelector("button").focus(); else if (el && el.focus) el.focus(); return; }
+
       var btn = $("formSubmit");
       btn.disabled = true; btn.textContent = "Saving…";
       $("formAlert").hidden = true;
-      fetch("/api/submit-qualification", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.assign({ intent: "strategy_call", source: "book-page", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, contact))
-      })
-        .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Please check your details."); return d; }); })
-        .then(function () { show("schedule"); loadScheduler(); })
-        .catch(function (err) { $("formAlert").textContent = err.message; $("formAlert").hidden = false; })
-        .then(function () { btn.disabled = false; btn.textContent = "Choose A Call Time"; });
+      var payload = Object.assign({}, state.values, {
+        hasWebsite: state.hasWebsite,
+        leadToken: state.leadToken,
+        attribution: window.nlAttribution ? window.nlAttribution() : {},
+        company_url_confirm: $("hpField").value
+      });
+      if (!CONFIG.askAdBudget) delete payload.adBudget;
+      fetch("/api/submit-qualification", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            var f = (res.d && res.d.fields) || {};
+            Object.keys(f).forEach(function (k) { setError(k, f[k]); });
+            throw new Error(res.d.error || "Please check your details.");
+          }
+          state.leadToken = res.d.leadToken;
+          state.summary = res.d.summary;
+          save();
+          track("qualification_completed", { profession: state.values.profession, ad_budget: state.values.adBudget || "" });
+          goSchedule(true);
+        })
+        .catch(function (err) { $("formAlert").textContent = err.message || "Something went wrong. Please try again."; $("formAlert").hidden = false; })
+        .then(function () { btn.disabled = false; btn.textContent = "See Available Zoom Times"; });
     });
 
+    // ---- Steps -----------------------------------------------------------
+    function show(step) {
+      state.step = step; save();
+      document.querySelectorAll("[data-step]").forEach(function (el) { el.hidden = el.getAttribute("data-step") !== step; });
+      $("stepLabel").textContent = step === "form" ? "Step 1 of 2" : "Step 2 of 2";
+      $("progressBar").style.width = step === "form" ? "8%" : "60%";
+      $("backBtn").hidden = step !== "schedule" || Boolean(replaceBookingToken);
+      $("editDetails").hidden = Boolean(replaceBookingToken);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      var h = document.querySelector('[data-step="' + step + '"] .fn-title');
+      if (h) setTimeout(function () { h.focus({ preventScroll: true }); }, 60);
+    }
+    function goForm() { show("form"); }
+    $("backBtn").addEventListener("click", function () { history.back(); });
+    $("editDetails").addEventListener("click", function () { history.back(); });
+    window.addEventListener("popstate", function () { if (state.step === "schedule") goForm(); });
+
+    function goSchedule(push) {
+      if (push) history.pushState({ step: "schedule" }, "", location.pathname + location.search);
+      show("schedule");
+      $("loadingNote").hidden = false; $("calendarCard").hidden = true; $("fallbackCard").hidden = true;
+      fetch("/api/book-call", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "start", leadToken: state.leadToken }) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            if (res.status === 401 || res.status === 404) { state.leadToken = ""; save(); goForm(); $("formAlert").textContent = res.d.error; $("formAlert").hidden = false; return; }
+            throw new Error(res.d.error);
+          }
+          state.summary = res.d.summary; save();
+          $("whoName").textContent = (res.d.summary.firstName + " " + res.d.summary.lastName).trim();
+          $("whoBiz").textContent = res.d.summary.businessName + " · " + res.d.summary.email;
+          if (res.d.activeBooking && !replaceBookingToken) { location.replace("/booked/?t=" + encodeURIComponent(res.d.activeBooking.bookingToken)); return; }
+          track("booking_started");
+          if (!res.d.liveCalendar) return useFallback(res.d.schedulerUrl);
+          loadDays();
+        })
+        .catch(function () { useFallback(); });
+    }
+
+    function useFallback(url) {
+      $("loadingNote").hidden = true; $("calendarCard").hidden = true;
+      var s = state.summary || {};
+      var link = new URL(url || "https://scheduler.zoom.us/elijah-thornton/30-min-strategy-call");
+      // Best-effort prefill for the external scheduler (ignored if unsupported).
+      if (s.firstName) link.searchParams.set("name", (s.firstName + " " + (s.lastName || "")).trim());
+      if (s.email) link.searchParams.set("email", s.email);
+      $("schedulerLink").href = link.toString();
+      $("fallbackCard").hidden = false;
+    }
+
+    // ---- Calendar --------------------------------------------------------
+    var visitorTz = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
     function pad(n) { return String(n).padStart(2, "0"); }
     function dateKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-    function upcomingWeekdays(count) {
-      var out = [], d = new Date();
-      d.setDate(d.getDate() + 1);
+    function weekdays(count) {
+      var out = [], d = new Date(); d.setDate(d.getDate() + 1);
       while (out.length < count) { if (d.getDay() > 0 && d.getDay() < 6) out.push(new Date(d)); d.setDate(d.getDate() + 1); }
       return out;
     }
+    function fetchSlots(key) { return fetch("/api/check-availability?date=" + encodeURIComponent(key)).then(function (r) { return r.json(); }); }
 
-    function useScheduler(url) {
-      $("loadingNote").hidden = true;
-      $("calendarCard").hidden = true;
-      $("tzNote").textContent = "30 minutes.";
-      $("schedulerLink").href = url || DEFAULT_SCHEDULER;
-      $("schedulerCard").hidden = false;
-    }
-
-    $("schedulerLink").addEventListener("click", function () { track("strategy_call_clicked", { cta_location: "book_scheduler" }); });
-
-    function fetchSlots(key) {
-      return fetch("/api/check-availability?date=" + encodeURIComponent(key)).then(function (r) { return r.json(); });
-    }
-
-    function loadScheduler() {
-      var days = upcomingWeekdays(10);
-      // Only use the live calendar when real Google Calendar availability is configured;
-      // otherwise fall back to the hosted scheduler so no booking is ever faked.
-      fetchSlots(dateKey(days[0]))
-        .then(function (data) {
-          if (data.mode !== "google") {
-            return fetch("/api/calendar-config").then(function (r) { return r.json(); }).catch(function () { return {}; })
-              .then(function (cfg) { useScheduler(cfg.bookingUrl || data.bookingUrl); });
-          }
-          $("loadingNote").hidden = true;
-          $("calendarCard").hidden = false;
-          renderDays(days);
-          selectDay(dateKey(days[0]), data);
-        })
-        .catch(function () { useScheduler(); });
-    }
-
-    function renderDays(days) {
-      var wrap = $("days");
-      wrap.textContent = "";
+    function loadDays() {
+      var days = weekdays(CONFIG.daysToShow || 10);
+      var wrap = $("days"); wrap.textContent = "";
       days.forEach(function (d) {
         var b = document.createElement("button");
         b.type = "button"; b.className = "fn-day"; b.dataset.key = dateKey(d);
@@ -205,62 +359,71 @@
         b.addEventListener("click", function () { selectDay(b.dataset.key); });
         wrap.appendChild(b);
       });
+      $("tzNote").textContent = "Times shown in your time zone (" + visitorTz.replace(/_/g, " ") + ").";
+      $("loadingNote").hidden = true; $("calendarCard").hidden = false;
+      selectDay(dateKey(days[0]));
     }
 
-    function selectDay(key, preloaded) {
-      selectedDate = key; selectedSlot = null; $("confirmBtn").disabled = true;
+    function selectDay(key) {
+      selected = { date: key, slot: null }; $("confirmBtn").disabled = true;
       document.querySelectorAll(".fn-day").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.key === key ? "true" : "false"); });
-      var times = $("times");
-      times.innerHTML = '<p class="fn-muted">Loading times…</p>';
-      (preloaded ? Promise.resolve(preloaded) : fetchSlots(key)).then(function (data) {
-        if (data.mode === "fallback") { useScheduler(data.bookingUrl); return; }
+      var times = $("times"); times.innerHTML = '<p class="fn-muted">Loading times…</p>';
+      fetchSlots(key).then(function (data) {
+        if (data.mode !== "google") return useFallback(data.bookingUrl);
         times.textContent = "";
-        if (!data.availableSlots || !data.availableSlots.length) { times.innerHTML = '<p class="fn-muted">No open times this day. Try another day.</p>'; return; }
-        data.availableSlots.forEach(function (slot) {
+        var slots = (data.availableSlots || []).filter(function (s) { return Date.parse(s.start) > Date.now() + 60 * 60 * 1000; });
+        if (!slots.length) { times.innerHTML = '<p class="fn-muted">No open times this day. Try another day.</p>'; return; }
+        slots.forEach(function (slot) {
           var b = document.createElement("button");
-          b.type = "button"; b.className = "fn-time"; b.textContent = slot.label;
+          b.type = "button"; b.className = "fn-time";
+          b.textContent = new Date(slot.start).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: visitorTz });
           b.addEventListener("click", function () {
-            selectedSlot = slot;
+            selected.slot = slot;
             times.querySelectorAll(".fn-time").forEach(function (t) { t.setAttribute("aria-pressed", t === b ? "true" : "false"); });
             $("confirmBtn").disabled = false;
           });
           times.appendChild(b);
         });
-      }).catch(function () { useScheduler(); });
+      }).catch(function () { useFallback(); });
     }
 
     $("confirmBtn").addEventListener("click", function () {
-      if (!selectedSlot || booking) return;
+      if (!selected.slot || booking) return;
       booking = true;
-      var btn = this; btn.disabled = true; btn.textContent = "Booking…";
+      var btn = this; btn.disabled = true; btn.textContent = "Booking your call…";
       $("calAlert").hidden = true;
-      track("strategy_call_clicked", { cta_location: "book_calendar" });
-      var parts = contact.name.split(" ");
-      fetch("/api/create-booking", {
+      fetch("/api/book-call", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: contact.email, fname: parts[0], lname: parts.slice(1).join(" "), biz: contact.business,
-          selectedDate: selectedDate, slotStart: selectedSlot.start, slotEnd: selectedSlot.end,
-          answers: { q1: "Contractor Lead System strategy call", q2: contact.notes, q3: contact.trade, q4: "Service area: " + contact.serviceArea, q5: "Phone: " + contact.phone }
-        })
+        body: JSON.stringify({ action: "book", leadToken: state.leadToken, date: selected.date, start: selected.slot.start, timezone: visitorTz, replaceBookingToken: replaceBookingToken })
       })
-        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
         .then(function (res) {
-          if (res.ok && res.data.mode === "google") {
-            track("strategy_call_booked", { date: selectedDate });
-            var when = new Date(selectedSlot.start).toLocaleString("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
-            $("doneText").textContent = when + " ET. A calendar invite is on its way to " + contact.email + ".";
-            show("done");
+          if (res.ok) {
+            if (!res.d.duplicate) track("call_booked", { profession: state.values.profession || "" });
+            try { sessionStorage.removeItem(STORE); } catch (e) {}
+            location.replace("/booked/?t=" + encodeURIComponent(res.d.bookingToken));
             return;
           }
-          if (res.data && res.data.bookingUrl) { useScheduler(res.data.bookingUrl); return; }
-          $("calAlert").textContent = (res.data && res.data.error) || "That time is no longer available. Please choose another.";
+          if (res.d.alreadyBooked) { location.replace("/booked/?t=" + encodeURIComponent(res.d.bookingToken)); return; }
+          if (res.status === 503) { useFallback(res.d.schedulerUrl); return; }
+          $("calAlert").textContent = res.d.error || "That time is no longer available. Please choose another.";
           $("calAlert").hidden = false;
-          selectDay(selectedDate);
+          selectDay(selected.date);
+          booking = false; btn.textContent = "Confirm My Call";
         })
-        .catch(function () { useScheduler(); })
-        .then(function () { booking = false; btn.textContent = "Confirm My Call"; });
+        .catch(function () {
+          $("calAlert").textContent = "We couldn't reach the scheduler. Please try again.";
+          $("calAlert").hidden = false; booking = false; btn.disabled = false; btn.textContent = "Confirm My Call";
+        });
     });
+
+    // ---- Resume after refresh / back -------------------------------------
+    if (state.leadToken && state.step === "schedule") {
+      history.replaceState({ step: "form" }, "", location.pathname + location.search);
+      goSchedule(true);
+    } else {
+      show("form");
+    }
   })();
   </script>
 </body>

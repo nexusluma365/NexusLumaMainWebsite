@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Start Your Project | Nexus Luma</title>
+  <meta name="robots" content="noindex" />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://js.stripe.com">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/nl-track.js"></script>
+</head>
+<body>
+  <nav class="fn-nav">
+    <div class="fn-nav-inner">
+      <a class="fn-brand" href="/"><img src="/Asset/nexus-luma-logo-176.webp" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
+      <a class="fn-nav-link" href="tel:+13365177347">(336) 517-7347</a>
+    </div>
+  </nav>
+
+  <main class="fn-main">
+    <p class="fn-muted" id="loading">Loading your project…</p>
+
+    <section id="start" hidden>
+      <p class="fn-eyebrow">Your Project</p>
+      <h1 class="fn-title" tabindex="-1">Let's Get Your Lead System Started.</h1>
+      <p class="fn-sub" id="startSub">Website, Google Search Ads setup, lead tracking, and your first 30 days of campaign management.</p>
+
+      <div class="fn-card">
+        <div class="fn-summary-head"><h3>Contractor Lead Generation System</h3></div>
+        <ul class="fn-lines">
+          <li><span>Total project</span><strong>$799</strong></li>
+          <li class="is-today"><span>Due today</span><strong>$275</strong></li>
+          <li><span>Remaining project balance</span><strong>$524</strong></li>
+        </ul>
+        <p class="fn-hint" style="margin-top:12px">The remaining $524 is due according to your project payment terms. Google Ads media spend is separate and paid directly to Google.</p>
+      </div>
+
+      <form class="fn-card" id="payForm" novalidate>
+        <span class="fn-test-badge" id="testBadge" hidden>TEST MODE — no real charge</span>
+        <div class="fn-alert" id="payAlert" role="alert" hidden></div>
+        <div id="cardFields" hidden>
+          <div class="fn-field">
+            <label for="billingName">Name on card</label>
+            <input class="fn-input" id="billingName" type="text" autocomplete="cc-name" maxlength="120">
+          </div>
+          <div class="fn-field"><label>Card number</label><div class="fn-stripe" id="cardNumber"></div></div>
+          <div class="fn-grid-2">
+            <div class="fn-field"><label>Expiration</label><div class="fn-stripe" id="cardExpiry"></div></div>
+            <div class="fn-field"><label>CVC</label><div class="fn-stripe" id="cardCvc"></div></div>
+          </div>
+        </div>
+        <div class="fn-actions" style="margin-top:6px">
+          <button class="fn-btn" type="submit" id="payBtn">Start My Project — $275</button>
+        </div>
+        <p class="fn-secure">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Payments processed securely by Stripe. You'll be charged $275 today.
+        </p>
+      </form>
+    </section>
+
+    <section id="paid" hidden>
+      <div class="fn-success-icon" aria-hidden="true">✓</div>
+      <p class="fn-eyebrow">Deposit Received</p>
+      <h1 class="fn-title" tabindex="-1">Your project is started.</h1>
+      <p class="fn-sub">A receipt for your $275 deposit is on its way to your email. Remaining balance: $524.</p>
+      <div class="fn-card">
+        <div class="fn-summary-head"><h3>Next: project onboarding</h3></div>
+        <p class="fn-sub" style="margin-bottom:0">Share your logo, services, photos, and a few details so we can start building. It takes about 10 minutes and you can send anything you don't have handy later.</p>
+        <div class="fn-actions"><a class="fn-btn" id="onboardingLink" href="#">Start Onboarding</a></div>
+      </div>
+    </section>
+
+    <section id="pending" hidden>
+      <h1 class="fn-title" tabindex="-1">Your payment is still processing.</h1>
+      <p class="fn-sub">Please don't submit another payment. We'll email you as soon as it's confirmed. Questions? Text or call (336) 517-7347.</p>
+      <div class="fn-actions"><button class="fn-btn fn-btn--ghost" type="button" id="recheckBtn">Check Again</button></div>
+    </section>
+
+    <section id="invalid" hidden>
+      <h1 class="fn-title">This project link isn't valid.</h1>
+      <p class="fn-sub" id="invalidMsg">It may have expired. Text or call (336) 517-7347 and we'll send a new one.</p>
+    </section>
+  </main>
+
+  <footer class="fn-footer">
+    Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a> · © 2026 Nexus Luma
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var token = new URLSearchParams(location.search).get("t") || "";
+    var DEPOSIT_CENTS = 27500; // display sanity check; the server sets the amount
+    var stripe = null, cardNumber = null, intent = null, paying = false, project = null, pendingId = "";
+
+    function track(n, d) { if (window.nlTrack) window.nlTrack(n, d); }
+    function showOnly(id) {
+      ["loading", "start", "paid", "pending", "invalid"].forEach(function (s) { $(s).hidden = s !== id; });
+      var h = $(id).querySelector(".fn-title"); if (h) h.focus({ preventScroll: true });
+    }
+    function api(body) {
+      return fetch("/api/project-api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ t: token }, body)) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); });
+    }
+    function showPaid() {
+      $("onboardingLink").href = "/onboarding/?t=" + encodeURIComponent(token);
+      showOnly("paid");
+    }
+    function payError(msg) { $("payAlert").textContent = msg; $("payAlert").hidden = false; }
+
+    function loadStripeJs() {
+      if (window.Stripe) return Promise.resolve();
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement("script"); s.src = "https://js.stripe.com/v3/";
+        s.onload = resolve; s.onerror = function () { reject(new Error("Secure checkout could not load. Please check your connection.")); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function openCheckout() {
+      if (intent) return Promise.resolve(intent);
+      track("deposit_checkout_started", { value: 275, currency: "USD" });
+      return Promise.all([loadStripeJs(), api({ action: "checkout" })]).then(function (r) {
+        var res = r[1];
+        if (res.status === 409 && res.d.paid) { showPaid(); throw null; }
+        if (!res.ok || !res.d.clientSecret) throw new Error(res.d.error || "We couldn't start secure checkout.");
+        if (res.d.amount !== DEPOSIT_CENTS) throw new Error("Checkout amount mismatch. Please contact us before paying.");
+        intent = res.d;
+        stripe = window.Stripe(intent.publishableKey);
+        var elements = stripe.elements();
+        var style = { base: { color: "#101326", fontSize: "16px", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "::placeholder": { color: "#8b91a3" } }, invalid: { color: "#d63f3f" } };
+        cardNumber = elements.create("cardNumber", { style: style, showIcon: true });
+        var exp = elements.create("cardExpiry", { style: style }), cvc = elements.create("cardCvc", { style: style });
+        cardNumber.mount("#cardNumber"); exp.mount("#cardExpiry"); cvc.mount("#cardCvc");
+        [cardNumber, exp, cvc].forEach(function (el) { el.on("change", function (ev) { if (ev.error) payError(ev.error.message); else $("payAlert").hidden = true; }); });
+        $("testBadge").hidden = intent.mode !== "test";
+        $("billingName").value = $("billingName").value || ((project.firstName || "") ? project.firstName : "");
+        $("cardFields").hidden = false;
+        return intent;
+      });
+    }
+
+    function verify(paymentIntentId, attempt) {
+      attempt = attempt || 0;
+      return api({ action: "verify", paymentIntentId: paymentIntentId }).then(function (res) {
+        if (res.d.verified) {
+          track("deposit_paid", { value: 275, currency: "USD", transaction_id: paymentIntentId, project_id: res.d.projectId });
+          showPaid();
+          return;
+        }
+        if (attempt < 4) return new Promise(function (r) { setTimeout(r, 2000); }).then(function () { return verify(paymentIntentId, attempt + 1); });
+        pendingId = paymentIntentId;
+        showOnly("pending");
+      });
+    }
+
+    $("payForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (paying) return;
+      var btn = $("payBtn");
+      if (!cardNumber) {
+        btn.disabled = true; btn.textContent = "Opening secure checkout…";
+        openCheckout()
+          .then(function () { btn.textContent = "Pay $275 & Start My Project"; })
+          .catch(function (err) { if (err) payError(err.message); btn.textContent = "Start My Project — $275"; })
+          .then(function () { btn.disabled = false; });
+        return;
+      }
+      var name = $("billingName").value.trim();
+      if (name.length < 2) return payError("Please enter the name on the card.");
+      paying = true; btn.disabled = true; btn.textContent = "Processing secure payment…"; $("payAlert").hidden = true;
+      stripe.confirmCardPayment(intent.clientSecret, {
+        payment_method: { card: cardNumber, billing_details: { name: name, email: project.email || undefined, phone: project.phone || undefined } }
+      })
+        .then(function (result) {
+          if (result.error) {
+            track("deposit_payment_failed", { code: result.error.code || result.error.type });
+            payError(result.error.type === "card_error" || result.error.type === "validation_error" ? result.error.message : "Your payment could not be completed. Please try another card.");
+            return;
+          }
+          var pi = result.paymentIntent;
+          if (pi && (pi.status === "succeeded" || pi.status === "processing")) return verify(pi.id);
+          payError("Your payment could not be completed. Please try again.");
+        })
+        .catch(function () { payError("We couldn't reach the payment service. Please try again."); })
+        .then(function () { paying = false; btn.disabled = false; btn.textContent = "Pay $275 & Start My Project"; });
+    });
+
+    $("recheckBtn").addEventListener("click", function () { if (pendingId) verify(pendingId, 4); });
+
+    if (!token) return showOnly("invalid");
+    fetch("/api/project-api?t=" + encodeURIComponent(token))
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { $("invalidMsg").textContent = res.d.error || $("invalidMsg").textContent; return showOnly("invalid"); }
+        project = res.d;
+        if (project.paid) return showPaid();
+        if (project.businessName) $("startSub").textContent = "For " + project.businessName + ": website, Google Search Ads setup, lead tracking, and your first 30 days of campaign management.";
+        showOnly("start");
+      })
+      .catch(function () { showOnly("invalid"); });
+  })();
+  </script>
+</body>
+</html>

@@ -97,15 +97,7 @@
   to = "/.netlify/functions/submit-qualification"
   status = 200
 
-[[redirects]]
-  from = "/api/create-lead-system-deposit"
-  to = "/.netlify/functions/create-lead-system-deposit"
-  status = 200
 
-[[redirects]]
-  from = "/api/verify-lead-system-deposit"
-  to = "/.netlify/functions/verify-lead-system-deposit"
-  status = 200
 
 [[redirects]]
   from = "/api/stripe-webhook"
@@ -121,3 +113,48 @@
   from = "/api/create-management-subscription"
   to = "/.netlify/functions/create-management-subscription"
   status = 200
+
+[[redirects]]
+  from = "/api/book-call"
+  to = "/.netlify/functions/book-call"
+  status = 200
+
+[[redirects]]
+  from = "/api/manage-booking"
+  to = "/.netlify/functions/manage-booking"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin-api"
+  to = "/.netlify/functions/admin-api"
+  status = 200
+
+[[redirects]]
+  from = "/api/project-api"
+  to = "/.netlify/functions/project-api"
+  status = 200
+
+# The strategy call is free: legacy paid pre-call funnels now lead to booking.
+[[redirects]]
+  from = "/start/*"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/start"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/questionnaire/*"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/questionnaire"
+  to = "/book/"
+  status = 301
+  force = true

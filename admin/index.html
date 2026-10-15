@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leads | Nexus Luma Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon-64.png" type="image/png">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <style>
+    .ad-main { max-width: 1180px; margin: 0 auto; padding: 24px 18px 60px; }
+    .ad-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+    .ad-top h1 { font-size: 1.6rem; font-weight: 900; }
+    .ad-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .ad-filter { border: 1px solid var(--card-border); background: var(--card); color: var(--muted); border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .8rem; font-weight: 800; cursor: pointer; }
+    .ad-filter[aria-pressed="true"] { color: #fff; border-color: var(--accent); background: rgba(159,211,221,.12); }
+    .ad-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 16px; align-items: start; }
+    .ad-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .ad-table th { text-align: left; color: var(--faint); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--card-border); }
+    .ad-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.06); vertical-align: top; }
+    .ad-table tr { cursor: pointer; }
+    .ad-table tr:hover td, .ad-table tr.is-active td { background: rgba(159,211,221,.06); }
+    .ad-table td small { display: block; color: var(--faint); font-size: .78rem; margin-top: 2px; }
+    .ad-status { display: inline-block; font-size: .66rem; font-weight: 900; letter-spacing: .06em; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.08); color: #fff; white-space: nowrap; }
+    .s-CALL_BOOKED { background: #1d4ed8; } .s-DEPOSIT_PAID, .s-PROJECT_STARTED { background: #15803d; } .s-DEPOSIT_SENT, .s-PROJECT_ACCEPTED { background: #a16207; }
+    .s-NOT_INTERESTED, .s-NO_SHOW { background: #7f1d1d; } .s-QUALIFIED, .s-CALL_COMPLETED { background: #0e7490; }
+    .ad-panel { position: sticky; top: 84px; max-height: calc(100vh - 100px); overflow: auto; }
+    .ad-brief { font-size: 1rem; line-height: 1.55; }
+    .ad-brief strong { display: block; font-size: 1.25rem; }
+    .ad-brief .big { font-size: 1.05rem; color: #fff; margin-top: 10px; }
+    .ad-kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; font-size: .88rem; margin-top: 12px; }
+    .ad-kv dt { color: var(--faint); } .ad-kv dd { color: #fff; word-break: break-word; }
+    .ad-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .ad-actions button { min-height: 40px; font-size: .82rem; padding: 10px 14px; width: auto; }
+    .ad-link { width: 100%; margin-top: 10px; font-size: .8rem; }
+    .ad-history { list-style: none; font-size: .8rem; color: var(--muted); display: grid; gap: 4px; margin-top: 8px; }
+    @media (max-width: 860px) { .ad-grid { grid-template-columns: 1fr; } .ad-panel { position: static; max-height: none; } .ad-hide-sm { display: none; } }
+  </style>
+</head>
+<body>
+  <nav class="fn-nav"><div class="fn-nav-inner">
+    <a class="fn-brand" href="/"><img src="/Asset/nexus-luma-logo-176.webp" alt="" width="52" height="52"><span>Nexus Luma Admin</span></a>
+    <button class="fn-link-btn" id="logout" type="button" hidden>Sign out</button>
+  </div></nav>
+
+  <main class="ad-main">
+    <section id="login" hidden style="max-width:420px;margin:40px auto">
+      <h1 class="fn-title">Sign in</h1>
+      <form class="fn-card" id="loginForm">
+        <div class="fn-field"><label for="password">Admin password</label><input class="fn-input" id="password" type="password" autocomplete="current-password"></div>
+        <div class="fn-alert" id="loginAlert" hidden></div>
+        <button class="fn-btn" type="submit">Sign In</button>
+      </form>
+    </section>
+
+    <section id="app" hidden>
+      <div class="ad-top">
+        <h1>Leads</h1>
+        <div style="display:flex;gap:10px;align-items:center">
+          <input class="fn-input" id="search" placeholder="Search name, business, email" style="max-width:260px;padding:10px 14px">
+          <button class="fn-btn fn-btn--ghost fn-btn--sm" id="exportBtn" type="button" style="width:auto">Export Paid Conversions (CSV)</button>
+        </div>
+      </div>
+      <div class="ad-filters" id="filters"></div>
+      <div class="ad-grid">
+        <div class="fn-card" style="padding:8px 4px;overflow:auto">
+          <table class="ad-table">
+            <thead><tr><th>Lead</th><th class="ad-hide-sm">Trade / Area</th><th>Call</th><th>Status</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <p class="fn-muted" id="empty" hidden style="padding:14px">No leads yet.</p>
+        </div>
+        <aside class="fn-card ad-panel" id="panel"><p class="fn-muted">Select a lead to see the call brief.</p></aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var TOKEN_KEY = "nl_admin_token";
+    var token = sessionStorage.getItem(TOKEN_KEY) || "";
+    var leads = [], statuses = [], filter = "ACTIVE", current = null, flash = "";
+    var ACTIVE = ["QUALIFIED_FORM_COMPLETED", "BOOKING_STARTED", "CALL_BOOKED", "CALL_COMPLETED", "QUALIFIED", "PROJECT_ACCEPTED", "DEPOSIT_SENT"];
+
+    function esc(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    function when(iso) { return iso ? new Date(iso).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : ""; }
+    function api(path, opts) {
+      opts = opts || {};
+      return fetch("/api/admin-api" + path, { method: opts.body ? "POST" : "GET", headers: Object.assign({ "Content-Type": "application/json" }, token ? { Authorization: "Bearer " + token } : {}), body: opts.body ? JSON.stringify(opts.body) : undefined })
+        .then(function (r) {
+          if (r.status === 401 && opts.body?.action !== "login") { signOut(); throw new Error("Session expired."); }
+          return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Request failed"); return d; });
+        });
+    }
+    function signOut() { token = ""; sessionStorage.removeItem(TOKEN_KEY); $("app").hidden = true; $("logout").hidden = true; $("login").hidden = false; }
+
+    $("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault(); $("loginAlert").hidden = true;
+      api("", { body: { action: "login", password: $("password").value } })
+        .then(function (d) { token = d.token; sessionStorage.setItem(TOKEN_KEY, token); start(); })
+        .catch(function (err) { $("loginAlert").textContent = err.message; $("loginAlert").hidden = false; });
+    });
+    $("logout").addEventListener("click", signOut);
+
+    function start() {
+      $("login").hidden = true; $("app").hidden = false; $("logout").hidden = false;
+      loadLeads().then(function () {
+        var m = location.hash.match(/lead=([\w-]+)/);
+        if (m) openLead(m[1]);
+      });
+    }
+
+    function loadLeads() {
+      return api("?action=leads").then(function (d) { leads = d.leads; statuses = d.statuses; renderFilters(); renderRows(); });
+    }
+
+    function renderFilters() {
+      var opts = ["ACTIVE", "ALL"].concat(statuses);
+      $("filters").innerHTML = opts.map(function (s) {
+        var n = s === "ALL" ? leads.length : s === "ACTIVE" ? leads.filter(function (l) { return ACTIVE.indexOf(l.status) >= 0; }).length : leads.filter(function (l) { return l.status === s; }).length;
+        return '<button class="ad-filter" data-f="' + s + '" aria-pressed="' + (s === filter) + '">' + esc(s.replace(/_/g, " ")) + " · " + n + "</button>";
+      }).join("");
+    }
+    $("filters").addEventListener("click", function (e) { var b = e.target.closest("[data-f]"); if (!b) return; filter = b.dataset.f; renderFilters(); renderRows(); });
+    $("search").addEventListener("input", renderRows);
+
+    function renderRows() {
+      var q = $("search").value.toLowerCase();
+      var list = leads.filter(function (l) {
+        if (filter === "ACTIVE" && ACTIVE.indexOf(l.status) < 0) return false;
+        if (filter !== "ACTIVE" && filter !== "ALL" && l.status !== filter) return false;
+        return !q || (l.name + " " + l.businessName + " " + (l.email || "")).toLowerCase().indexOf(q) >= 0;
+      });
+      $("empty").hidden = list.length > 0;
+      $("rows").innerHTML = list.map(function (l) {
+        return '<tr data-id="' + esc(l.leadId) + '"' + (current === l.leadId ? ' class="is-active"' : "") + "><td><strong>" + esc(l.name) + "</strong><small>" + esc(l.businessName) + "</small></td>" +
+          '<td class="ad-hide-sm">' + esc(l.profession) + "<small>" + esc(l.serviceArea) + "</small></td>" +
+          "<td>" + (l.callStart ? esc(when(l.callStart)) : '<small>—</small>') + "</td>" +
+          '<td><span class="ad-status s-' + esc(l.status) + '">' + esc(l.status.replace(/_/g, " ")) + "</span>" + (l.source ? "<small>" + esc(l.source) + "</small>" : "") + "</td></tr>";
+      }).join("");
+    }
+    $("rows").addEventListener("click", function (e) { var tr = e.target.closest("tr[data-id]"); if (tr) openLead(tr.dataset.id); });
+
+    function openLead(id) {
+      current = id; history.replaceState(null, "", "#lead=" + id); renderRows();
+      $("panel").innerHTML = '<p class="fn-muted">Loading…</p>';
+      api("?action=lead&id=" + encodeURIComponent(id)).then(renderPanel).catch(function (err) { $("panel").innerHTML = '<p class="fn-alert">' + esc(err.message) + "</p>"; });
+    }
+
+    function renderPanel(d) {
+      var l = d.lead, a = l.attribution || {};
+      var booking = d.bookings.filter(function (b) { return b.status === "BOOKED"; }).sort(function (x, y) { return x.start.localeCompare(y.start); })[0];
+      var trade = l.profession === "Other Contractor / Home Service" ? (l.professionOther || l.profession) : l.profession;
+      var html = '<p class="fn-eyebrow" style="margin-bottom:8px">Call Brief</p><div class="ad-brief">' +
+        "<strong>" + esc(l.firstName + " " + l.lastName) + "</strong>" + esc(l.businessName) + "<br>" + esc(trade) + "<br>" + esc(l.serviceArea) +
+        '<div class="big">Wants more: <strong style="display:inline;font-size:1.05rem">' + esc(l.primaryService) + "</strong></div>" +
+        "<div>Website: " + (l.hasWebsite === "yes" ? (l.websiteUrl ? '<a href="' + esc(l.websiteUrl) + '" target="_blank" rel="noopener">' + esc(l.websiteUrl.replace(/^https?:\/\//, "")) + "</a>" : "Yes (no URL)") : "No website") + "</div>" +
+        (l.adBudget ? "<div>Ad budget: " + esc(l.adBudget) + "</div>" : "") +
+        (booking ? '<div class="big">Appointment: ' + esc(when(booking.start)) + (booking.zoomJoinUrl ? ' · <a href="' + esc(booking.zoomJoinUrl) + '" target="_blank" rel="noopener">Zoom</a>' : "") + "</div>" : "") +
+        "</div>" +
+        '<dl class="ad-kv"><dt>Status</dt><dd><span class="ad-status s-' + esc(l.status) + '">' + esc(l.status.replace(/_/g, " ")) + "</span></dd>" +
+        '<dt>Phone</dt><dd><a href="tel:' + esc(l.phone) + '">' + esc(l.phone) + "</a></dd>" +
+        '<dt>Email</dt><dd><a href="mailto:' + esc(l.email) + '">' + esc(l.email) + "</a></dd>" +
+        "<dt>Source</dt><dd>" + esc([a.utm_source, a.utm_medium, a.utm_campaign].filter(Boolean).join(" / ") || (a.gclid ? "Google Ads (gclid)" : "Direct / unknown")) + "</dd>" +
+        (a.utm_term ? "<dt>Keyword</dt><dd>" + esc(a.utm_term) + "</dd>" : "") +
+        "<dt>GCLID</dt><dd>" + (a.gclid ? "Yes" : "—") + "</dd>" +
+        "<dt>Landing page</dt><dd>" + esc(a.landingPage || "—") + "</dd>" +
+        "<dt>Lead ID</dt><dd>" + esc(l.leadId) + "</dd>" +
+        (d.project ? "<dt>Project</dt><dd>" + esc(d.project.status.replace(/_/g, " ")) + (d.project.depositPaidAt ? " · paid " + esc(when(d.project.depositPaidAt)) : "") + "</dd>" : "") +
+        "</dl>" +
+        '<p class="fn-section-label">After the call</p><div class="ad-actions">' +
+        ["CALL_COMPLETED", "QUALIFIED", "NO_SHOW", "NOT_INTERESTED"].map(function (s) { return '<button class="fn-btn fn-btn--ghost" data-status="' + s + '">' + s.replace(/_/g, " ") + "</button>"; }).join("") +
+        "</div>" +
+        '<div class="ad-actions"><button class="fn-btn" id="startProject"' + (d.project && d.project.depositPaidAt ? " disabled" : "") + ">" + (d.project ? "Copy Project Start Link" : "Start Project & Get Link") + '</button>' +
+        '<label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted)"><input type="checkbox" id="emailLink"> Also email it</label></div>' +
+        (d.projectLink ? '<input class="fn-input ad-link" id="linkOut" readonly value="' + esc(d.projectLink) + '">' : '<input class="fn-input ad-link" id="linkOut" readonly hidden>') +
+        '<div class="fn-alert" id="panelAlert" hidden style="margin-top:10px"></div>' +
+        '<p class="fn-section-label">Set status</p><select class="fn-select" id="statusSelect">' + statuses.map(function (s) { return "<option" + (s === l.status ? " selected" : "") + ">" + s + "</option>"; }).join("") + "</select>" +
+        '<p class="fn-section-label">History</p><ul class="ad-history">' + (l.statusHistory || []).slice().reverse().map(function (h) { return "<li>" + esc(when(h.at)) + " — " + esc(h.status.replace(/_/g, " ")) + (h.note ? " (" + esc(h.note) + ")" : "") + "</li>"; }).join("") + "</ul>";
+      $("panel").innerHTML = html;
+      if (flash) {
+        $("panelAlert").style.background = "rgba(74,222,128,.1)"; $("panelAlert").style.color = "#bbf7d0";
+        $("panelAlert").textContent = flash; $("panelAlert").hidden = false; flash = "";
+        if ($("linkOut").value) $("linkOut").select();
+      }
+
+      $("panel").querySelectorAll("[data-status]").forEach(function (b) { b.onclick = function () { setStatus(l.leadId, b.dataset.status); }; });
+      $("statusSelect").onchange = function () { setStatus(l.leadId, this.value); };
+      $("startProject").onclick = function () {
+        var btn = this; btn.disabled = true;
+        api("", { body: { action: "start-project", leadId: l.leadId, email: $("emailLink").checked } })
+          .then(function (r) {
+            try { navigator.clipboard.writeText(r.link); } catch (e) {}
+            flash = "Link copied" + (r.emailed ? " and emailed to the customer." : ". Paste it into a text or email.");
+            return loadLeads().then(function () { openLead(l.leadId); });
+          })
+          .catch(function (err) { $("panelAlert").textContent = err.message; $("panelAlert").hidden = false; })
+          .then(function () { btn.disabled = false; });
+      };
+    }
+
+    function setStatus(id, status) {
+      api("", { body: { action: "status", leadId: id, status: status } }).then(function () { return loadLeads(); }).then(function () { openLead(id); });
+    }
+
+    $("exportBtn").addEventListener("click", function () {
+      fetch("/api/admin-api?action=conversions", { headers: { Authorization: "Bearer " + token } })
+        .then(function (r) { if (!r.ok) throw new Error("Export failed"); return r.blob(); })
+        .then(function (blob) { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "nexus-luma-deposit-conversions.csv"; a.click(); });
+    });
+
+    if (token) start(); else $("login").hidden = false;
+  })();
+  </script>
+</body>
+</html>

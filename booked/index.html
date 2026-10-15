@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>You're Booked | Nexus Luma</title>
+  <meta name="robots" content="noindex" />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/nl-track.js"></script>
+</head>
+<body>
+  <nav class="fn-nav">
+    <div class="fn-nav-inner">
+      <a class="fn-brand" href="/"><img src="/Asset/nexus-luma-logo-176.webp" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
+      <a class="fn-nav-link" href="tel:+13365177347">(336) 517-7347</a>
+    </div>
+  </nav>
+
+  <main class="fn-main">
+    <p class="fn-muted" id="loading">Loading your booking…</p>
+
+    <section id="booked" hidden>
+      <div class="fn-success-icon" aria-hidden="true">✓</div>
+      <p class="fn-eyebrow">Free Strategy Call</p>
+      <h1 class="fn-title" tabindex="-1" id="title">You're Booked.</h1>
+      <p class="fn-sub">We've saved your information. Your next step is simply to join your Zoom call and tell us what type of work you want more of.</p>
+
+      <div class="fn-card">
+        <ul class="fn-detail-list">
+          <li><span>Date</span><strong id="dDate"></strong></li>
+          <li><span>Time</span><strong id="dTime"></strong></li>
+          <li><span>Timezone</span><strong id="dTz"></strong></li>
+          <li><span>Zoom</span><span id="dZoom" style="min-width:0;color:#fff;font-size:.98rem;letter-spacing:0;text-transform:none;font-weight:600;padding:0"></span></li>
+        </ul>
+        <div class="fn-btn-row">
+          <a class="fn-btn fn-btn--sm" id="gcalBtn" href="#" target="_blank" rel="noopener">Add to Google Calendar</a>
+          <button class="fn-btn fn-btn--ghost fn-btn--sm" id="icsBtn" type="button">Download .ics (Apple / Outlook)</button>
+        </div>
+        <p class="fn-hint" style="margin-top:12px" id="inviteNote">A calendar invite has been sent to your email.</p>
+      </div>
+
+      <div class="fn-card">
+        <div class="fn-summary-head"><h3>What We'll Cover</h3></div>
+        <ul class="fn-check-list">
+          <li>The services you want more leads for</li>
+          <li>The areas you want to target</li>
+          <li>Your current online presence</li>
+          <li>How the Nexus Luma system would work for your business</li>
+          <li>Recommended Google Ads starting strategy</li>
+        </ul>
+      </div>
+
+      <p class="fn-alt">Need a different time? <a href="#" id="rescheduleLink">Reschedule</a> · <a href="#" id="cancelLink">Cancel</a></p>
+      <div class="fn-alert" id="manageAlert" role="alert" hidden></div>
+    </section>
+
+    <section id="cancelled" hidden>
+      <p class="fn-eyebrow">Call Cancelled</p>
+      <h1 class="fn-title" tabindex="-1">Your call has been cancelled.</h1>
+      <p class="fn-sub">Your details are still saved, so booking a new time only takes a moment.</p>
+      <div class="fn-actions"><a class="fn-btn" href="/book/" id="rebookLink">Choose A New Time</a></div>
+    </section>
+
+    <section id="invalid" hidden>
+      <h1 class="fn-title">We couldn't find that booking.</h1>
+      <p class="fn-sub" id="invalidMsg">This link may have expired. Text or call (336) 517-7347 and we'll help.</p>
+      <div class="fn-actions"><a class="fn-btn" href="/book/">Book A Free Strategy Call</a></div>
+    </section>
+  </main>
+
+  <footer class="fn-footer">
+    Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a> · © 2026 Nexus Luma
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var token = new URLSearchParams(location.search).get("t") || "";
+    var visitorTz = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
+    var data = null;
+
+    function showOnly(id) {
+      ["loading", "booked", "cancelled", "invalid"].forEach(function (s) { $(s).hidden = s !== id; });
+      var h = $(id).querySelector(".fn-title"); if (h) h.focus({ preventScroll: true });
+    }
+
+    function render(d) {
+      data = d;
+      var b = d.booking;
+      if (b.status !== "BOOKED") {
+        $("rebookLink").href = "/book/#lt=" + encodeURIComponent(d.leadToken);
+        return showOnly("cancelled");
+      }
+      var start = new Date(b.start), tz = b.timezone || visitorTz;
+      $("dDate").textContent = start.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: tz });
+      $("dTime").textContent = start.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: tz }) + " – " +
+        new Date(b.end).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: tz });
+      $("dTz").textContent = tz.replace(/_/g, " ") + " (" + start.toLocaleTimeString("en-US", { timeZoneName: "short", timeZone: tz }).split(" ").pop() + ")";
+      var zoom = $("dZoom");
+      zoom.textContent = "";
+      if (b.zoomJoinUrl) {
+        var a = document.createElement("a");
+        a.href = b.zoomJoinUrl; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Join Zoom meeting";
+        zoom.appendChild(a);
+        if (b.zoomPasscode) zoom.appendChild(document.createTextNode(" · passcode " + b.zoomPasscode));
+      } else {
+        zoom.textContent = "We'll send your Zoom link before the call.";
+      }
+      var title = "Nexus Luma Strategy Call";
+      var details = (b.zoomJoinUrl ? "Join Zoom: " + b.zoomJoinUrl + "\n" : "") + "Manage: " + location.href;
+      var fmt = function (d) { return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); };
+      $("gcalBtn").href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) +
+        "&dates=" + fmt(start) + "/" + fmt(new Date(b.end)) + "&details=" + encodeURIComponent(details) + "&location=" + encodeURIComponent(b.zoomJoinUrl || "Zoom");
+      $("icsBtn").onclick = function () {
+        var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nexus Luma//Strategy Call//EN", "BEGIN:VEVENT",
+          "UID:" + fmt(start) + "-nexusluma@nexusluma.com", "DTSTAMP:" + fmt(new Date()), "DTSTART:" + fmt(start), "DTEND:" + fmt(new Date(b.end)),
+          "SUMMARY:" + title, "DESCRIPTION:" + details.replace(/\n/g, "\\n"), "LOCATION:" + (b.zoomJoinUrl || "Zoom"), "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+        var url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+        var a = document.createElement("a"); a.href = url; a.download = "nexus-luma-strategy-call.ics"; a.click();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      };
+      $("rescheduleLink").href = "/book/#reschedule=" + encodeURIComponent(token) + "&lt=" + encodeURIComponent(d.leadToken);
+      showOnly("booked");
+    }
+
+    $("cancelLink").addEventListener("click", function (e) {
+      e.preventDefault();
+      if (!confirm("Cancel your strategy call?")) return;
+      fetch("/api/manage-booking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, action: "cancel" }) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.error) throw new Error(d.error);
+          if (window.nlTrack) window.nlTrack("call_cancelled");
+          render(d);
+        })
+        .catch(function (err) { $("manageAlert").textContent = err.message || "We couldn't cancel. Please call us."; $("manageAlert").hidden = false; });
+    });
+
+    if (!token) { showOnly("invalid"); return; }
+    fetch("/api/manage-booking?t=" + encodeURIComponent(token))
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) { if (!res.ok) { $("invalidMsg").textContent = res.d.error || $("invalidMsg").textContent; return showOnly("invalid"); } render(res.d); })
+      .catch(function () { showOnly("invalid"); });
+  })();
+  </script>
+</body>
+</html>

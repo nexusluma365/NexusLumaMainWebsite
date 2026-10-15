@@ -180,8 +180,24 @@ async function forwardPipelineRecord(record) {
   }
 }
 
+// A deposit counts only if Stripe says it succeeded for exactly the
+// configured amount, currency and product (never trust the browser).
+function isVerifiedDeposit(intent, projectId) {
+  return Boolean(
+    intent &&
+    intent.status === "succeeded" &&
+    intent.amount === LEAD_SYSTEM.depositCents &&
+    intent.amount_received === LEAD_SYSTEM.depositCents &&
+    intent.currency === LEAD_SYSTEM.currency &&
+    intent.metadata?.product === LEAD_SYSTEM.productKey &&
+    intent.metadata?.payment_type === "deposit" &&
+    (!projectId || intent.metadata?.project_id === projectId)
+  );
+}
+
 module.exports = {
   CLIENT_LEAD_STATUSES,
+  isVerifiedDeposit,
   LEAD_SYSTEM,
   clean,
   cleanMultiline,

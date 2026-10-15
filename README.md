@@ -3,8 +3,11 @@
 Nexus Luma builds **lead generation systems for contractors**: website + Google Search Ads setup + conversion/lead tracking + 30 days of campaign management.
 
 - `/` — contractor sales page (static HTML + GSAP)
-- `/start/` — qualification → **$275 deposit** on the **$799** Contractor Lead System (Stripe, amount fixed server-side)
-- `/book/` — strategy call booking
+- `/book/` — the whole pre-call funnel: one short form → pick a Zoom time (no payment)
+- `/booked/` — confirmation, add to calendar, reschedule/cancel
+- `/admin/` — leads, call briefs, statuses, "Send Project Start Link"
+- `/project/` — post-call $275 deposit on the $799 project (link from admin only)
+- `/onboarding/` — detailed project questions after payment
 - Website analyzer (Claude-powered) as a secondary lead magnet on the homepage
 
 Full architecture, tracking events, client lead tracking, legacy routes, and the
@@ -39,7 +42,9 @@ ANTHROPIC_API_KEY
 ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
-Required for the $275 Contractor Lead System deposit (use test keys until verified):
+Required for the funnel: `FUNNEL_SECRET`, `ADMIN_PASSWORD`, the Google Calendar variables below, and optionally Zoom/Resend (see `.env.example`).
+
+Required for the post-call $275 project deposit (use test keys until verified):
 
 ```text
 STRIPE_SECRET_KEY

@@ -22,3 +22,19 @@
 
 /
   Cache-Control: public, max-age=0, must-revalidate
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/project/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-store
+
+/onboarding/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-store
+
+/booked/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-store

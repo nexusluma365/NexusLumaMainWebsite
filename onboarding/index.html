@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Project Onboarding | Nexus Luma</title>
+  <meta name="robots" content="noindex" />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/css/nl-funnel.css">
+  <script src="/js/nl-track.js"></script>
+</head>
+<body>
+  <nav class="fn-nav">
+    <div class="fn-nav-inner">
+      <a class="fn-brand" href="/"><img src="/Asset/nexus-luma-logo-176.webp" alt="Nexus Luma" width="52" height="52"><span>Nexus Luma</span></a>
+      <a class="fn-nav-link" href="tel:+13365177347">(336) 517-7347</a>
+    </div>
+  </nav>
+
+  <main class="fn-main">
+    <p class="fn-muted" id="loading">Loading…</p>
+
+    <section id="formView" hidden>
+      <p class="fn-eyebrow">Project Onboarding</p>
+      <h1 class="fn-title" tabindex="-1">Let's build your lead system.</h1>
+      <p class="fn-sub">Share what you have now. Skip anything you don't have handy; we'll follow up.</p>
+
+      <form id="onbForm" novalidate>
+        <div class="fn-card">
+          <p class="fn-section-label" style="margin-top:0;padding-top:0;border:0">Your business</p>
+          <div class="fn-field"><label for="businessDescription">Describe your business in a few sentences</label><textarea class="fn-textarea" id="businessDescription" maxlength="2000" placeholder="Family-owned roofing company serving Charlotte since 2011…"></textarea></div>
+          <div class="fn-field"><label for="services">Services you offer (one per line)</label><textarea class="fn-textarea" id="services" maxlength="2000" placeholder="Roof replacement&#10;Storm damage repair&#10;Gutters"></textarea></div>
+          <div class="fn-field"><label for="serviceAreas">Cities, counties or ZIP codes you serve</label><textarea class="fn-textarea" id="serviceAreas" maxlength="1000"></textarea></div>
+          <div class="fn-grid-2">
+            <div class="fn-field"><label for="businessHours">Business hours</label><input class="fn-input" id="businessHours" maxlength="300" placeholder="Mon–Fri 7am–6pm"></div>
+            <div class="fn-field"><label for="licenseInsurance">License / insurance info</label><input class="fn-input" id="licenseInsurance" maxlength="400" placeholder="Licensed & insured, NC #12345"></div>
+          </div>
+          <div class="fn-field"><label for="competitors">Competitors you know of</label><textarea class="fn-textarea" id="competitors" maxlength="1000" style="min-height:72px"></textarea></div>
+          <div class="fn-field"><label for="reviewsLink">Google reviews / Business Profile link</label><input class="fn-input" id="reviewsLink" type="url" inputmode="url" maxlength="400"></div>
+        </div>
+
+        <div class="fn-card">
+          <p class="fn-section-label" style="margin-top:0;padding-top:0;border:0">Brand & website</p>
+          <div class="fn-field">
+            <label for="logoFile">Logo</label>
+            <input class="fn-input" id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf">
+          </div>
+          <div class="fn-field">
+            <label for="photoFiles">Project photos (up to 5)</label>
+            <input class="fn-input" id="photoFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+            <p class="fn-hint">Up to 4 MB total here. For more photos, share a Google Drive or Dropbox link below.</p>
+            <div class="fn-error" id="fileError"></div>
+          </div>
+          <div class="fn-field"><label for="photosLink">Photo folder link (optional)</label><input class="fn-input" id="photosLink" type="url" inputmode="url" maxlength="400"></div>
+          <div class="fn-grid-2">
+            <div class="fn-field"><label for="brandColors">Brand colors</label><input class="fn-input" id="brandColors" maxlength="200" placeholder="Navy and orange"></div>
+            <div class="fn-field"><label for="domain">Domain you own (if any)</label><input class="fn-input" id="domain" maxlength="200" placeholder="smithroofing.com"></div>
+          </div>
+          <div class="fn-field"><label for="currentWebsite">Current website (if any)</label><input class="fn-input" id="currentWebsite" type="url" inputmode="url" maxlength="240"></div>
+          <div class="fn-field"><label for="websitePreferences">Websites you like or anything you want on yours</label><textarea class="fn-textarea" id="websitePreferences" maxlength="2000"></textarea></div>
+        </div>
+
+        <div class="fn-card">
+          <p class="fn-section-label" style="margin-top:0;padding-top:0;border:0">Google Ads access</p>
+          <div class="fn-field">
+            <label for="googleAdsAccount">Do you have a Google Ads account?</label>
+            <select class="fn-select" id="googleAdsAccount"><option value="">Select</option><option>Yes</option><option>No — help me set one up</option><option>Not sure</option></select>
+          </div>
+          <div class="fn-field"><label for="googleAccountEmail">Google account email we should invite</label><input class="fn-input" id="googleAccountEmail" type="email" inputmode="email" maxlength="160"></div>
+          <p class="fn-hint">We'll send a manager-access request; you approve it inside Google Ads. Ad spend is billed by Google to your own payment method.</p>
+          <div class="fn-field" style="margin-top:14px"><label for="notes">Anything else we should know?</label><textarea class="fn-textarea" id="notes" maxlength="2000" style="min-height:72px"></textarea></div>
+        </div>
+
+        <div class="fn-alert" id="onbAlert" role="alert" hidden style="margin-top:14px"></div>
+        <div class="fn-actions"><button class="fn-btn" type="submit" id="onbSubmit">Send My Onboarding Details</button></div>
+      </form>
+    </section>
+
+    <section id="done" hidden>
+      <div class="fn-success-icon" aria-hidden="true">✓</div>
+      <p class="fn-eyebrow">Onboarding Received</p>
+      <h1 class="fn-title" tabindex="-1">You're all set. We're building.</h1>
+      <p class="fn-sub">We'll be in touch with your build timeline and the Google Ads access steps. You can update details anytime by replying to our email or texting (336) 517-7347.</p>
+      <div class="fn-actions"><button class="fn-btn fn-btn--ghost" id="addMore" type="button">Add More Details</button></div>
+    </section>
+
+    <section id="locked" hidden>
+      <h1 class="fn-title">Onboarding opens after your deposit.</h1>
+      <p class="fn-sub" id="lockedMsg">Use your project link to start your project first.</p>
+      <div class="fn-actions"><a class="fn-btn" id="projectLink" href="#">Go To My Project</a></div>
+    </section>
+  </main>
+
+  <footer class="fn-footer">
+    Questions? Text or call <a href="tel:+13365177347">(336) 517-7347</a> · © 2026 Nexus Luma
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var token = new URLSearchParams(location.search).get("t") || "";
+    var FIELDS = ["businessDescription", "services", "serviceAreas", "businessHours", "licenseInsurance", "competitors", "reviewsLink", "photosLink", "brandColors", "domain", "currentWebsite", "websitePreferences", "googleAdsAccount", "googleAccountEmail", "notes"];
+    var DRAFT = "nl_onboarding_" + token.slice(-16);
+    var MAX_TOTAL = 4 * 1024 * 1024;
+
+    function showOnly(id) {
+      ["loading", "formView", "done", "locked"].forEach(function (s) { $(s).hidden = s !== id; });
+      var h = $(id).querySelector(".fn-title"); if (h) h.focus({ preventScroll: true });
+    }
+    try { var draft = JSON.parse(localStorage.getItem(DRAFT) || "{}"); FIELDS.forEach(function (f) { if (draft[f]) $(f).value = draft[f]; }); } catch (e) {}
+    FIELDS.forEach(function (f) {
+      $(f).addEventListener("input", function () {
+        try { var d = JSON.parse(localStorage.getItem(DRAFT) || "{}"); d[f] = $(f).value; localStorage.setItem(DRAFT, JSON.stringify(d)); } catch (e) {}
+      });
+    });
+
+    function readFiles() {
+      var files = [];
+      if ($("logoFile").files[0]) files.push({ file: $("logoFile").files[0], kind: "logo" });
+      Array.prototype.slice.call($("photoFiles").files, 0, 5).forEach(function (f) { files.push({ file: f, kind: "photo" }); });
+      var total = files.reduce(function (s, f) { return s + f.file.size; }, 0);
+      if (total > MAX_TOTAL) return Promise.reject(new Error("Files are over 4 MB total. Upload fewer here and share the rest with a link."));
+      return Promise.all(files.map(function (f) {
+        return new Promise(function (resolve, reject) {
+          var r = new FileReader();
+          r.onload = function () { resolve({ name: f.file.name, type: f.file.type, kind: f.kind, base64: String(r.result).split(",")[1] || "" }); };
+          r.onerror = function () { reject(new Error("Couldn't read " + f.file.name)); };
+          r.readAsDataURL(f.file);
+        });
+      }));
+    }
+
+    $("onbForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = $("onbSubmit"); btn.disabled = true; btn.textContent = "Sending…";
+      $("onbAlert").hidden = true; $("fileError").textContent = "";
+      var data = {}; FIELDS.forEach(function (f) { data[f] = $(f).value; });
+      readFiles()
+        .then(function (files) {
+          return fetch("/api/project-api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, action: "onboarding", data: data, files: files }) });
+        })
+        .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Couldn't save. Please try again."); return d; }); })
+        .then(function () {
+          try { localStorage.removeItem(DRAFT); } catch (e) {}
+          if (window.nlTrack) window.nlTrack("onboarding_submitted");
+          showOnly("done");
+        })
+        .catch(function (err) { $("onbAlert").textContent = err.message; $("onbAlert").hidden = false; })
+        .then(function () { btn.disabled = false; btn.textContent = "Send My Onboarding Details"; });
+    });
+    $("addMore").addEventListener("click", function () { showOnly("formView"); });
+
+    if (!token) { $("lockedMsg").textContent = "This link is missing its project code. Text or call (336) 517-7347."; return showOnly("locked"); }
+    $("projectLink").href = "/project/?t=" + encodeURIComponent(token);
+    fetch("/api/project-api?t=" + encodeURIComponent(token))
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { $("lockedMsg").textContent = res.d.error; $("projectLink").hidden = true; return showOnly("locked"); }
+        if (!res.d.paid) return showOnly("locked");
+        if (window.nlTrack) window.nlTrack("onboarding_started", { project_id: res.d.projectId });
+        showOnly(res.d.onboardingSubmitted ? "done" : "formView");
+      })
+      .catch(function () { showOnly("locked"); });
+  })();
+  </script>
+</body>
+</html>
