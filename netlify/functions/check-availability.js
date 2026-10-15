@@ -1,10 +1,12 @@
 const {
   BOOKING_TIMEZONE,
+  bookingAvailableFrom,
   buildSlots,
   createCalendarClient,
   getGoogleCalendarBookingUrl,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
+  isBeforeAvailableFrom,
   isWeekday,
   makeJsonResponse,
   parseDateKey,
@@ -33,11 +35,12 @@ exports.handler = async (event) => {
   try {
     parseDateKey(dateKey);
 
-    if (!isWeekday(dateKey)) {
+    if (!isWeekday(dateKey) || isBeforeAvailableFrom(dateKey)) {
       return makeJsonResponse(200, {
         date: dateKey,
         timeZone: BOOKING_TIMEZONE,
         mode: hasGoogleCalendarConfig() ? 'google' : 'mock',
+        availableFrom: bookingAvailableFrom() || undefined,
         availableSlots: []
       });
     }

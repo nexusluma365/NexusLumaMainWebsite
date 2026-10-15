@@ -154,9 +154,13 @@
 
     function pad(n) { return String(n).padStart(2, "0"); }
     function dateKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-    function upcomingWeekdays(count) {
+    function upcomingWeekdays(count, fromKey) {
       var out = [], d = new Date();
       d.setDate(d.getDate() + 1);
+      if (fromKey) {
+        var p = fromKey.split("-").map(Number), from = new Date(p[0], p[1] - 1, p[2]);
+        if (from > d) d = from;
+      }
       while (out.length < count) { if (d.getDay() > 0 && d.getDay() < 6) out.push(new Date(d)); d.setDate(d.getDate() + 1); }
       return out;
     }
@@ -185,12 +189,21 @@
             return fetch("/api/calendar-config").then(function (r) { return r.json(); }).catch(function () { return {}; })
               .then(function (cfg) { useScheduler(cfg.bookingUrl || data.bookingUrl); });
           }
-          $("loadingNote").hidden = true;
-          $("calendarCard").hidden = false;
-          renderDays(days);
-          selectDay(dateKey(days[0]), data);
+          // Booking closed until a later date: start the day list there.
+          if (data.availableFrom && data.availableFrom > dateKey(days[0])) {
+            days = upcomingWeekdays(10, data.availableFrom);
+            return fetchSlots(dateKey(days[0])).then(function (first) { showCalendar(days, first); });
+          }
+          showCalendar(days, data);
         })
         .catch(function () { useScheduler(); });
+    }
+
+    function showCalendar(days, firstDayData) {
+      $("loadingNote").hidden = true;
+      $("calendarCard").hidden = false;
+      renderDays(days);
+      selectDay(dateKey(days[0]), firstDayData);
     }
 
     function renderDays(days) {

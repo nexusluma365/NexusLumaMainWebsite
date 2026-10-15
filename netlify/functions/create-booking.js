@@ -4,6 +4,7 @@ const {
   createCalendarClient,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
+  isBeforeAvailableFrom,
   isWeekday,
   makeCalendarErrorResponse,
   makeJsonResponse,
@@ -70,7 +71,7 @@ exports.handler = async (event) => {
   try {
     parseDateKey(selectedDate);
 
-    if (!isWeekday(selectedDate)) {
+    if (!isWeekday(selectedDate) || isBeforeAvailableFrom(selectedDate)) {
       return makeJsonResponse(409, { error: 'That date is not available.' });
     }
 

@@ -332,3 +332,26 @@ test("booking rejects times outside 10 AM-4 PM ET, weekends, and the past", asyn
   assert.equal(ok.statusCode, 200);
   assert.equal(parse(ok).mode, "mock");
 });
+
+test("BOOKING_AVAILABLE_FROM closes booking before that date", async () => {
+  process.env.BOOKING_AVAILABLE_FROM = "2030-10-21"; // a Monday
+  try {
+    const avail = async (date) => parse(await fn("check-availability").handler({ httpMethod: "GET", queryStringParameters: { date } }));
+    const friday = await avail("2030-10-18");
+    assert.deepEqual(friday.availableSlots, []);
+    assert.equal(friday.availableFrom, "2030-10-21", "page learns where to start the day list");
+    const monday = await avail("2030-10-21");
+    assert.equal(monday.availableSlots.length, 12);
+    assert.equal(monday.availableFrom, undefined);
+
+    const book = (selectedDate, slotStart, slotEnd) =>
+      fn("create-booking").handler(post({ email: "jane@example.com", selectedDate, slotStart, slotEnd }));
+    assert.equal((await book("2030-10-18", "2030-10-18T14:00:00.000Z", "2030-10-18T14:30:00.000Z")).statusCode, 409);
+    assert.equal((await book("2030-10-21", "2030-10-21T14:00:00.000Z", "2030-10-21T14:30:00.000Z")).statusCode, 200);
+
+    process.env.BOOKING_AVAILABLE_FROM = "";
+    assert.equal((await avail("2030-10-18")).availableSlots.length, 12, "no setting = normal weekdays");
+  } finally {
+    delete process.env.BOOKING_AVAILABLE_FROM;
+  }
+});

@@ -100,6 +100,17 @@ function formatSlotLabel(date, timeZone = BOOKING_TIMEZONE) {
   }).format(date);
 }
 
+// BOOKING_AVAILABLE_FROM=YYYY-MM-DD closes booking before that date (time off).
+function bookingAvailableFrom() {
+  const value = String(process.env.BOOKING_AVAILABLE_FROM || '').trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : '';
+}
+
+function isBeforeAvailableFrom(dateKey) {
+  const from = bookingAvailableFrom();
+  return Boolean(from) && String(dateKey) < from;
+}
+
 function isWeekday(dateKey) {
   const { year, month, day } = parseDateKey(dateKey);
   const dayOfWeek = new Date(year, month - 1, day).getDay();
@@ -219,12 +230,14 @@ module.exports = {
   SLOT_START_HOUR,
   SLOT_END_HOUR,
   SLOT_MINUTES,
+  bookingAvailableFrom,
   buildSlots,
   createCalendarClient,
   formatSlotLabel,
   getGoogleCalendarBookingUrl,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
+  isBeforeAvailableFrom,
   isWeekday,
   makeCalendarErrorResponse,
   makeJsonResponse,
