@@ -235,3 +235,37 @@ test("management subscription is off by default and requires explicit consent", 
   assert.equal(ok.statusCode, 200);
   assert.equal(new URLSearchParams(calls[0].body).get("mode"), "subscription");
 });
+
+test("booking a call marks the lead Call Booked in the pipeline sheet", async () => {
+  const googleEnv = { GOOGLE_CLIENT_ID: "id", GOOGLE_CLIENT_SECRET: "secret", GOOGLE_REFRESH_TOKEN: "token", GOOGLE_CALENDAR_ID: "primary" };
+  Object.assign(process.env, googleEnv, { LEAD_SYSTEM_WEBHOOK_URL: "https://sheet.example/exec" });
+  require.cache[require.resolve("googleapis")] = {
+    exports: {
+      google: {
+        auth: { OAuth2: class { setCredentials() {} } },
+        calendar: () => ({
+          freebusy: { query: async () => ({ data: { calendars: { primary: { busy: [] } } } }) },
+          events: { insert: async () => ({ data: { id: "evt_1", htmlLink: "https://calendar.google.com/event?eid=1" } }) }
+        })
+      }
+    }
+  };
+  try {
+    const res = await fn("create-booking").handler(post({
+      email: "Jane@Example.com", fname: "Jane", lname: "Roofer", leadId: "lead_1", selectedDate: "2026-10-20",
+      slotStart: "2026-10-20T14:00:00.000Z", slotEnd: "2026-10-20T14:30:00.000Z"
+    }));
+    assert.equal(res.statusCode, 200);
+    assert.equal(parse(res).mode, "google");
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].url, "https://sheet.example/exec");
+    assert.deepEqual(JSON.parse(calls[0].body), {
+      updateEmail: "jane@example.com", leadId: "lead_1", status: "CALL_BOOKED",
+      callStart: "2026-10-20T14:00:00.000Z", callEnd: "2026-10-20T14:30:00.000Z",
+      eventLink: "https://calendar.google.com/event?eid=1"
+    });
+  } finally {
+    for (const key of Object.keys(googleEnv)) delete process.env[key];
+    delete require.cache[require.resolve("googleapis")];
+  }
+});

@@ -147,7 +147,7 @@
         body: JSON.stringify(Object.assign({ intent: "strategy_call", source: "book-page", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, contact))
       })
         .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Please check your details."); return d; }); })
-        .then(function () { show("schedule"); loadScheduler(); })
+        .then(function (d) { contact.leadId = d.leadId || ""; show("schedule"); loadScheduler(); })
         .catch(function (err) { $("formAlert").textContent = err.message; $("formAlert").hidden = false; })
         .then(function () { btn.disabled = false; btn.textContent = "Choose A Call Time"; });
     });
@@ -239,7 +239,7 @@
       fetch("/api/create-booking", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: contact.email, fname: parts[0], lname: parts.slice(1).join(" "), biz: contact.business,
+          email: contact.email, fname: parts[0], lname: parts.slice(1).join(" "), biz: contact.business, leadId: contact.leadId || "",
           selectedDate: selectedDate, slotStart: selectedSlot.start, slotEnd: selectedSlot.end,
           answers: { q1: "Contractor Lead System strategy call", q2: contact.notes, q3: contact.trade, q4: "Service area: " + contact.serviceArea, q5: "Phone: " + contact.phone }
         })
@@ -273,7 +273,8 @@
         if (!c.name || !c.business || !c.email || !c.phone || !a.trade) return;
         contact = {
           name: c.name, business: c.business, email: c.email, phone: c.phone,
-          trade: a.trade, serviceArea: a.serviceArea || "", notes: a.service ? "Primary service: " + a.service : ""
+          trade: a.trade, serviceArea: a.serviceArea || "", notes: a.service ? "Primary service: " + a.service : "",
+          leadId: saved.leadId || ""
         };
         track("strategy_call_booking_started", { source: "lead_plan", trade: a.trade, service: a.service || "" });
         show("schedule");

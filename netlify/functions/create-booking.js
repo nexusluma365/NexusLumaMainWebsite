@@ -8,6 +8,7 @@ const {
   makeJsonResponse,
   parseDateKey
 } = require('./_shared');
+const { clean, forwardPipelineRecord } = require('./_lead-system');
 
 function safeParseBody(event) {
   if (!event.body) {
@@ -125,6 +126,16 @@ exports.handler = async (event) => {
         }
       },
       sendUpdates: 'all'
+    });
+
+    // Mark the lead as "Call Booked" in the lead sheet. Never fails the booking.
+    await forwardPipelineRecord({
+      updateEmail: clean(email, 160).toLowerCase(),
+      leadId: clean(payload.leadId, 80),
+      status: 'CALL_BOOKED',
+      callStart: slotStart,
+      callEnd: slotEnd,
+      eventLink: result.data.htmlLink || ''
     });
 
     return makeJsonResponse(200, {

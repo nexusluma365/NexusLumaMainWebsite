@@ -31,6 +31,7 @@ Google search → homepage (/) → /start/ qualification → $275 deposit → on
 | Endpoint | What it does |
 |---|---|
 | `POST /api/submit-qualification` | Validates a `/start/` or `/book/` submission server-side, assigns a `leadId`, forwards it to the pipeline sheet. |
+| `POST /api/create-booking` | Books the strategy call on Google Calendar and marks the lead `CALL_BOOKED` (call time + event link) in the pipeline sheet. |
 | `POST /api/create-lead-system-deposit` | Creates a Stripe PaymentIntent for exactly **27500** (ignores any client amount). Metadata: `product=contractor-lead-system`, `payment_type=deposit`, totals, lead details. Returns a publishable key whose mode matches the secret key. |
 | `POST /api/verify-lead-system-deposit` | Retrieves the PaymentIntent with the secret key; verified only if `succeeded`, amount/received = 27500, `usd`, and lead-system metadata. Marks the lead `DEPOSIT_PAID`. |
 | `POST /api/stripe-webhook` | Signature-verified `payment_intent.succeeded` handler. Authoritative record if the visitor closes the browser before the success screen. |
@@ -112,7 +113,7 @@ service chips): `/roofing-lead-generation/`, `/hvac-lead-generation/`,
 
 1. **Stripe test mode first:** set `STRIPE_SECRET_KEY=sk_test_…` and `STRIPE_PUBLISHABLE_KEY=pk_test_…` in a Netlify deploy preview, run `/start/` with card `4242 4242 4242 4242` (success) and `4000 0000 0000 0002` (decline). The checkout shows a yellow TEST MODE badge.
 2. **Webhook:** Stripe → Developers → Webhooks → endpoint `https://<site>/api/stripe-webhook`, event `payment_intent.succeeded` → set `STRIPE_WEBHOOK_SECRET`.
-3. **Pipeline sheet:** deploy `google-apps-script/lead-system-pipeline.gs`, set `LEAD_SYSTEM_WEBHOOK_URL`.
+3. **Pipeline sheet:** paste `google-apps-script/lead-system-pipeline.gs` into the lead sheet's Apps Script, run `setupLeadTracker` (color-coded year tab + Dashboard), deploy as a Web app, set `LEAD_SYSTEM_WEBHOOK_URL`.
 4. **Client lead sheet:** deploy `google-apps-script/client-lead-tracker.gs`, set `CLIENT_LEADS_WEBHOOK_URL`, `CLIENT_LEADS_WEBHOOK_SECRET`, `CLIENT_LEAD_ALLOWED_CLIENTS`, `CLIENT_LEAD_ALLOWED_ORIGINS`.
 5. **Analytics:** add GTM/GA4 and mark `deposit_paid` and `qualification_completed` as conversions.
 6. **Live:** switch to `sk_live_…`/`pk_live_…` only after test payments pass.
