@@ -14,6 +14,56 @@ const WEBSITE_FETCH_TIMEOUT_MS = 2500;
 const REQUEST_BUDGET_MS = 20000;
 const CLAUDE_MIN_TIMEOUT_MS = 5500;
 
+// Structured outputs guarantee Claude returns valid JSON in this shape
+// (free-form JSON occasionally came back malformed and forced the fallback).
+const stringList = { type: "array", items: { type: "string" } };
+const shortText = { type: "string" };
+const AUDIT_SCHEMA = {
+  type: "object",
+  properties: {
+    overall_score: { type: "integer" },
+    summary: shortText,
+    categories: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: { type: "string", enum: CATEGORY_NAMES },
+          score: { type: "integer" },
+          note: shortText
+        },
+        required: ["name", "score", "note"],
+        additionalProperties: false
+      }
+    },
+    recommendations: stringList,
+    audit_sections: {
+      type: "object",
+      properties: {
+        strengths: stringList,
+        conversion_opportunities: stringList,
+        design_user_experience: shortText,
+        messaging_offer_clarity: shortText,
+        trust_credibility: shortText,
+        cta_effectiveness: shortText,
+        mobile_experience: shortText,
+        seo_visibility: shortText,
+        priority_improvements: stringList,
+        quick_wins: stringList,
+        recommended_next_steps: stringList
+      },
+      required: [
+        "strengths", "conversion_opportunities", "design_user_experience", "messaging_offer_clarity",
+        "trust_credibility", "cta_effectiveness", "mobile_experience", "seo_visibility",
+        "priority_improvements", "quick_wins", "recommended_next_steps"
+      ],
+      additionalProperties: false
+    }
+  },
+  required: ["overall_score", "summary", "categories", "recommendations", "audit_sections"],
+  additionalProperties: false
+};
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -691,8 +741,9 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify({
           model: claudeModel(),
-          max_tokens: 1100,
+          max_tokens: 2000,
           temperature: 0.2,
+          output_config: { format: { type: "json_schema", schema: AUDIT_SCHEMA } },
           messages: [{ role: "user", content: prompt }]
         })
       });
