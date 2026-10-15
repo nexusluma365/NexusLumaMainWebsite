@@ -36,7 +36,7 @@ Required for the AI audit:
 
 ```text
 ANTHROPIC_API_KEY
-ANTHROPIC_MODEL=claude-haiku-4-5
+ANTHROPIC_MODEL=claude-haiku-5-5
 ```
 
 Required for the $275 Contractor Lead System deposit (use test keys until verified):

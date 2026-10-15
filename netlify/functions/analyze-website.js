@@ -6,7 +6,7 @@ const CATEGORY_NAMES = [
   "Mobile Experience",
   "Trust Signals"
 ];
-const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5";
+const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-5-5";
 const WEBSITE_FETCH_TIMEOUT_MS = 2500;
 // Claude gets whatever is left of this budget after the site fetch. Measured on
 // Netlify: Haiku takes ~9-10.5s for the full ~950-token JSON audit, and this
@@ -314,6 +314,14 @@ function timeoutSignal(ms) {
 
 function claudeModel() {
   return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
+}
+
+// Haiku 5.5 rejects non-default temperature and thinks by default; thinking
+// off keeps the audit at ~8-11s (measured). Haiku 4.5 keeps its old settings.
+function modelOptions(model) {
+  if (model === "claude-haiku-5-5") return { thinking: { type: "disabled" } };
+  if (model === "claude-haiku-4-5") return { temperature: 0.2 };
+  return {};
 }
 
 function pageSentence(signals) {
@@ -742,7 +750,7 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           model: claudeModel(),
           max_tokens: 2000,
-          temperature: 0.2,
+          ...modelOptions(claudeModel()),
           output_config: { format: { type: "json_schema", schema: AUDIT_SCHEMA } },
           messages: [{ role: "user", content: prompt }]
         })
