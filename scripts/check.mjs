@@ -18,8 +18,10 @@ const files = pages.map((page) => {
 });
 
 files.push("js/nl-track.js", "js/funnel-config.js");
-for (const name of readdirSync("netlify/functions")) {
-  if (name.endsWith(".js")) files.push(join("netlify/functions", name));
+for (const dir of ["netlify/functions", "netlify/functions/_crm"]) {
+  for (const name of readdirSync(dir)) {
+    if (name.endsWith(".js") || name.endsWith(".mjs")) files.push(join(dir, name));
+  }
 }
 
 for (const file of files) {

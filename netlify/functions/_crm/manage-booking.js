@@ -4,8 +4,8 @@
 // Rescheduling books the new time first (book-call with replaceBookingToken),
 // then cancels the old one, so the visitor never ends up with no slot.
 
-const shared = require("./_shared");
-const { json, parseBody } = require("./_lead-system");
+const shared = require("../_shared");
+const { json, parseBody } = require("../_lead-system");
 const { db } = require("./_db");
 const { sign, verify } = require("./_tokens");
 const { deleteMeeting } = require("./_integrations");

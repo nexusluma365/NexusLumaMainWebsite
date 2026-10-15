@@ -7,7 +7,7 @@
 // /api/stripe-webhook, and set STRIPE_WEBHOOK_SECRET.
 
 const crypto = require("crypto");
-const { LEAD_SYSTEM, forwardPipelineRecord, isVerifiedDeposit, json } = require("./_lead-system");
+const { LEAD_SYSTEM, forwardPipelineRecord, isVerifiedDeposit, json } = require("../_lead-system");
 const { db } = require("./_db");
 const { markPaid } = require("./project-api");
 

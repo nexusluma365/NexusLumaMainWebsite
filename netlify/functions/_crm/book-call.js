@@ -9,8 +9,8 @@
 // Availability is real: the slot must be on the generated grid, free in
 // Google Calendar, and win an atomic slot lock (no double booking).
 
-const shared = require("./_shared");
-const { json, parseBody, clean } = require("./_lead-system");
+const shared = require("../_shared");
+const { json, parseBody, clean } = require("../_lead-system");
 const { db, newId } = require("./_db");
 const { sign, verify } = require("./_tokens");
 const { SITE_URL, bookingEmails, callBrief, createMeeting, deleteMeeting, sendEmail } = require("./_integrations");

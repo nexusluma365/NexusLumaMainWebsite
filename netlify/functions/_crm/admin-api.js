@@ -9,7 +9,7 @@
 // GET  ?action=conversions                 -> CSV of verified deposits for Google Ads offline conversion import
 
 const crypto = require("crypto");
-const { LEAD_SYSTEM, json, parseBody } = require("./_lead-system");
+const { LEAD_SYSTEM, json, parseBody } = require("../_lead-system");
 const { STATUSES, db } = require("./_db");
 const { sign, verify } = require("./_tokens");
 const { SITE_URL, callBrief, sendEmail } = require("./_integrations");

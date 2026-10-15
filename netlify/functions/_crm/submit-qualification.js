@@ -4,7 +4,7 @@
 // signed lead token; the scheduling step uses it so the visitor never
 // re-enters their details.
 
-const { clean, forwardPipelineRecord, isEmail, isPhone, json, parseBody } = require("./_lead-system");
+const { clean, forwardPipelineRecord, isEmail, isPhone, json, parseBody } = require("../_lead-system");
 const { db } = require("./_db");
 const { sign, verify } = require("./_tokens");
 
@@ -74,7 +74,7 @@ exports.handler = async (event) => {
     ({ lead } = await db(event).upsertLead(fields, { leadId: known?.id, attribution }));
   } catch (error) {
     console.error("Lead save failed:", error);
-    return json(500, { error: "We couldn't save your details. Please try again.", debug: String(error && (error.stack || error.message)).slice(0, 600) });
+    return json(500, { error: "We couldn't save your details. Please try again." });
   }
   if (!lead) return json(500, { error: "We couldn't save your details. Please try again." });
 

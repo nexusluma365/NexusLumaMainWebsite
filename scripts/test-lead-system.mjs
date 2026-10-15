@@ -8,7 +8,8 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const fn = (name) => require(`../netlify/functions/${name}.js`);
+const CRM = new Set(["submit-qualification", "book-call", "manage-booking", "admin-api", "project-api", "stripe-webhook", "_db", "_tokens", "_integrations"]);
+const fn = (name) => require(`../netlify/functions/${CRM.has(name) ? "_crm/" : ""}${name}.js`);
 const shared = fn("_shared");
 
 // ---- simulated Google Calendar ------------------------------------------
@@ -111,6 +112,9 @@ test("pricing is $799 total, $275 deposit, $524 balance", () => {
 
 test("no pre-call payment: old deposit endpoints are gone and /start, /questionnaire redirect to /book", () => {
   assert.equal(fs.existsSync("netlify/functions/create-lead-system-deposit.js"), false);
+  for (const f of ["submit-qualification", "book-call", "manage-booking", "admin-api", "project-api", "stripe-webhook"]) {
+    assert.match(fs.readFileSync(`netlify/functions/${f}.mjs`, "utf8"), new RegExp(`path: "/api/${f}"`), `${f} is a v2 function`);
+  }
   assert.equal(fs.existsSync("netlify/functions/verify-lead-system-deposit.js"), false);
   const toml = fs.readFileSync("netlify.toml", "utf8");
   assert.match(toml, /from = "\/start\/\*"\s+to = "\/book\/"/);

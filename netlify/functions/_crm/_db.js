@@ -1,8 +1,8 @@
 // CRM data layer for the Contractor Lead System funnel.
 //
 // Production: Netlify Blobs (store "nl-crm", strong consistency). No setup is
-// needed on Netlify; Lambda-style functions must call db(event) so the
-// request's Blobs context is connected.
+// needed on Netlify. Strong consistency requires Functions v2, so the CRM
+// endpoints are v2 entry points (../*.mjs) wrapping these handlers.
 // Local/tests: an in-memory store with the same API (or a JSON file when
 // NL_LOCAL_DB_FILE is set).
 //
@@ -107,7 +107,7 @@ function blobsStore(event) {
 }
 
 function db(event) {
-  const onNetlify = Boolean((event && event.blobs) || process.env.NETLIFY_BLOBS_CONTEXT);
+  const onNetlify = Boolean((event && (event.blobs || event.__v2)) || process.env.NETLIFY_BLOBS_CONTEXT || globalThis.netlifyBlobsContext);
   const store = onNetlify ? blobsStore(event) : memoryStore();
   return createRepo(store);
 }

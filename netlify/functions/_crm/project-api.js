@@ -8,7 +8,7 @@
 // POST { t, action: "verify", paymentIntentId }            server-side verification -> DEPOSIT_PAID
 // POST { t, action: "onboarding", data, files }            detailed onboarding (after payment only)
 
-const { LEAD_SYSTEM, clean, cleanMultiline, isVerifiedDeposit, json, parseBody, publishableKeyFor, stripeMode, stripeRequest } = require("./_lead-system");
+const { LEAD_SYSTEM, clean, cleanMultiline, isVerifiedDeposit, json, parseBody, publishableKeyFor, stripeMode, stripeRequest } = require("../_lead-system");
 const { db } = require("./_db");
 const { verify } = require("./_tokens");
 const { sendEmail } = require("./_integrations");
