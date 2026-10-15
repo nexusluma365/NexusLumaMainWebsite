@@ -8,9 +8,10 @@ const CATEGORY_NAMES = [
 ];
 const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5";
 const WEBSITE_FETCH_TIMEOUT_MS = 2500;
-// Netlify kills synchronous functions at 10s. Claude gets whatever is left of
-// this budget after the site fetch (Haiku needs ~6-8s for the full JSON audit).
-const REQUEST_BUDGET_MS = 9000;
+// Claude gets whatever is left of this budget after the site fetch. Measured on
+// Netlify: Haiku takes ~9-10.5s for the full ~950-token JSON audit, and this
+// site's functions run past 28s, so 20s leaves headroom on both sides.
+const REQUEST_BUDGET_MS = 20000;
 const CLAUDE_MIN_TIMEOUT_MS = 5500;
 
 function json(statusCode, body) {
