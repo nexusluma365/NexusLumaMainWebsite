@@ -84,7 +84,8 @@ exports.handler = async (event) => {
       calendarUnavailable: true,
       error: 'Live availability is temporarily unavailable.',
       bookingUrl: getGoogleCalendarBookingUrl(),
-      availableSlots: []
+      availableSlots: [],
+      debug: String(error && error.message).slice(0, 300)
     });
   }
 };
