@@ -146,7 +146,7 @@
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(Object.assign({ intent: "strategy_call", source: "book-page", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, contact))
       })
-        .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "Please check your details."); return d; }); })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok) throw new Error(d.error || "We couldn't save your details. Please try again."); return d; }); })
         .then(function (d) { contact.leadId = d.leadId || ""; show("schedule"); loadScheduler(); })
         .catch(function (err) { $("formAlert").textContent = err.message; $("formAlert").hidden = false; })
         .then(function () { btn.disabled = false; btn.textContent = "Choose A Call Time"; });

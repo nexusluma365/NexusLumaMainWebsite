@@ -130,6 +130,10 @@ async function stripeRequest(method, path, secretKey, params) {
 // google-apps-script/lead-system-pipeline.gs). Without it, the record is
 // mapped into the existing legacy "Leads" sheet so nothing is lost.
 // Failures are logged and never thrown: lead forwarding must not break payment.
+// The visitor never waits more than FORWARD_TIMEOUT_MS: Apps Script keeps
+// running and still writes the row after we stop waiting (verified).
+const FORWARD_TIMEOUT_MS = 6000;
+
 async function forwardPipelineRecord(record) {
   const target = process.env.LEAD_SYSTEM_WEBHOOK_URL;
   try {
@@ -138,7 +142,8 @@ async function forwardPipelineRecord(record) {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(record),
-        redirect: "manual"
+        redirect: "manual",
+        signal: AbortSignal.timeout(FORWARD_TIMEOUT_MS)
       });
       return { ok: response.status < 400, status: response.status };
     }
@@ -171,7 +176,8 @@ async function forwardPipelineRecord(record) {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(legacy),
-      redirect: "manual"
+      redirect: "manual",
+      signal: AbortSignal.timeout(FORWARD_TIMEOUT_MS)
     });
     return { ok: response.status < 400, status: response.status, legacy: true };
   } catch (error) {

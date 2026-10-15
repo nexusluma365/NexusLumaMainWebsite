@@ -462,12 +462,12 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(Object.assign({ intent: "strategy_call", source: "lead-system-start", campaign: window.nlCampaign ? window.nlCampaign() : {}, company_url_confirm: $("hpField").value }, state.answers, c))
       })
-        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, data: d }; }); })
         .then(function (res) {
           if (!res.ok) {
             var fields = (res.data && res.data.fields) || {};
             Object.keys(fields).forEach(function (f) { setError(f, fields[f]); });
-            throw new Error((res.data && res.data.error) || "Please check your details.");
+            throw new Error((res.data && res.data.error) || "We couldn't save your details. Please try again.");
           }
           state.leadId = res.data.leadId || "";
           save();

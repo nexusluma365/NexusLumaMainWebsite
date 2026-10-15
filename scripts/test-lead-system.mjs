@@ -269,3 +269,29 @@ test("booking a call marks the lead Call Booked in the pipeline sheet", async ()
     delete require.cache[require.resolve("googleapis")];
   }
 });
+
+test("a hanging lead sheet never blocks the visitor (forwarding gives up after 6s)", async () => {
+  process.env.LEAD_SYSTEM_WEBHOOK_URL = "https://sheet.example/exec";
+  const realFetch = globalThis.fetch;
+  let sawSignal = false;
+  const keepAlive = setInterval(() => {}, 1000); // AbortSignal.timeout timers do not hold the event loop open
+  globalThis.fetch = (url, init = {}) => new Promise((_, reject) => {
+    sawSignal = Boolean(init.signal);
+    init.signal?.addEventListener("abort", () => reject(init.signal.reason));
+  });
+  try {
+    const started = Date.now();
+    const res = await fn("submit-qualification").handler(post({
+      intent: "strategy_call", name: "Jane Roofer", business: "Jane's Roofing", email: "jane@example.com",
+      phone: "3365550100", trade: "Roofing"
+    }));
+    const elapsed = Date.now() - started;
+    assert.equal(res.statusCode, 200);
+    assert.match(parse(res).leadId, /^lead_/);
+    assert.ok(sawSignal, "forward request carries an abort signal");
+    assert.ok(elapsed >= 5900 && elapsed < 8000, `responded after ${elapsed}ms`);
+  } finally {
+    clearInterval(keepAlive);
+    globalThis.fetch = realFetch;
+  }
+});
