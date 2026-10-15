@@ -8,7 +8,10 @@ const CATEGORY_NAMES = [
 ];
 const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5";
 const WEBSITE_FETCH_TIMEOUT_MS = 2500;
-const CLAUDE_TIMEOUT_MS = 5500;
+// Netlify kills synchronous functions at 10s. Claude gets whatever is left of
+// this budget after the site fetch (Haiku needs ~6-8s for the full JSON audit).
+const REQUEST_BUDGET_MS = 9000;
+const CLAUDE_MIN_TIMEOUT_MS = 5500;
 
 function json(statusCode, body) {
   return {
@@ -679,7 +682,7 @@ exports.handler = async (event) => {
     try {
       const claudeResponse = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        signal: timeoutSignal(CLAUDE_TIMEOUT_MS),
+        signal: timeoutSignal(Math.max(CLAUDE_MIN_TIMEOUT_MS, REQUEST_BUDGET_MS - (Date.now() - startedAt))),
         headers: {
           "content-type": "application/json",
           "x-api-key": process.env.ANTHROPIC_API_KEY,
@@ -695,6 +698,7 @@ exports.handler = async (event) => {
 
       if (!claudeResponse.ok) {
         const errorText = await claudeResponse.text();
+        console.warn(`Claude request failed (${claudeResponse.status}); using signal audit.`, errorText.slice(0, 300));
         const result = finalizeResult(buildSignalAudit(signals, `Claude request failed: ${errorText.slice(0, 180)}`), signals.finalUrl);
         const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
         return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
@@ -709,6 +713,7 @@ exports.handler = async (event) => {
       const reason = error.name === "TimeoutError" || error.name === "AbortError"
         ? "Claude took too long to respond."
         : error.message || "Claude analysis was unavailable.";
+      console.warn(`Claude analysis fell back after ${Date.now() - startedAt}ms: ${reason}`);
       const result = finalizeResult(buildSignalAudit(signals, reason), signals.finalUrl);
       const leadWebhook = await sendLeadWebhook(lead, result, signals.finalUrl);
       return json(200, { result, analyzed_url: signals.finalUrl, analyzer_mode: "fallback", model: claudeModel(), lead_recorded: leadWebhook.ok, lead_webhook_status: leadWebhook.status, lead_webhook_message: leadWebhook.message });
