@@ -729,6 +729,15 @@
     .nav-actions { display: flex; align-items: center; gap: 10px; justify-self: end; }
     #mainNav .nav-cta { color: #fff; }
     #mainNav .nav-cta::after, #mainNav .nav-brand::after { display: none; }
+    .nav-dd { position: relative; }
+    .nav-dd-toggle { background: none; border: 0; font: inherit; color: rgba(210,210,220,.78); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 4px; }
+    .nav-dd-toggle:hover, .nav-dd.is-open .nav-dd-toggle { color: #fff; }
+    .nav-dd-menu { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%); min-width: 200px; padding: 8px; border-radius: 14px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.4); display: none; flex-direction: column; z-index: 10; }
+    .nav-dd-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+    .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu, .nav-dd.is-open .nav-dd-menu { display: flex; }
+    #mainNav .nav-dd-menu a { padding: 10px 12px; border-radius: 10px; }
+    #mainNav .nav-dd-menu a::after { display: none; }
+    #mainNav .nav-dd-menu a:hover { background: rgba(255,255,255,.06); }
 
     /* Hero copy (sits over the existing parallax) */
     /* padding-top nudges the glyphs down so their ink (not the line box) is centered. */
@@ -873,7 +882,11 @@
     @media (max-width: 900px) {
       .nav-inner { grid-template-columns: 1fr auto; gap: 8px; position: relative; }
       .nav-toggle { display: inline-flex; }
-      #mainNav ul { position: absolute; top: calc(100% + 4px); right: 14px; }
+      #mainNav ul { position: absolute; top: calc(100% + 4px); right: 14px; max-height: calc(100vh - 110px); overflow-y: auto; }
+      .nav-dd-toggle { min-height: 44px; padding: 10px 12px; width: 100%; justify-content: flex-start; }
+      .nav-dd-menu { position: static; transform: none; box-shadow: none; border: 0; background: rgba(255,255,255,.04); min-width: 0; margin: 2px 0 4px; }
+      .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu { display: none; }
+      .nav-dd.is-open .nav-dd-menu { display: flex; }
       .mask-text { padding-bottom: 50vh; }
       .hero-sticky { --hero-img-w: max(100vw, 75vh); --hero-img-cy: 25vh; }
       .hero-copy { bottom: max(24px, env(safe-area-inset-bottom)); }
@@ -930,7 +943,7 @@
       .nav-inner > div[style*="justify-self:end"] { gap: 8px; }
       .nav-cta-funnel, .nav-inner .nav-cta { font-size: 11px; padding: 10px 12px; }
       .nav-spacer { display: none; }
-      #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: rgba(11,11,15,.98); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
+      #mainNav ul { display: none; width: min(92vw, 420px); flex-direction: column; align-items: stretch; gap: 6px; padding: 12px; margin-top: 6px; border-radius: 16px; background: #0b0b0f; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
       #mainNav ul.is-open { display: flex; }
       #mainNav a { display: inline-flex; align-items: center; justify-content: flex-start; min-height: 44px; padding: 10px 12px; border-radius: 12px; touch-action: manipulation; }
       #mainNav .nav-cta-item { display: block; }
@@ -1038,12 +1051,22 @@
       <ul id="navLinks">
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#included">What's Included</a></li>
-        <li><a href="#results">Results</a></li>
+        <li><a href="#results">Our Work</a></li>
         <li><a href="#faq">FAQ</a></li>
-        <li><a href="/book/" data-track="strategy_call_clicked" data-track-location="nav">Book A Call</a></li>
+        <li class="nav-dd">
+          <button class="nav-dd-toggle" type="button" aria-expanded="false" aria-controls="industriesMenu">Industries <span aria-hidden="true">▾</span></button>
+          <div class="nav-dd-menu" id="industriesMenu">
+            <a href="/book/?trade=Roofing" data-track="primary_cta_clicked" data-track-location="nav_industries">Roofing</a>
+            <a href="/book/?trade=HVAC" data-track="primary_cta_clicked" data-track-location="nav_industries">HVAC</a>
+            <a href="/book/?trade=Plumbing" data-track="primary_cta_clicked" data-track-location="nav_industries">Plumbing</a>
+            <a href="/book/?trade=Remodeling" data-track="primary_cta_clicked" data-track-location="nav_industries">Remodeling</a>
+            <a href="/book/?trade=Electrical" data-track="primary_cta_clicked" data-track-location="nav_industries">Electrical</a>
+            <a href="/book/" data-track="primary_cta_clicked" data-track-location="nav_industries">Other Contractors</a>
+          </div>
+        </li>
       </ul>
       <div class="nav-actions">
-        <a class="nav-cta nav-cta-funnel" href="/start/" data-track="lead_system_cta_clicked" data-track-location="nav">Build My Lead System</a>
+        <a class="nav-cta nav-cta-funnel" href="/book/" data-track="primary_cta_clicked" data-track-location="nav">Book A Free Call</a>
         <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks"><span></span></button>
       </div>
     </div>
@@ -1061,7 +1084,7 @@
         <h1>Turn Google Searches Into Opportunities For Your Business.</h1>
         <p>We build your contractor website, launch your Google Search Ads, connect your lead tracking, and manage your campaign for the first 30 days.</p>
         <div class="hero-ctas">
-          <a class="btn btn-primary" id="heroPrimaryCta" href="/start/" data-track="lead_system_cta_clicked" data-track-location="hero">Build My Lead System</a>
+          <a class="btn btn-primary" id="heroPrimaryCta" href="/book/" data-track="primary_cta_clicked" data-track-location="hero">Book My Free Strategy Call</a>
           <a class="btn btn-glass" href="#how-it-works">See How It Works</a>
         </div>
         <ul class="hero-trust">
@@ -1160,7 +1183,7 @@
         <article class="what-we-do-card"><div class="system-num"><b>03</b><span>CAPTURE</span></div><h3>Turn Clicks Into Leads</h3><p>Calls and quote requests routed through a clear, tracked conversion path.</p></article>
         <article class="what-we-do-card"><div class="system-num"><b>04</b><span>OPTIMIZE</span></div><h3>30 Days Of Campaign Management</h3><p>We review search terms, add negative keywords, and adjust the campaign.</p></article>
       </div>
-      <div class="what-we-do-cta"><a class="btn btn-primary" href="/start/" data-track="lead_system_cta_clicked" data-track-location="system">Build My Lead System</a></div>
+      <div class="what-we-do-cta"><a class="btn btn-primary" href="/book/" data-track="primary_cta_clicked" data-track-location="system">Get More Leads</a></div>
     </section>
 
     <!-- PROOF -->
@@ -1219,7 +1242,7 @@
         </ul>
         <p class="query-note">Example searches. Search volume varies by service and market.</p>
         <div class="contractor-ctaRow">
-          <a class="btn btn-primary" href="/start/" data-track="lead_system_cta_clicked" data-track-location="referrals">Build My Lead System</a>
+          <a class="btn btn-primary" href="/book/" data-track="primary_cta_clicked" data-track-location="referrals">See If We're A Fit</a>
         </div>
       </div>
     </div>
@@ -1279,9 +1302,8 @@
           <p class="price-total"><s>$799</s> total project price</p>
           <div class="price-today"><span>Start with</span><strong>$275</strong></div>
           <p class="price-rest">$524 remaining according to the project's payment terms.</p>
-          <a class="btn btn-primary" href="/start/" data-track="lead_system_cta_clicked" data-track-location="pricing">Start My Project — $275</a>
-          <p class="price-note"><strong>Google advertising media spend is separate</strong> and paid by you directly to Google, so you always know exactly what you're spending on ads.</p>
-          <a class="price-alt" href="/book/" data-track="strategy_call_clicked" data-track-location="pricing">Prefer to talk first? Book a strategy call →</a>
+          <a class="btn btn-primary" href="/book/" data-track="primary_cta_clicked" data-track-location="pricing">Book My Free Strategy Call</a>
+          <p class="price-note"><strong>Nothing to pay to book.</strong> If we're a fit after your call, your project starts with the $275 deposit. Google advertising media spend is separate and paid by you directly to Google.</p>
         </div>
       </div>
     </div>
@@ -1294,6 +1316,10 @@
       <h2 id="faq-title">Questions, Answered.</h2>
     </div>
     <div class="faq-list">
+      <details>
+        <summary>Do I pay anything to book a call?</summary>
+        <p>No. The Zoom strategy call is free. If we're a good fit and you decide to move forward, your project starts with a $275 deposit toward the $799 total.</p>
+      </details>
       <details>
         <summary>What exactly do I get?</summary>
         <p>A professional contractor website, Google Search Ads setup, conversion tracking, lead capture, and 30 days of Google Ads campaign management.</p>
@@ -1366,14 +1392,14 @@
       <h2>Get Found. Get Clicked. Get Leads.</h2>
       <p>We help contractors turn Google searches into real opportunities with a professional website, targeted Google Ads, conversion tracking, and 30 days of campaign management.</p>
       <div class="closure-ctas">
-        <a class="btn btn-primary" href="/start/" data-track="lead_system_cta_clicked" data-track-location="closing">Build My Lead System</a>
-        <a class="btn btn-ghost" href="/book/" data-track="strategy_call_clicked" data-track-location="closing">Book A Strategy Call</a>
+        <a class="btn btn-primary" href="/book/" data-track="primary_cta_clicked" data-track-location="closing">Book My Free Strategy Call</a>
+        <a class="btn btn-ghost" href="tel:+13365177347">Or Call (336) 517-7347</a>
       </div>
     </div>
   </section>
 
   <div class="sticky-cta" id="stickyCta">
-    <a class="btn btn-primary" href="/start/" data-track="lead_system_cta_clicked" data-track-location="sticky_mobile">Build My Lead System</a>
+    <a class="btn btn-primary" href="/book/" data-track="primary_cta_clicked" data-track-location="sticky_mobile">Book My Free Strategy Call</a>
   </div>
 
   <footer id="contact">
@@ -1433,7 +1459,7 @@
     ============================================================ */
     let startContractor = null, stopContractor = null, startDemo = null, stopDemo = null;
 
-    if (window.nlTrack) window.nlTrack("contractor_landing_view");
+    if (window.nlTrack) window.nlTrack("landing_page_view");
 
     document.addEventListener("DOMContentLoaded", function() {
       // Lead system demo: highlight each stage in turn and type example searches.
@@ -1470,6 +1496,17 @@
       const setOpen = (open) => { links.classList.toggle("is-open", open); toggle.setAttribute("aria-expanded", open ? "true" : "false"); };
       toggle.addEventListener("click", () => setOpen(!links.classList.contains("is-open")));
       links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+      document.querySelectorAll(".nav-dd-toggle").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const dd = btn.closest(".nav-dd");
+          const open = !dd.classList.contains("is-open");
+          dd.classList.toggle("is-open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".nav-dd")) document.querySelectorAll(".nav-dd.is-open").forEach((dd) => { dd.classList.remove("is-open"); dd.querySelector(".nav-dd-toggle").setAttribute("aria-expanded", "false"); });
+      });
       document.addEventListener("click", (e) => { if (!e.target.closest("#mainNav")) setOpen(false); });
     });
 
@@ -1987,9 +2024,8 @@
 <div class="rec-title">What To Fix First</div>
 <ul class="rec-list">${recsHTML}</ul>
 <div class="analyzer-result-cta">
-  <p>Your website is one part of the system. We can build the site, launch your Google Search Ads, and connect your lead tracking.</p>
-  <a href="/start/" data-track="lead_system_cta_clicked" data-track-location="analyzer_results">Build My Lead System</a>
-  <a class="cta-secondary" href="/book/" data-track="strategy_call_clicked" data-track-location="analyzer_results">Book A Strategy Call</a>
+  <p>Your website is one part of the system. On a free call we'll show you how the site, Google Search Ads, and lead tracking would work together for your business.</p>
+  <a href="/book/" data-track="primary_cta_clicked" data-track-location="analyzer_results">Book My Free Strategy Call</a>
 </div>`;
       }
 
@@ -2028,8 +2064,7 @@
 </div>
 <div class="analyzer-result-cta">
   <p>Want more leads from Google? We build the website, the ads, and the lead tracking.</p>
-  <a href="/start/" data-track="lead_system_cta_clicked" data-track-location="analyzer_unavailable">Build My Lead System</a>
-  <a class="cta-secondary" href="/book/" data-track="strategy_call_clicked" data-track-location="analyzer_unavailable">Book A Strategy Call</a>
+  <a href="/book/" data-track="primary_cta_clicked" data-track-location="analyzer_unavailable">Book My Free Strategy Call</a>
 </div>`;
       }
 

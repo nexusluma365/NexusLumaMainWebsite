@@ -1,35 +1,48 @@
-/* Nexus Luma — tiny provider-agnostic tracking layer.
- * nlTrack(event, data) pushes to window.dataLayer (GTM/GA4), calls gtag if
- * present, and dispatches a "nl:track" DOM event. Add GTM/GA4 to the page and
- * these events flow through automatically.
+/* Nexus Luma — tiny provider-agnostic tracking + attribution layer.
  *
- * Elements with data-track="event_name" fire that event on click.
- * nlCampaign() returns first-touch UTM/gclid data captured on landing.
+ * nlTrack(event, data) pushes to window.dataLayer (GTM/GA4), calls gtag if
+ * present, and dispatches a "nl:track" DOM event. Elements with
+ * data-track="event_name" fire that event on click.
+ *
+ * Attribution: first-touch UTM/GCLID data is kept for 90 days in localStorage
+ * (later ad clicks fill gaps and update lastGclid), so a visitor who clicks
+ * an ad today and books next week is still attributed to the original
+ * campaign/keyword. nlAttribution() returns it; /book/ sends it with the lead.
  */
 (function () {
   "use strict";
 
-  var CAMPAIGN_KEY = "nl_campaign_v1";
-  var PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid"];
+  var KEY = "nl_attribution_v2";
+  var TTL_MS = 90 * 24 * 60 * 60 * 1000;
+  var PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid"];
 
-  function safeStorage(fn) {
-    try { return fn(window.sessionStorage); } catch (e) { return null; }
+  function storage(fn) {
+    try { return fn(window.localStorage); } catch (e) { return null; }
   }
 
-  function captureCampaign() {
-    var existing = safeStorage(function (s) { return JSON.parse(s.getItem(CAMPAIGN_KEY) || "null"); });
+  function captureAttribution() {
+    var saved = storage(function (s) { return JSON.parse(s.getItem(KEY) || "null"); });
+    if (saved && saved.firstSeenAt && Date.now() - Date.parse(saved.firstSeenAt) > TTL_MS) saved = null;
     var search = new URLSearchParams(window.location.search);
-    var hasParams = PARAMS.some(function (p) { return search.get(p); });
-    if (existing && !hasParams) return existing;
-    var data = { landingPage: window.location.href.split("#")[0], referrer: document.referrer || "" };
-    PARAMS.forEach(function (p) { if (search.get(p)) data[p] = search.get(p).slice(0, 200); });
-    safeStorage(function (s) { s.setItem(CAMPAIGN_KEY, JSON.stringify(data)); });
+    var incoming = {};
+    PARAMS.forEach(function (p) { if (search.get(p)) incoming[p] = search.get(p).slice(0, 200); });
+
+    var data = saved || {
+      firstSeenAt: new Date().toISOString(),
+      landingPage: window.location.href.split("#")[0].slice(0, 300),
+      referrer: (document.referrer || "").slice(0, 300)
+    };
+    Object.keys(incoming).forEach(function (k) {
+      if (!data[k]) data[k] = incoming[k];
+    });
+    if (incoming.gclid) data.lastGclid = incoming.gclid;
+    storage(function (s) { s.setItem(KEY, JSON.stringify(data)); });
     return data;
   }
 
-  var campaign = captureCampaign();
-
-  window.nlCampaign = function () { return campaign || {}; };
+  var attribution = captureAttribution();
+  window.nlAttribution = function () { return attribution || {}; };
+  window.nlCampaign = window.nlAttribution; // backwards compatible name
 
   window.nlTrack = function (eventName, data) {
     var payload = Object.assign({ page_path: window.location.pathname }, data || {});
@@ -39,9 +52,7 @@
       if (typeof window.gtag === "function") window.gtag("event", eventName, payload);
       document.dispatchEvent(new CustomEvent("nl:track", { detail: { event: eventName, data: payload } }));
     } catch (e) { /* tracking must never break the page */ }
-    if (/localhost|127\.0\.0\.1/.test(window.location.hostname)) {
-      console.info("[nlTrack]", eventName, payload);
-    }
+    if (/localhost|127\.0\.0\.1/.test(window.location.hostname)) console.info("[nlTrack]", eventName, payload);
   };
 
   document.addEventListener("click", function (e) {

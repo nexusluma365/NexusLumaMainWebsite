@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 const dir = mkdtempSync(join(tmpdir(), "nexus-luma-check-"));
 
 // Inline <script> blocks of the active pages (external/src scripts are skipped).
-const pages = ["index.html", "start/index.html", "book/index.html"];
+const pages = ["index.html", "book/index.html", "booked/index.html", "project/index.html", "onboarding/index.html", "admin/index.html"];
 const files = pages.map((page) => {
   const html = readFileSync(page, "utf8");
   const scripts = [...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
@@ -17,9 +17,11 @@ const files = pages.map((page) => {
   return out;
 });
 
-files.push("js/nl-track.js");
-for (const name of readdirSync("netlify/functions")) {
-  if (name.endsWith(".js")) files.push(join("netlify/functions", name));
+files.push("js/nl-track.js", "js/funnel-config.js");
+for (const dir of ["netlify/functions", "netlify/functions/_crm"]) {
+  for (const name of readdirSync(dir)) {
+    if (name.endsWith(".js") || name.endsWith(".mjs")) files.push(join(dir, name));
+  }
 }
 
 for (const file of files) {

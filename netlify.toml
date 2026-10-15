@@ -92,25 +92,9 @@
   to = "/.netlify/functions/google-auth-callback"
   status = 200
 
-[[redirects]]
-  from = "/api/submit-qualification"
-  to = "/.netlify/functions/submit-qualification"
-  status = 200
 
-[[redirects]]
-  from = "/api/create-lead-system-deposit"
-  to = "/.netlify/functions/create-lead-system-deposit"
-  status = 200
 
-[[redirects]]
-  from = "/api/verify-lead-system-deposit"
-  to = "/.netlify/functions/verify-lead-system-deposit"
-  status = 200
 
-[[redirects]]
-  from = "/api/stripe-webhook"
-  to = "/.netlify/functions/stripe-webhook"
-  status = 200
 
 [[redirects]]
   from = "/api/contractor-site-lead"
@@ -121,3 +105,32 @@
   from = "/api/create-management-subscription"
   to = "/.netlify/functions/create-management-subscription"
   status = 200
+
+
+
+
+
+# The strategy call is free: legacy paid pre-call funnels now lead to booking.
+[[redirects]]
+  from = "/start/*"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/start"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/questionnaire/*"
+  to = "/book/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/questionnaire"
+  to = "/book/"
+  status = 301
+  force = true
