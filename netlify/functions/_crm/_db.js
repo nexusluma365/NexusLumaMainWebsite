@@ -83,8 +83,14 @@ function memoryStore() {
 }
 
 function blobsStore(event) {
-  const { connectLambda, getStore } = require("@netlify/blobs");
-  if (event && event.blobs) connectLambda(event);
+  // v2 entry points (../*.mjs) provide getStore via a static import, which
+  // Netlify's bundler includes; v1 callers fall back to require.
+  let getStore = globalThis.__nlGetBlobStore;
+  if (!getStore || (event && event.blobs)) {
+    const blobs = require("@netlify/blobs");
+    if (event && event.blobs) blobs.connectLambda(event);
+    getStore = blobs.getStore;
+  }
   const store = getStore({ name: "nl-crm", consistency: "strong" });
   return {
     async get(key) {

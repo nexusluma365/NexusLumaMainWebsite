@@ -18,9 +18,9 @@ function createCalendarClient() {
     throw new Error('Google Calendar environment variables are not configured.');
   }
 
-  let google;
+  let google = globalThis.__nlGoogleApis;
   try {
-    google = require('googleapis').google;
+    if (!google) google = require('googleapis').google;
   } catch (error) {
     throw new Error('The googleapis package is not installed or was not bundled.');
   }
