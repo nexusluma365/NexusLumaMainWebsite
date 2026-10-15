@@ -10,6 +10,14 @@
   "use strict";
 
   var CAMPAIGN_KEY = "nl_campaign_v1";
+
+  // Google Ads conversions: tracked event -> "AW-18213168150/<conversion label>".
+  // The label comes from Google Ads → Goals → Conversions → (your conversion
+  // action) → Tag setup → "Use Google tag" → event snippet ("send_to").
+  // Empty = that event is not reported as a conversion.
+  var ADS_CONVERSIONS = {
+    strategy_call_booked: ""
+  };
   var PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid"];
 
   function safeStorage(fn) {
@@ -36,7 +44,13 @@
     try {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push(Object.assign({ event: eventName }, payload));
-      if (typeof window.gtag === "function") window.gtag("event", eventName, payload);
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, payload);
+        if (ADS_CONVERSIONS[eventName]) {
+          // transaction_id lets Google Ads count each booking once, even on a reload
+          window.gtag("event", "conversion", { send_to: ADS_CONVERSIONS[eventName], transaction_id: payload.transaction_id || "" });
+        }
+      }
       document.dispatchEvent(new CustomEvent("nl:track", { detail: { event: eventName, data: payload } }));
     } catch (e) { /* tracking must never break the page */ }
     if (/localhost|127\.0\.0\.1/.test(window.location.hostname)) {

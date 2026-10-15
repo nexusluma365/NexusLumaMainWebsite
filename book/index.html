@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18213168150"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'AW-18213168150');
+  </script>
   <title>Book A Strategy Call | Nexus Luma</title>
   <meta name="description" content="Book a strategy call with Nexus Luma to see if a contractor lead generation system fits your business." />
   <link rel="icon" href="/favicon-64.png" type="image/png">
@@ -260,7 +269,7 @@
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
         .then(function (res) {
           if (res.ok && res.data.mode === "google") {
-            track("strategy_call_booked", { date: selectedDate });
+            track("strategy_call_booked", { date: selectedDate, transaction_id: res.data.eventId || "" });
             var when = new Date(selectedSlot.start).toLocaleString("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
             $("doneText").textContent = when + " ET. A calendar invite is on its way to " + contact.email + ".";
             show("done");
