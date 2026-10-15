@@ -1,6 +1,6 @@
 const BOOKING_TIMEZONE = process.env.BOOKING_TIMEZONE || 'America/New_York';
-const SLOT_START_HOUR = Number(process.env.BOOKING_START_HOUR || 9);
-const SLOT_END_HOUR = Number(process.env.BOOKING_END_HOUR || 17);
+const SLOT_START_HOUR = Number(process.env.BOOKING_START_HOUR || 10);
+const SLOT_END_HOUR = Number(process.env.BOOKING_END_HOUR || 16);
 const SLOT_MINUTES = Number(process.env.BOOKING_SLOT_MINUTES || 30);
 const DEFAULT_BOOKING_URL = 'https://scheduler.zoom.us/elijah-thornton/30-min-strategy-call';
 

@@ -295,3 +295,40 @@ test("a hanging lead sheet never blocks the visitor (forwarding gives up after 6
     globalThis.fetch = realFetch;
   }
 });
+
+test("call slots are weekdays 10 AM-4 PM ET and busy calendar times are hidden", () => {
+  const { buildSlots, isWeekday } = fn("_shared");
+  const day = "2026-10-20"; // a Tuesday, during daylight time (ET = UTC-4)
+  const labels = buildSlots(day).map((s) => s.label);
+  assert.equal(labels[0], "10:00 AM");
+  assert.equal(labels.at(-1), "3:30 PM", "last 30-minute call ends at 4:00 PM");
+  assert.equal(labels.length, 12);
+  assert.equal(buildSlots(day)[0].start, "2026-10-20T14:00:00.000Z");
+
+  // A meeting 11:00-12:15 ET removes the 11:00, 11:30 and 12:00 slots only
+  const busy = [{ start: "2026-10-20T15:00:00.000Z", end: "2026-10-20T16:15:00.000Z" }];
+  const open = buildSlots(day, { busyIntervals: busy }).map((s) => s.label);
+  assert.deepEqual(open.filter((l) => /^1[12]:/.test(l)), ["12:30 PM"]);
+  assert.equal(open.length, 9);
+
+  // Winter (standard time, ET = UTC-5) still starts at 10 AM local
+  assert.equal(buildSlots("2026-12-15")[0].start, "2026-12-15T15:00:00.000Z");
+
+  assert.equal(isWeekday("2026-10-17"), false, "Saturday");
+  assert.equal(isWeekday("2026-10-18"), false, "Sunday");
+  assert.equal(isWeekday("2026-10-19"), true, "Monday");
+  assert.equal(isWeekday("2026-10-23"), true, "Friday");
+});
+
+test("booking rejects times outside 10 AM-4 PM ET, weekends, and the past", async () => {
+  const book = (selectedDate, slotStart, slotEnd) =>
+    fn("create-booking").handler(post({ email: "jane@example.com", selectedDate, slotStart, slotEnd }));
+  assert.equal((await book("2030-10-22", "2030-10-22T13:00:00.000Z", "2030-10-22T13:30:00.000Z")).statusCode, 409, "9:00 AM");
+  assert.equal((await book("2030-10-22", "2030-10-22T20:00:00.000Z", "2030-10-22T20:30:00.000Z")).statusCode, 409, "4:00 PM");
+  assert.equal((await book("2030-10-22", "2030-10-22T14:00:00.000Z", "2030-10-22T15:00:00.000Z")).statusCode, 409, "wrong length");
+  assert.equal((await book("2030-10-26", "2030-10-26T14:00:00.000Z", "2030-10-26T14:30:00.000Z")).statusCode, 409, "Saturday");
+  assert.equal((await book("2020-10-20", "2020-10-20T14:00:00.000Z", "2020-10-20T14:30:00.000Z")).statusCode, 409, "past");
+  const ok = await book("2030-10-22", "2030-10-22T19:30:00.000Z", "2030-10-22T20:00:00.000Z"); // 3:30 PM, no Google config -> mock
+  assert.equal(ok.statusCode, 200);
+  assert.equal(parse(ok).mode, "mock");
+});

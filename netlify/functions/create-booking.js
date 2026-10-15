@@ -1,5 +1,6 @@
 const {
   BOOKING_TIMEZONE,
+  buildSlots,
   createCalendarClient,
   getMockBookedSlotSet,
   hasGoogleCalendarConfig,
@@ -71,6 +72,12 @@ exports.handler = async (event) => {
 
     if (!isWeekday(selectedDate)) {
       return makeJsonResponse(409, { error: 'That date is not available.' });
+    }
+
+    // Only real slots inside booking hours (Mon-Fri, 10 AM-4 PM ET), never in the past.
+    const isOfferedSlot = buildSlots(selectedDate).some((slot) => slot.start === slotStart && slot.end === slotEnd);
+    if (!isOfferedSlot || new Date(slotStart) <= new Date()) {
+      return makeJsonResponse(409, { error: 'That time is not available. Please choose another.' });
     }
 
     if (!hasGoogleCalendarConfig()) {
