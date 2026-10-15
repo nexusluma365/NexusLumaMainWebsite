@@ -74,7 +74,7 @@ exports.handler = async (event) => {
     ({ lead } = await db(event).upsertLead(fields, { leadId: known?.id, attribution }));
   } catch (error) {
     console.error("Lead save failed:", error);
-    return json(500, { error: "We couldn't save your details. Please try again." });
+    return json(500, { error: "We couldn't save your details. Please try again.", debug: String(error && (error.stack || error.message)).slice(0, 700), ctx: { env: Boolean(process.env.NETLIFY_BLOBS_CONTEXT), g: Boolean(globalThis.netlifyBlobsContext), nl: typeof globalThis.Netlify } });
   }
   if (!lead) return json(500, { error: "We couldn't save your details. Please try again." });
 
