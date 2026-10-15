@@ -21,8 +21,8 @@
   <main class="fn-main">
     <section class="fn-step" data-step="form" aria-labelledby="bookTitle">
       <p class="fn-eyebrow">Strategy Call</p>
-      <h1 class="fn-title" id="bookTitle" tabindex="-1">Let's See If The System Fits Your Business.</h1>
-      <p class="fn-sub">Tell us what you do, where you serve, and what type of work you want more of.</p>
+      <h1 class="fn-title" id="bookTitle" tabindex="-1">Book Your Contractor Lead Strategy Call.</h1>
+      <p class="fn-sub">A short call focused on your trade, service area, and the jobs you want more of. No payment required to book.</p>
       <form class="fn-card" id="bookForm" novalidate>
         <div class="fn-grid-2">
           <div class="fn-field">
@@ -69,7 +69,7 @@
         <div class="fn-alert" id="formAlert" role="alert" hidden></div>
         <div class="fn-actions"><button class="fn-btn" type="submit" id="formSubmit">Choose A Call Time</button></div>
       </form>
-      <p class="fn-alt">Already know you want it? <a href="/start/" data-track="lead_system_cta_clicked" data-track-location="book_form">Build my lead system</a></p>
+      <p class="fn-alt">Not ready yet? <a href="/">See how the lead system works</a></p>
     </section>
 
     <section class="fn-step" data-step="schedule" aria-labelledby="scheduleTitle" hidden>
@@ -261,6 +261,25 @@
         .catch(function () { useScheduler(); })
         .then(function () { booking = false; btn.textContent = "Confirm My Call"; });
     });
+
+    // Carry questionnaire answers into booking so Google Ads visitors never repeat themselves.
+    (function resumeFromLeadPlan() {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get("from") !== "start") return;
+      try {
+        var saved = JSON.parse(sessionStorage.getItem("nl_lead_system_v1") || "null");
+        if (!saved || !saved.contact || !saved.answers) return;
+        var c = saved.contact, a = saved.answers;
+        if (!c.name || !c.business || !c.email || !c.phone || !a.trade) return;
+        contact = {
+          name: c.name, business: c.business, email: c.email, phone: c.phone,
+          trade: a.trade, serviceArea: a.serviceArea || "", notes: a.service ? "Primary service: " + a.service : ""
+        };
+        track("strategy_call_booking_started", { source: "lead_plan", trade: a.trade, service: a.service || "" });
+        show("schedule");
+        loadScheduler();
+      } catch (e) {}
+    })();
   })();
   </script>
 </body>
